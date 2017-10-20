@@ -5,6 +5,7 @@
 #include "GraphicsManager.h"
 #include "RenderHelper.h"
 
+
 CProjectile::CProjectile(void)
 	: modelMesh(NULL)
 	, m_bStatus(false)
