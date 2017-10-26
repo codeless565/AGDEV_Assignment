@@ -16,14 +16,15 @@ void CPistol::Init(void)
 	// Call the parent's Init method
 	CWeaponInfo::Init();
 
+	firingspeed = 300.f;
 	// The number of ammunition in a magazine for this weapon
 	magRounds = 8;
 	// The maximum number of ammunition for this magazine for this weapon
 	maxMagRounds = 8;
 	// The current total number of rounds currently carried by this player
-	totalRounds = 40;
+	totalRounds = 16;
 	// The max total number of rounds currently carried by this player
-	maxTotalRounds = 40;
+	maxTotalRounds = 16;
 
 	// The time between shots
 	timeBetweenShots = 0.3333;
