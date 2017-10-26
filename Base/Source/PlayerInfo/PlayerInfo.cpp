@@ -6,6 +6,7 @@
 #include "Mtx44.h"
 #include "../Projectile/Projectile.h"
 #include "../WeaponInfo/Pistol.h"
+#include "../WeaponInfo/AssaultRifle.h"
 
 // Allocating and initializing CPlayerInfo's static data member.  
 // The pointer is allocated but not the object's constructor.
@@ -22,6 +23,7 @@ CPlayerInfo::CPlayerInfo(void)
 	, m_dFallAcceleration(-10.0)
 	, attachedCamera(NULL)
 	, m_pTerrain(NULL)
+	, currWeapon(NULL)
 	, primaryWeapon(NULL)
 	, secondaryWeapon(NULL)
 {
@@ -29,15 +31,14 @@ CPlayerInfo::CPlayerInfo(void)
 
 CPlayerInfo::~CPlayerInfo(void)
 {
-	if (secondaryWeapon)
+	if (currWeapon)
 	{
-		delete secondaryWeapon;
-		secondaryWeapon = NULL;
+		delete currWeapon;
+		currWeapon = NULL;
 	}
-	if (primaryWeapon)
+	for (int i = 0; i < Weapons.size(); ++i)
 	{
-		delete primaryWeapon;
-		primaryWeapon = NULL;
+		Weapons.pop_back();
 	}
 	m_pTerrain = NULL;
 }
@@ -59,9 +60,18 @@ void CPlayerInfo::Init(void)
 	maxBoundary.Set(1,1,1);
 	minBoundary.Set(-1, -1, -1);
 
-	// Set the pistol as the primary weapon
-	primaryWeapon = new CPistol();
+	// Set the assault rifle as the primary weapon
+	primaryWeapon = new CAssaultRifle();
 	primaryWeapon->Init();
+
+	// Set the pistol as the secondary weapon
+	secondaryWeapon = new CPistol();
+	secondaryWeapon->Init();
+
+	Weapons.push_back(primaryWeapon);
+	Weapons.push_back(secondaryWeapon);
+
+	currWeapon = Weapons[0];
 }
 
 // Returns true if the player is on ground
@@ -399,29 +409,50 @@ void CPlayerInfo::Update(double dt)
 		SetToJumpUpwards(true);
 	}
 
+
+	// WEAPONS
 	// Update the weapons
 	if (KeyboardController::GetInstance()->IsKeyReleased('R'))
 	{
-		if (primaryWeapon)
+		if (currWeapon)
 		{
-			primaryWeapon->Reload();
+			currWeapon->Reload();
 			//primaryWeapon->PrintSelf();
 		}
 	}
-	if (primaryWeapon)
-		primaryWeapon->Update(dt);
-	if (secondaryWeapon)
-		secondaryWeapon->Update(dt);
+	if (currWeapon)
+		currWeapon->Update(dt);
 
 	// if Mouse Buttons were activated, then act on them
 	if (MouseController::GetInstance()->IsButtonPressed(MouseController::LMB))
 	{
-		if (primaryWeapon)
-			primaryWeapon->Discharge(position, target, this);
-	}
-	else if (MouseController::GetInstance()->IsButtonPressed(MouseController::RMB))
-	{
+		if (currWeapon && currWeapon->GetMagRound() > 0)
+		{
+			Vector3 recoil = target;
+			recoil.y = target.y + Math::RandFloatMinMax(0.0f, 0.01f);
+			recoil.x = target.x + Math::RandFloatMinMax(-0.01f, 0.01f);
+			Vector3 viewdirection = recoil - position;
 
+			if (currWeapon == primaryWeapon)
+			{
+				currWeapon->Discharge("cube", position, target, currWeapon->GetFiringSpeed(), this);
+				target = position + viewdirection;
+			}
+			else if (currWeapon == secondaryWeapon)
+			{
+				currWeapon->Discharge("sphere", position, target, currWeapon->GetFiringSpeed(), this);
+				target = position + viewdirection;
+			}
+		}
+	}
+
+	if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) == 3.0f)
+	{
+		currWeapon = Weapons[0];
+	}
+	else if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) == -3.0f)
+	{
+		currWeapon = Weapons[1];
 	}
 
 	// If the user presses R key, then reset the view to default values

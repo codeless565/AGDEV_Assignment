@@ -4,6 +4,7 @@
 #include "../GroundEntity.h"
 #include "../WeaponInfo/WeaponInfo.h"
 
+#include <vector>
 class CPlayerInfo
 {
 protected:
@@ -94,6 +95,13 @@ public:
 	void AttachCamera(FPSCamera* _cameraPtr);
 	void DetachCamera();
 
+	//GetProj
+	std::list<CProjectile*>GetProj();
+
+	// Weapons
+	// Discharge Curr Weapon
+	//bool DischargeWeapon(const float deltaTime);
+
 private:
 	Vector3 defaultPosition, defaultTarget, defaultUp;
 	Vector3 position, target, up;
@@ -113,6 +121,8 @@ private:
 
 	FPSCamera* attachedCamera;
 
+	CWeaponInfo* currWeapon;
 	CWeaponInfo* primaryWeapon;
 	CWeaponInfo* secondaryWeapon;
+	std::vector <CWeaponInfo*> Weapons;
 };
