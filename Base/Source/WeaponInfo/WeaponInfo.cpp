@@ -5,7 +5,8 @@
 using namespace std;
 
 CWeaponInfo::CWeaponInfo()
-	: magRounds(1)
+	: firingspeed(1.f)
+	, magRounds(1)
 	, maxMagRounds(1)
 	, totalRounds(8)
 	, maxTotalRounds(8)
@@ -44,6 +45,11 @@ void CWeaponInfo::SetMaxTotalRound(const int maxTotalRounds)
 	this->maxTotalRounds = maxTotalRounds;
 }
 
+void CWeaponInfo::SetFiringSpeed(const float speed)
+{
+	this->firingspeed = speed;
+}
+
 
 // Get the number of ammunition in the magazine for this player
 int CWeaponInfo::GetMagRound(void) const
@@ -67,6 +73,11 @@ int CWeaponInfo::GetTotalRound(void) const
 int CWeaponInfo::GetMaxTotalRound(void) const
 {
 	return maxTotalRounds;
+}
+
+float CWeaponInfo::GetFiringSpeed(void) const
+{
+	return firingspeed;
 }
 
 // Set the time between shots
@@ -137,7 +148,7 @@ void CWeaponInfo::Update(const double dt)
 }
 
 // Discharge this weapon
-void CWeaponInfo::Discharge(Vector3 position, Vector3 target, CPlayerInfo* _source)
+void CWeaponInfo::Discharge(const std::string& _meshName, Vector3 position, Vector3 target, float bulletSpeed, CPlayerInfo* _source)
 {
 	if (bFire)
 	{
@@ -146,16 +157,18 @@ void CWeaponInfo::Discharge(Vector3 position, Vector3 target, CPlayerInfo* _sour
 		{
 			// Create a projectile with a cube mesh. Its position and direction is same as the player.
 			// It will last for 3.0 seconds and travel at 500 units per second
-			CProjectile* aProjectile = Create::Projectile("cube", 
-															position, 
-															(target - position).Normalized(), 
-															2.0f, 
-															10.0f,
-															_source);
+			CProjectile* aProjectile = Create::Projectile(_meshName,
+				position,
+				(target - position).Normalized(),
+				2.0f,
+				bulletSpeed,
+				_source);
 			aProjectile->SetCollider(true);
 			aProjectile->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
 			bFire = false;
 			magRounds--;
+
+			bullets.push_back(aProjectile);
 		}
 	}
 }
@@ -199,4 +212,9 @@ void CWeaponInfo::PrintSelf(void)
 	cout << "timeBetweenShots\t:\t" << timeBetweenShots << endl;
 	cout << "elapsedTime\t\t:\t" << elapsedTime << endl;
 	cout << "bFire\t\t:\t" << bFire << endl;
+}
+
+std::list<CProjectile*> CWeaponInfo::GetProj()
+{
+	return bullets;
 }

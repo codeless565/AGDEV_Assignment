@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Vector3.h"
+#include "..//Projectile/Projectile.h"
+#include <list>
 
 class CPlayerInfo;
 
@@ -9,7 +11,8 @@ class CWeaponInfo
 public:
 	CWeaponInfo();
 	virtual ~CWeaponInfo();
-protected:
+
+	float firingspeed;
 	// The number of ammunition in a magazine for this weapon
 	int magRounds;
 	// The maximum number of ammunition for this magazine for this weapon
@@ -25,7 +28,8 @@ protected:
 	double elapsedTime;
 	// Boolean flag to indicate if weapon can fire now
 	bool bFire;
-public:
+	std::list<CProjectile*>bullets;
+
 	// Set the number of ammunition in the magazine for this player
 	virtual void SetMagRound(const int magRounds);
 	// Set the maximum number of ammunition in the magazine for this weapon
@@ -34,6 +38,7 @@ public:
 	virtual void SetTotalRound(const int totalRounds);
 	// The max total number of rounds currently carried by this player
 	virtual void SetMaxTotalRound(const int maxTotalRounds);
+	virtual void SetFiringSpeed(const float speed);
 
 	// Get the number of ammunition in the magazine for this player
 	virtual int GetMagRound(void) const;
@@ -43,6 +48,7 @@ public:
 	virtual int GetTotalRound(void) const;
 	// Get the max total number of rounds currently carried by this player
 	virtual int GetMaxTotalRound(void) const;
+	virtual float GetFiringSpeed(void) const;
 
 	// Set the time between shots
 	virtual void SetTimeBetweenShots(const double timeBetweenShots);
@@ -63,7 +69,7 @@ public:
 	// Update the elapsed time
 	void Update(const double dt);
 	// Discharge this weapon
-	void Discharge(Vector3 position, Vector3 target, CPlayerInfo* _source = NULL);
+	void Discharge(const std::string& _meshName, Vector3 position, Vector3 target, float bulletSpeed, CPlayerInfo* _source = NULL);
 	// Reload this weapon
 	void Reload(void);
 	// Add rounds
@@ -71,4 +77,7 @@ public:
 
 	// Print Self
 	void PrintSelf(void);
+
+	//GetProjectiles
+	std::list<CProjectile*> GetProj();
 };
