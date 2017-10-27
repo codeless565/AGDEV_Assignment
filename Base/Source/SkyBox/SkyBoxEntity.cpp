@@ -133,6 +133,7 @@ SkyBoxEntity* Create::SkyBox(	const std::string& _meshName0,
 	result->SetMesh(SkyBoxEntity::TOP, modelMesh4);
 	result->SetMesh(SkyBoxEntity::BOTTOM, modelMesh5);
 
+	result->setEntityType(EntityBase::ENTITY_FIXED);
 	EntityManager::GetInstance()->AddEntity(result);
 	return result;
 }

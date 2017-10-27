@@ -159,6 +159,8 @@ CProjectile* Create::Projectile(const std::string& _meshName,
 	result->SetStatus(true);
 	result->SetCollider(true);
 	result->SetSource(_source);
+	result->setEntityType(EntityBase::ENTITY_PROJECTILES);
+	result->SetAABB(Vector3(0.5f,0.5f,0.5f),Vector3(-0.5f,-0.5f,-0.5f));
 	EntityManager::GetInstance()->AddEntity(result);
 
 	return result;
