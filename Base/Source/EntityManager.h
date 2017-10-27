@@ -16,6 +16,7 @@ public:
 	void RenderUI();
 
 	void AddEntity(EntityBase* _newEntity);
+
 	bool RemoveEntity(EntityBase* _existingEntity);
 
 private:
@@ -32,6 +33,9 @@ private:
 	bool CheckForCollision(void);
 
 	std::list<EntityBase*> entityList;
+	std::list<EntityBase*> list_fixedEntity;
+	std::list<EntityBase*> list_NPC;
+	std::list<EntityBase*> list_Projectile;
 };
 
 #endif // ENTITY_MANAGER_H
