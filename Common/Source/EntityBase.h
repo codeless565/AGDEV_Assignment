@@ -27,7 +27,19 @@ public:
 	// Set the flag to indicate if this entity has a collider class parent
 	virtual void SetCollider(const bool _value);
 
+
+	enum ENTITY_TYPE
+	{
+		ENTITY_FIXED = 0,
+		ENTITY_NPCS,
+		ENTITY_PROJECTILES,
+		TOTAL_ENTITY
+	};
+	void setEntityType(ENTITY_TYPE _type);
+	ENTITY_TYPE getEntityType() { return this->m_entityType; };
 protected:
+	ENTITY_TYPE m_entityType;
+
 	Vector3 position;
 	Vector3 scale;
 

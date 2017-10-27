@@ -45,3 +45,8 @@ void EntityBase::SetCollider(const bool _value)
 {
 	m_bCollider = _value;
 }
+
+void EntityBase::setEntityType(ENTITY_TYPE _type)
+{
+	this->m_entityType = _type;
+}
