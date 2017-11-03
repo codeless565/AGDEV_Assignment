@@ -78,6 +78,12 @@
     <ClCompile Include="Source\WeaponInfo\AssaultRifle.cpp">
       <Filter>WeaponInfo</Filter>
     </ClCompile>
+    <ClCompile Include="Source\WeaponInfo\LaserBlaster.cpp">
+      <Filter>WeaponInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Projectile\Laser.cpp">
+      <Filter>Projectile</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -127,6 +133,12 @@
     </ClInclude>
     <ClInclude Include="Source\WeaponInfo\AssaultRifle.h">
       <Filter>WeaponInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\WeaponInfo\LaserBlaster.h">
+      <Filter>WeaponInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Projectile\Laser.h">
+      <Filter>Projectile</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
