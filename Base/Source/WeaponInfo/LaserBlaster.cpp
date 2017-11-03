@@ -51,6 +51,7 @@ void CLaserBlaster::Discharge(const std::string& _meshName, Vector3 position, Ve
 				2.0f,
 				bulletSpeed,
 				_source);
+			aLaser->SetIsLaser(true);
 			aLaser->SetCollider(true);
 			aLaser->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
 			bFire = false;

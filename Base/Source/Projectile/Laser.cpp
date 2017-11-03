@@ -131,6 +131,7 @@ CLaser* Create::Laser(const std::string& _meshName,
 	result->SetLength(m_fLength);
 	result->SetStatus(true);
 	result->SetCollider(true);
+	result->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
 	result->SetSource(_source);
 	EntityManager::GetInstance()->AddEntity(result);
 
