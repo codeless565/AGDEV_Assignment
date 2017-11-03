@@ -27,6 +27,10 @@ public:
 	// Set the flag to indicate if this entity has a collider class parent
 	virtual void SetCollider(const bool _value);
 
+	void SetIsLaser(const bool bLaser);
+
+	bool GetIsLaser(void) const;
+
 
 	enum ENTITY_TYPE
 	{
@@ -37,6 +41,7 @@ public:
 		TOTAL_ENTITY
 	};
 	void setEntityType(ENTITY_TYPE _type);
+
 	ENTITY_TYPE getEntityType() { return this->m_entityType; };
 protected:
 	ENTITY_TYPE m_entityType;
@@ -46,6 +51,7 @@ protected:
 
 	bool isDone;
 	bool m_bCollider;
+	bool bLaser;
 };
 
 #endif // ENTITY_BASE_H
