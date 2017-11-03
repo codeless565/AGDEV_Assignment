@@ -2,6 +2,7 @@
 
 #include "Vector3.h"
 #include "..//Projectile/Projectile.h"
+#include "..//Projectile/Laser.h"
 #include <list>
 
 class CPlayerInfo;
@@ -69,7 +70,7 @@ public:
 	// Update the elapsed time
 	void Update(const double dt);
 	// Discharge this weapon
-	void Discharge(const std::string& _meshName, Vector3 position, Vector3 target, float bulletSpeed, CPlayerInfo* _source = NULL);
+	virtual void Discharge(const std::string& _meshName, Vector3 position, Vector3 target, float bulletSpeed, CPlayerInfo* _source = NULL);
 	// Reload this weapon
 	void Reload(void);
 	// Add rounds

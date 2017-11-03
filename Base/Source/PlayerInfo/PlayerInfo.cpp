@@ -436,7 +436,7 @@ void CPlayerInfo::Update(double dt)
 
 			if (currWeapon == primaryWeapon)
 			{
-				currWeapon->Discharge("cube", position, target, currWeapon->GetFiringSpeed(), this);
+				currWeapon->Discharge("laser", position, target, currWeapon->GetFiringSpeed(), this);
 				target = position + viewdirection;
 			}
 			else if (currWeapon == secondaryWeapon)
