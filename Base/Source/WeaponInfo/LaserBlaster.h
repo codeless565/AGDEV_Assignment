@@ -2,16 +2,15 @@
 
 #include "WeaponInfo.h"
 
-class CPistol :
+class CLaserBlaster :
 	public CWeaponInfo
 {
 public:
-	CPistol();
-	virtual ~CPistol();
+	CLaserBlaster();
+	virtual ~CLaserBlaster();
 
 	// Initialise this instance to default values
 	void Init(void);
 
 	void Discharge(const std::string& _meshName, Vector3 position, Vector3 target, float bulletSpeed, CPlayerInfo* _source = NULL);
 };
-

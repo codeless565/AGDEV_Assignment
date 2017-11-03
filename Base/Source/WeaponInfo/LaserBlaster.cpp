@@ -1,33 +1,33 @@
-#include "Pistol.h"
+#include "LaserBlaster.h"
 
 
-CPistol::CPistol()
+CLaserBlaster::CLaserBlaster()
 {
 }
 
 
-CPistol::~CPistol()
+CLaserBlaster::~CLaserBlaster()
 {
 }
 
 // Initialise this instance to default values
-void CPistol::Init(void)
+void CLaserBlaster::Init(void)
 {
 	// Call the parent's Init method
 	CWeaponInfo::Init();
 
-	firingspeed = 300.f;
+	firingspeed = 100.f;
 	// The number of ammunition in a magazine for this weapon
-	magRounds = 8;
+	magRounds = 5;
 	// The maximum number of ammunition for this magazine for this weapon
-	maxMagRounds = 8;
+	maxMagRounds = 5;
 	// The current total number of rounds currently carried by this player
-	totalRounds = 16;
+	totalRounds = maxMagRounds * 2;
 	// The max total number of rounds currently carried by this player
-	maxTotalRounds = 16;
+	maxTotalRounds = maxMagRounds * 2;
 
 	// The time between shots
-	timeBetweenShots = 0.3333;
+	timeBetweenShots = 1.f;
 	// The elapsed time (between shots)
 	elapsedTime = 0.0;
 	// Boolean flag to indicate if weapon can fire now
@@ -35,7 +35,7 @@ void CPistol::Init(void)
 }
 
 // Discharge this weapon
-void CPistol::Discharge(const std::string& _meshName, Vector3 position, Vector3 target, float bulletSpeed, CPlayerInfo* _source)
+void CLaserBlaster::Discharge(const std::string& _meshName, Vector3 position, Vector3 target, float bulletSpeed, CPlayerInfo* _source)
 {
 	if (bFire)
 	{
@@ -44,18 +44,19 @@ void CPistol::Discharge(const std::string& _meshName, Vector3 position, Vector3 
 		{
 			// Create a projectile with a cube mesh. Its position and direction is same as the player.
 			// It will last for 3.0 seconds and travel at 500 units per second
-			CProjectile* aProjectile = Create::Projectile(_meshName,
+			CLaser* aLaser = Create::Laser(_meshName,
 				position,
 				(target - position).Normalized(),
+				10.f,
 				2.0f,
 				bulletSpeed,
 				_source);
-			aProjectile->SetCollider(true);
-			aProjectile->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+			aLaser->SetCollider(true);
+			aLaser->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
 			bFire = false;
 			magRounds--;
 
-			bullets.push_back(aProjectile);
+			bullets.push_back(aLaser);
 		}
 	}
 }

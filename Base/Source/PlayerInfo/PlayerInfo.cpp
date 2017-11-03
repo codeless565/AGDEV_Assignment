@@ -7,6 +7,7 @@
 #include "../Projectile/Projectile.h"
 #include "../WeaponInfo/Pistol.h"
 #include "../WeaponInfo/AssaultRifle.h"
+#include "../WeaponInfo/LaserBlaster.h"
 
 // Allocating and initializing CPlayerInfo's static data member.  
 // The pointer is allocated but not the object's constructor.
@@ -61,7 +62,7 @@ void CPlayerInfo::Init(void)
 	minBoundary.Set(-1, -1, -1);
 
 	// Set the assault rifle as the primary weapon
-	primaryWeapon = new CAssaultRifle();
+	primaryWeapon = new CLaserBlaster();
 	primaryWeapon->Init();
 
 	// Set the pistol as the secondary weapon
@@ -435,7 +436,7 @@ void CPlayerInfo::Update(double dt)
 
 			if (currWeapon == primaryWeapon)
 			{
-				currWeapon->Discharge("cube", position, target, currWeapon->GetFiringSpeed(), this);
+				currWeapon->Discharge("laser", position, target, currWeapon->GetFiringSpeed(), this);
 				target = position + viewdirection;
 			}
 			else if (currWeapon == secondaryWeapon)
