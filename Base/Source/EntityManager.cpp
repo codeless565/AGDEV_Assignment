@@ -3,6 +3,8 @@
 #include "Collider/Collider.h"
 #include "Projectile/Laser.h"
 
+#include "SceneGraph.h"
+
 #include <iostream>
 using namespace std;
 
@@ -303,6 +305,16 @@ bool EntityManager::CheckForCollision(void)
 					{
 						(*colliderThis)->SetIsDone(true);
 						(*colliderThat)->SetIsDone(true);
+
+						//Remove from Scene Graph
+						if (CSceneGraph::GetInstance()->DeleteNode(*colliderThis) == true)
+						{
+							cout << "*** This Entity is Removed ***\n";
+						}
+						if (CSceneGraph::GetInstance()->DeleteNode(*colliderThat) == true)
+						{
+							cout << "*** That Entity is Removed ***\n";
+						}
 					}
 				}
 			}

@@ -21,6 +21,9 @@
 #include "Light.h"
 #include "SkyBox/SkyBoxEntity.h"
 
+#include "SceneGraph.h"
+#include "SceneNode.h"
+
 #include <iostream>
 using namespace std;
 
@@ -37,6 +40,7 @@ SceneText::SceneText(SceneManager* _sceneMgr)
 
 SceneText::~SceneText()
 {
+	CSceneGraph::GetInstance()->Destroy();
 }
 
 void SceneText::Init()
@@ -159,12 +163,28 @@ void SceneText::Init()
 	Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
 	Create::Entity("lightball", Vector3(lights[0]->position.x, lights[0]->position.y, lights[0]->position.z)); // Lightball
 	
-	for (int i = 0; i < 10; i++)
+	
+	GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f,-20.0f));
+	aCube->SetCollider(true);
+	aCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	
+	//Add the pointer to this new entity to the SceneGraph
+	CSceneNode* theNode = CSceneGraph::GetInstance()->AddNode(aCube);
+	if (theNode == NULL)
 	{
-		GenericEntity* aCube = Create::Entity("cube", Vector3(i * -5.0f, 0.0f,-20.0f));
-		aCube->SetCollider(true);
-		aCube->SetAABB(Vector3(1.5f, 1.5f, 1.5f), Vector3(-1.5f, -1.5f, -1.5f));
+		cout << "EntityManager::AddEntity: Unable to add to scenegraph!\n";
 	}
+
+	GenericEntity* anotherCube = Create::Entity("cube", Vector3(-20.0f, 1.1f, -20.0f));
+	anotherCube->SetCollider(true);
+	anotherCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+
+	CSceneNode* anotherNode = theNode->AddChild(anotherCube);
+	if (anotherCube == NULL)
+	{
+		cout << "EntityManager::AddEntity: Unable to add to scenegraph!\n";
+	}
+
 	groundEntity = Create::Ground("GRASS_DARKGREEN", "GEO_GRASS_LIGHTGREEN");
 //	Create::Text3DObject("text", Vector3(0.0f, 0.0f, 0.0f), "DM2210", Vector3(10.0f, 10.0f, 10.0f), Color(0, 1, 1));
 	Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
