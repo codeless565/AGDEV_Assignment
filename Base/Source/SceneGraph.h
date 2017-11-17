@@ -37,6 +37,9 @@ public:
 	// The root of the scene graph.
 	// It usually does not have a mesh, and is the starting point for all scene graph operations
 	CSceneNode* theRoot;
+
+	void Update(void);
+	void Render(void);
 protected:
 	// The next ID to be assigned to a scene node.
 	int ID;

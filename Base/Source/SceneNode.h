@@ -1,10 +1,13 @@
 #pragma once
 
-#include "EntityBase.h"
-#include "Vector3.h"
 #include <vector>
 
-class CSceneNode
+#include "Vector3.h"
+
+#include "EntityBase.h"
+#include "Transform.h"
+
+class CSceneNode : public CTransform
 {
 public:
 	CSceneNode();
@@ -50,6 +53,9 @@ public:
 
 	// PrintSelf for debug purposes
 	void PrintSelf(const int numTabs = 0);
+
+	void Update(void);
+	void Render(void);
 protected:
 	int ID;
 	EntityBase* theEntity;
