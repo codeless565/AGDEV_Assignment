@@ -24,6 +24,7 @@ void CUpdateTransformation::Reset(void)
 // Update the steps
 void CUpdateTransformation::Update(void)
 {
+	std::cout << curSteps << std::endl;
 	curSteps += deltaSteps;
 	if ((curSteps >= maxSteps) || (curSteps <= minSteps))
 	{
@@ -41,7 +42,13 @@ void CUpdateTransformation::ApplyUpdate(const float angle, const float rx, const
 {
 	Update_Mtx.SetToRotation(angle, rx, ry, rz);
 	Update_Mtx_REVERSED.SetToRotation(-angle, rx, ry, rz);
-}// Set the minSteps and maxSteps
+}
+// Apply a scale to the Update Transformation Matrix
+void CUpdateTransformation::ApplyUpdateScale(const float sx, const float sy, const float sz)
+{
+	Update_Mtx.SetToScale(sx, sy, sz);
+	Update_Mtx_REVERSED.SetToScale(1 / sx, 1 / sy, 1 / sz);
+}// Set the minSteps and maxSteps
 void CUpdateTransformation::SetSteps(const int minSteps, const int maxSteps)
 {
 	this->minSteps = minSteps;

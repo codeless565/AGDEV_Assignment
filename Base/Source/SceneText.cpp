@@ -177,11 +177,10 @@ void SceneText::Init()
 	CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
 	grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
 	CUpdateTransformation* aRotateMtx = new CUpdateTransformation();
-	aRotateMtx->ApplyUpdate(1.0f, 0.0f, 0.0f, 1.0f);
-	aRotateMtx->SetSteps(-90, 90);
+	aRotateMtx->ApplyUpdateScale(1.1f, 1.0f, 1.0f);
+	//TODO - make all transalation/rotation/scaling matrix update together. Currently is only doing the last "ApplyUpdate()" line.
+	aRotateMtx->SetSteps(0, 90);
 	grandchildNode->SetUpdateTransformation(aRotateMtx);
-
-
 	
 	GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f,-20.0f));
 	aCube->SetCollider(true);
