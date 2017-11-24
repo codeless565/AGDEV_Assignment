@@ -22,6 +22,10 @@ void EntityManager::Update(double _dt)
 	// Update the SceneGraph
 	CSceneGraph::GetInstance()->Update();
 
+	//Render the Spatial Partition
+	if (theSpatialPartition)
+		theSpatialPartition->Update();
+
 	// Check for Collision amongst entities with collider properties
 	CheckForCollision();
 
@@ -56,6 +60,10 @@ void EntityManager::Render()
 
 	// Render the SceneGraph
 	CSceneGraph::GetInstance()->Render();
+
+	////Render the Spatial Partition
+	//if (theSpatialPartition)
+	//	theSpatialPartition->Render();
 }
 
 // Render the UI entities
@@ -71,10 +79,13 @@ void EntityManager::RenderUI()
 }
 
 // Add an entity to this EntityManager
-void EntityManager::AddEntity(EntityBase* _newEntity)
+void EntityManager::AddEntity(EntityBase* _newEntity, bool bAddToSpatialPartition)
 {
 	entityList.push_back(_newEntity);
-}
+	// Add to the Spatial Partition
+	if (theSpatialPartition && bAddToSpatialPartition)
+		theSpatialPartition->Add(_newEntity);
+}
 
 // Remove an entity from this EntityManager
 bool EntityManager::RemoveEntity(EntityBase* _existingEntity)
@@ -87,10 +98,43 @@ bool EntityManager::RemoveEntity(EntityBase* _existingEntity)
 	{
 		delete *findIter;
 		findIter = entityList.erase(findIter);
+
+		//Remove from SceneNode
+		if (CSceneGraph::GetInstance()->DeleteNode(_existingEntity))
+		{
+			cout << "EntityManager::RemoveEntity: Unable to remove\n";
+		}
+		else
+		{
+			//Remove from the Spatial Partition
+			if (theSpatialPartition)
+				theSpatialPartition->Remove(_existingEntity);
+		}
+
 		return true;
 	}
 	// Return false if not found
 	return false;
+}
+
+bool EntityManager::MarkForDeletion(EntityBase * _existingEntity)
+{
+	//Find the entity's deletion
+	std::list<EntityBase*>::iterator findIter = std::find(entityList.begin(), entityList.end(), _existingEntity);
+
+	//Delete the entity if dound
+	if (findIter != entityList.end())
+	{
+		(*findIter)->SetIsDone(true);
+		return true;
+	}
+	//Return false if not found
+	return false;
+}
+
+void EntityManager::SetSpatialPartition(CSpatialPartition * theSpatialPartition)
+{
+	this->theSpatialPartition = theSpatialPartition;
 }
 
 // Constructor

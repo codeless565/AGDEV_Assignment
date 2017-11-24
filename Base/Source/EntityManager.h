@@ -4,6 +4,7 @@
 #include "SingletonTemplate.h"
 #include <list>
 #include "Vector3.h"
+#include "SpatialPartition.h"
 
 class EntityBase;
 
@@ -15,9 +16,12 @@ public:
 	void Render();
 	void RenderUI();
 
-	void AddEntity(EntityBase* _newEntity);
+	void AddEntity(EntityBase* _newEntity, bool bAddToSpatialPartition = false);
 
 	bool RemoveEntity(EntityBase* _existingEntity);
+	bool MarkForDeletion(EntityBase* _existingEntity);
+
+	void SetSpatialPartition(CSpatialPartition* theSpatialPartition);
 
 private:
 	EntityManager();
@@ -39,6 +43,9 @@ private:
 	std::list<EntityBase*> list_fixedEntity;
 	std::list<EntityBase*> list_NPC;
 	std::list<EntityBase*> list_Projectile;
+
+	//Handler to Spatial Partition
+	CSpatialPartition* theSpatialPartition;
 };
 
 #endif // ENTITY_MANAGER_H
