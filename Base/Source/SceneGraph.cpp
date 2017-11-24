@@ -102,5 +102,8 @@ void CSceneGraph::Update()
 
 void CSceneGraph::Render(void)
 {
+	if (!theRoot)
+		return;
+
 	theRoot->Render();
 }
