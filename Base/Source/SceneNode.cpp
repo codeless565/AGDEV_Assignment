@@ -384,24 +384,26 @@ void CSceneNode::Render(void)
 
 	if (theEntity)
 	{
-		//modelStack.LoadMatrix(this->GetTransform());
-		modelStack.MultMatrix(this->GetTransform());
+		if (!theEntity->IsDone())
+		{//modelStack.LoadMatrix(this->GetTransform());
+			modelStack.MultMatrix(this->GetTransform());
 
-		/*
-		Mtx44 Mtx = modelStack.Top();
-		cout << "======================================================================" << endl;
-		cout << "CSceneNode::PrintSelf" << endl;
-		cout << "----------------------------------------------------------------------" << endl;
-		cout << "[\t" << Mtx.a[0] << "\t" << Mtx.a[4] << "\t" << Mtx.a[8] << "\t" << Mtx.a[12] << "\t]" << endl;
-		cout << "[\t" << Mtx.a[1] << "\t" << Mtx.a[5] << "\t" << Mtx.a[9] << "\t" << Mtx.a[13] << "\t]" << endl;
-		cout << "[\t" << Mtx.a[2] << "\t" << Mtx.a[6] << "\t" << Mtx.a[10] << "\t" << Mtx.a[14] << "\t]" << endl;
-		cout << "[\t" << Mtx.a[3] << "\t" << Mtx.a[7] << "\t" << Mtx.a[11] << "\t" << Mtx.a[15] << "\t]" << endl;
-		cout << "======================================================================" << endl;
-		*/
+			/*
+			Mtx44 Mtx = modelStack.Top();
+			cout << "======================================================================" << endl;
+			cout << "CSceneNode::PrintSelf" << endl;
+			cout << "----------------------------------------------------------------------" << endl;
+			cout << "[\t" << Mtx.a[0] << "\t" << Mtx.a[4] << "\t" << Mtx.a[8] << "\t" << Mtx.a[12] << "\t]" << endl;
+			cout << "[\t" << Mtx.a[1] << "\t" << Mtx.a[5] << "\t" << Mtx.a[9] << "\t" << Mtx.a[13] << "\t]" << endl;
+			cout << "[\t" << Mtx.a[2] << "\t" << Mtx.a[6] << "\t" << Mtx.a[10] << "\t" << Mtx.a[14] << "\t]" << endl;
+			cout << "[\t" << Mtx.a[3] << "\t" << Mtx.a[7] << "\t" << Mtx.a[11] << "\t" << Mtx.a[15] << "\t]" << endl;
+			cout << "======================================================================" << endl;
+			*/
 
 
-		// Render the entity
-		theEntity->Render();
+			// Render the entity
+			theEntity->Render();
+		}
 	}
 
 	// Render the children
