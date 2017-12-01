@@ -28,6 +28,9 @@
     <Filter Include="SpatialPartitioning">
       <UniqueIdentifier>{fab7862e-8a2d-45c9-8dee-67193862de4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LevelOfDetails">
+      <UniqueIdentifier>{8c120b87-db2c-499c-a784-06811639d55d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -111,6 +114,9 @@
     <ClCompile Include="Source\Projectile\Grenade.cpp">
       <Filter>Projectile</Filter>
     </ClCompile>
+    <ClCompile Include="Source\LevelOfDetails\LevelOfDetails.cpp">
+      <Filter>LevelOfDetails</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -190,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="Source\Projectile\Grenade.h">
       <Filter>Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LevelOfDetails\LevelOfDetails.h">
+      <Filter>LevelOfDetails</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
