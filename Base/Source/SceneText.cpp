@@ -164,6 +164,8 @@ void SceneText::Init()
 	//Setup the Spatial Parition and pass it to EntityManager to manage
 	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
 	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
+	CSpatialPartition::GetInstance()->SetCamera(&camera);
+	CSpatialPartition::GetInstance()->SetLevelofDetails(5000.f, 10000.f);
 	EntityManager::GetInstance()->SetSpatialPartition(CSpatialPartition::GetInstance());
 
 	// Create entities into the scene
@@ -171,7 +173,10 @@ void SceneText::Init()
 	Create::Entity("lightball", Vector3(lights[0]->position.x, lights[0]->position.y, lights[0]->position.z)); // Lightball
 	
 	MeshBuilder::GetInstance()->GenerateCube("cubeSG", Color(1.0f, 0.64f, 0.0f), 1.0f);
-	//=============================================== Asset = non destructible
+	
+	/*****************************************************
+	=\/========= Asset = non destructible =============\/= 
+	******************************************************/
 	GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
 	CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
 
@@ -189,9 +194,14 @@ void SceneText::Init()
 	aRotateMtx->SetSteps(0, 90);
 	grandchildNode->SetUpdateTransformation(aRotateMtx);
 
-	//===================================================
+	/*****************************************************
+	=\/=============== Destructibles ==================\/=
+	******************************************************/
 	GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f,-20.0f));
-	
+	aCube->SetCollider(true);
+	aCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	aCube->InitLOD("cube", "sphere", "cubeSG");
+
 	//Add the pointer to this new entity to the SceneGraph
 	CSceneNode* theNode = CSceneGraph::GetInstance()->AddNode(aCube);
 	if (theNode == NULL)
@@ -209,6 +219,7 @@ void SceneText::Init()
 		cout << "EntityManager::AddEntity: Unable to add to scenegraph!\n";
 	}
 
+	//=======================================================
 	groundEntity = Create::Ground("GRASS_DARKGREEN", "GEO_GRASS_LIGHTGREEN");
 //	Create::Text3DObject("text", Vector3(0.0f, 0.0f, 0.0f), "DM2210", Vector3(10.0f, 10.0f, 10.0f), Color(0, 1, 1));
 	Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));

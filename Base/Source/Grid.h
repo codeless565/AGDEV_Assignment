@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EntityBase.h"
+#include "LevelOfDetails\LevelOfDetails.h"
 #include "Vector3.h"
 #include <vector>
 using namespace std;
@@ -28,6 +29,8 @@ protected:
 	// List of objects in this grid
 	vector<EntityBase*> ListOfObjects;
 
+	//The Level of detail for this grid
+	CLevelOfDetails::DETAIL_LEVEL theDetailLevel;
 public:
 	// Constructor
 	CGrid(void);
@@ -62,6 +65,7 @@ public:
 	// Get list of objects in this grid
 	vector<EntityBase*> GetListOfObject(void);
 
+	void SetDetailLevel(const CLevelOfDetails::DETAIL_LEVEL theDetailLevel);
 	// PrintSelf
 	void PrintSelf();
 };
