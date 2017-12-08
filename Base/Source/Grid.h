@@ -68,4 +68,7 @@ public:
 	void SetDetailLevel(const CLevelOfDetails::DETAIL_LEVEL theDetailLevel);
 	// PrintSelf
 	void PrintSelf();
+
+	Vector3 getMin() { return min; }
+	Vector3 getMax() { return max; }
 };
