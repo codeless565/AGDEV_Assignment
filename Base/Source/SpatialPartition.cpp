@@ -122,10 +122,11 @@ void CSpatialPartition::Update(void)
 			theGrid[i*zNumOfGrid + j].Update(&MigrationList);
 
 			//Check Visibility
-			if (IsVisible(theCamera->GetCameraPos(), theCamera->GetCameraTarget() - theCamera->GetCameraPos(), i, j) ||
+			if (IsVisible(theCamera->GetCameraPos(), theCamera->GetCameraTarget() - theCamera->GetCameraPos(), i, j) //Check if OBJ is in player's view frustum
+				||
+				//Check if player is in Grid
 				((theCamera->GetCameraPos().x > theGrid[i*zNumOfGrid + j].getMin().x) && (theCamera->GetCameraPos().x < theGrid[i*zNumOfGrid + j].getMax().x) &&
 				(theCamera->GetCameraPos().z > theGrid[i*zNumOfGrid + j].getMin().z) && (theCamera->GetCameraPos().z < theGrid[i*zNumOfGrid + j].getMax().z)))
-				// Player is in the grid
 			{
 				//Calculate LOD for this Grid
 				float distance = CalculateDistanceSquare(&(theCamera->GetCameraPos()), i, j);
