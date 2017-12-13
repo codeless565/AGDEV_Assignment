@@ -1,6 +1,7 @@
 #pragma once
 #include "../GenericEntity.h"
 #include "../GroundEntity.h"
+#include "../SceneNode.h"
 
 class Mesh;
 
@@ -15,6 +16,17 @@ protected:
 
 	double m_dSpeed;
 	double m_dAcceleration;
+
+	int Health;
+	CSceneNode* BodyNode;
+
+	GenericEntity* HeadCube;
+	CSceneNode* HeadNode;
+
+	GenericEntity* LeftArmCube;
+	GenericEntity* RightArmCube;
+	CSceneNode* LeftArmNode;
+	CSceneNode* RightArmNode;
 
 public:
 	CEnemy(void);
@@ -34,6 +46,8 @@ public:
 	void SetBoundary(Vector3 max, Vector3 min);
 	// Set the terrain for the player info
 	void SetTerrain(GroundEntity* m_pTerrain);
+	// Set the Health 
+	void SetHealth(int _Health);
 
 	// Get position
 	Vector3 GetPos(void) const;
@@ -43,6 +57,8 @@ public:
 	Vector3 GetUp(void) const;
 	// Get the terrain for the player info
 	GroundEntity* GetTerrain(void);
+	// Get Health
+	int GetHealth(void);
 
 	// Update
 	void Update(double dt = 0.0333f);

@@ -39,6 +39,7 @@ public:
 		ENTITY_NPCS,
 		ENTITY_ENEMY,
 		ENTITY_PROJECTILES,
+		ENEMY,
 		TOTAL_ENTITY
 	};
 	void setEntityType(ENTITY_TYPE _type);

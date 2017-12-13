@@ -81,4 +81,6 @@ public:
 
 	//GetProjectiles
 	std::list<CProjectile*> GetProj();
+
+	virtual void ResetWeapon();
 };
