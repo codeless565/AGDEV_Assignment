@@ -28,7 +28,8 @@ namespace Create
 {
 	GenericEntity* Entity(	const std::string& _meshName, 
 							const Vector3& _position, 
-							const Vector3& _scale = Vector3(1.0f, 1.0f, 1.0f));
+							const Vector3& _scale = Vector3(1.0f, 1.0f, 1.0f),
+							const EntityBase::ENTITY_TYPE = EntityBase::ENTITY_FIXED);
 	GenericEntity* Asset(	const std::string& _meshName,
 							const Vector3& _position,
 							const Vector3& _scale = Vector3(1.0f, 1.0f, 1.0f));
