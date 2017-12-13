@@ -59,3 +59,8 @@ void CPistol::Discharge(const std::string& _meshName, Vector3 position, Vector3 
 		}
 	}
 }
+
+void CPistol::ResetWeapon()
+{
+	CPistol::Init();
+}

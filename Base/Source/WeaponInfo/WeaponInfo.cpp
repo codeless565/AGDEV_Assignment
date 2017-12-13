@@ -218,3 +218,8 @@ std::list<CProjectile*> CWeaponInfo::GetProj()
 {
 	return bullets;
 }
+
+void CWeaponInfo::ResetWeapon()
+{
+
+}

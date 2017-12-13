@@ -10,4 +10,5 @@ public:
 	void Init(void);
 	// Discharge this weapon
 	void CGrenadeThrow::Discharge(const std::string& _meshName, Vector3 position, Vector3 target, float bulletSpeed, CPlayerInfo* _source);
+	void ResetWeapon();
 };
