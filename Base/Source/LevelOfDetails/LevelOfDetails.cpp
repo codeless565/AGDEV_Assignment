@@ -42,7 +42,7 @@ bool CLevelOfDetails::InitLOD(const std::string& _meshName_High,
 		return false;
 
 	// Set the LOD to active
-	SetLODStatus(true);
+	m_bActive = true;
 	return true;
 }
 

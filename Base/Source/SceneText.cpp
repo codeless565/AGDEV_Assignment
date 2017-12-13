@@ -136,7 +136,11 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GetMesh("Chair")->textureID = LoadTGA("Image//chair.tga");
 	MeshBuilder::GetInstance()->GenerateRing("ring", Color(1, 0, 1), 36, 1, 0.5f);
 	MeshBuilder::GetInstance()->GenerateSphere("lightball", Color(1, 1, 1), 18, 36, 1.f);
-	MeshBuilder::GetInstance()->GenerateSphere("sphere", Color(1, 0, 0), 18, 36, 0.5f);
+	
+	MeshBuilder::GetInstance()->GenerateSphere("sphereLow", Color(1, 0, 0), 8, 16, 0.5f);
+	MeshBuilder::GetInstance()->GenerateSphere("sphereMed", Color(1, 0, 0), 10, 20, 0.5f);
+	MeshBuilder::GetInstance()->GenerateSphere("sphereHigh", Color(1, 0, 0), 18, 36, 0.5f);
+
 	MeshBuilder::GetInstance()->GenerateCone("cone", Color(0.5f, 1, 0.3f), 36, 10.f, 10.f);
 	MeshBuilder::GetInstance()->GenerateCube("cube", Color(1.0f, 1.0f, 0.0f), 1.0f);
 	MeshBuilder::GetInstance()->GenerateCube("HPBar", Color(1.0f, 0.f, 0.0f), 1.0f);
@@ -166,11 +170,10 @@ void SceneText::Init()
 
 	
 	//Setup the Spatial Parition and pass it to EntityManager to manage
-	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
+	CSpatialPartition::GetInstance()->Init(1000, 1000, 10, 10);
 	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
 	CSpatialPartition::GetInstance()->SetCamera(&camera);
-	CSpatialPartition::GetInstance()->SetLevelofDetails(5000.f, 10000.f);
-	CSpatialPartition::GetInstance()->SetPlayer(playerInfo);
+	CSpatialPartition::GetInstance()->SetLevelofDetails(10000.f, 50000.f);
 	EntityManager::GetInstance()->SetSpatialPartition(CSpatialPartition::GetInstance());
 
 	// Create entities into the scene
@@ -183,12 +186,11 @@ void SceneText::Init()
 	******************************************************/
 	GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
 	CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
-	baseCube->InitLOD("cube", "sphere", "cubeSG");
+	baseCube->InitLOD("cube", "sphereHigh", "cubeSG");
 
 	GenericEntity* childCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
 	CSceneNode* childNode = baseNode->AddChild(childCube);
 	childNode->ApplyTranslate(0.0f, 1.0f, 0.0f);
-	childCube->InitLOD("cube", "sphere", "cubeSG");
 
 	GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
 	CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
@@ -203,10 +205,10 @@ void SceneText::Init()
 	/*****************************************************
 	=\/=============== Destructibles ==================\/=
 	******************************************************/
-	GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f, -20.0f), Vector3(1.f, 1.f, 1.f), EntityBase::ENTITY_ENEMY);
+	GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f, -20.0f), Vector3(10.f, 10.f, 10.f), EntityBase::ENTITY_ENEMY);
 	aCube->SetCollider(true);
 	aCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-	aCube->InitLOD("cube", "sphere", "cubeSG");
+	aCube->InitLOD("sphereHigh", "sphereMed", "sphereLow");
 
 	//Add the pointer to this new entity to the SceneGraph
 	CSceneNode* theNode = CSceneGraph::GetInstance()->AddNode(aCube);
