@@ -2,6 +2,9 @@
 #include "../EntityManager.h"
 #include "GraphicsManager.h"
 #include "RenderHelper.h"
+#include "../SceneGraph.h"
+#include "../CUpdateTransformation.h"
+
 
 CEnemy::CEnemy()
 	: GenericEntity(NULL)
@@ -13,6 +16,8 @@ CEnemy::CEnemy()
 	, maxBoundary(Vector3(0.0f, 0.0f, 0.0f))
 	, minBoundary(Vector3(0.0f, 0.0f, 0.0f))
 	, m_pTerrain(NULL)
+	, Health(0)
+
 {
 }
 
@@ -50,6 +55,30 @@ void CEnemy::Init(void)
 	// Add to EntityManager
 	EntityManager::GetInstance()->AddEntity(this, true);
 
+	BodyNode = CSceneGraph::GetInstance()->AddNode(this);
+
+	HeadCube = Create::Asset("cubeSG", Vector3(position.x, position.y + 1.f, position.z));
+	HeadCube->SetCollider(true);
+	HeadCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	HeadCube->setEntityType(ENTITY_TYPE::ENEMY);
+	HeadNode = BodyNode->AddChild(HeadCube);
+
+	LeftArmCube = Create::Asset("cubeSG", Vector3(position.x-1.f, position.y, position.z));
+	LeftArmCube->SetCollider(true);
+	LeftArmCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	LeftArmNode = BodyNode->AddChild(LeftArmCube);
+
+	RightArmCube= Create::Asset("cubeSG", Vector3(position.x + 1.f, position.y, position.z));
+	RightArmCube->SetCollider(true);
+	RightArmCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	RightArmNode = BodyNode->AddChild(RightArmCube);
+	
+	if (HeadNode != NULL)
+		Health += 10.f;
+	if (LeftArmNode != NULL)
+		Health += 5.f;
+	if (RightArmNode != NULL)
+		Health += 5.f;
 }
 
 // Reset this player instance to default
@@ -94,6 +123,11 @@ void CEnemy::SetTerrain(GroundEntity* m_pTerrain)
 	}
 }
 
+void CEnemy::SetHealth(int _Health)
+{
+	this->Health = _Health;
+}
+
 // Get position
 Vector3 CEnemy::GetPos(void) const
 {
@@ -116,9 +150,24 @@ GroundEntity* CEnemy::GetTerrain(void)
 	return m_pTerrain;
 }
 
+int CEnemy::GetHealth(void)
+{
+	return Health;
+}
+
 // Update
 void CEnemy::Update(double dt)
 {
+	for (auto hi : BodyNode->getChild())
+	{
+		if (hi == HeadNode)
+			hi->GetEntity()->SetPosition(Vector3(position.x, position.y + 1.f, position.z));
+		else if (hi == LeftArmNode)
+			hi->GetEntity()->SetPosition(Vector3(position.x - 1, position.y, position.z));
+		else if (hi == RightArmNode)
+			hi->GetEntity()->SetPosition(Vector3(position.x + 1, position.y, position.z));
+	}
+
 	Vector3 viewVector = (target - position).Normalized();
 	position += viewVector * (float)m_dSpeed * (float)dt;
 	//cout << position << "..." << viewVector << endl;
@@ -161,7 +210,7 @@ void CEnemy::Render(void)
 	modelStack.Scale(scale.x, scale.y, scale.z);
 	if (GetLODStatus())
 	{
-		cout << theDetailLevel << endl;
+		//cout << theDetailLevel << endl;
 		if (theDetailLevel != NO_DETAILS)
 		{
 			RenderHelper::RenderMesh(GetLODMesh());
@@ -169,3 +218,6 @@ void CEnemy::Render(void)
 	}
 	modelStack.PopMatrix();
 }
+// TODO //
+// CHANGE TO CREATE::ENTITY //
+// TODO // 
