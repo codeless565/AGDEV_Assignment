@@ -17,6 +17,7 @@ public:
 	void RenderUI();
 
 	void AddEntity(EntityBase* _newEntity, bool bAddToSpatialPartition = false);
+	void AddSPLOD(EntityBase * _newEntity);
 
 	bool RemoveEntity(EntityBase* _existingEntity);
 	bool MarkForDeletion(EntityBase* _existingEntity);

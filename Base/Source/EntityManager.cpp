@@ -85,6 +85,12 @@ void EntityManager::AddEntity(EntityBase* _newEntity, bool bAddToSpatialPartitio
 	// Add to the Spatial Partition
 	if (theSpatialPartition && bAddToSpatialPartition)
 		theSpatialPartition->Add(_newEntity);
+}// Add an entity to this EntityManager
+void EntityManager::AddSPLOD(EntityBase* _newEntity)
+{
+	// Add to the Spatial Partition
+	if (theSpatialPartition)
+		theSpatialPartition->Add(_newEntity);
 }
 
 // Remove an entity from this EntityManager
