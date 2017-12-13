@@ -105,6 +105,15 @@ public:
 	// Discharge Curr Weapon
 	//bool DischargeWeapon(const float deltaTime);
 
+
+	CWeaponInfo* getCurrWeapon() { return currWeapon; }
+	CWeaponInfo* getPrimaryWeapon() { return primaryWeapon; }
+	CWeaponInfo* getSecondaryWeapon() { return secondaryWeapon; }
+	CWeaponInfo* getTertiaryWeapon() { return tertiaryWeapon; }
+
+	void CameraUpdate(double dt = 0.333f);
+	void PlayerUpdate(double dt = 0.333f);
+	void WeaponUpdate(double dt = 0.333f);
 private:
 	Vector3 defaultPosition, defaultTarget, defaultUp;
 	Vector3 position, target, up;
@@ -127,5 +136,6 @@ private:
 	CWeaponInfo* currWeapon;
 	CWeaponInfo* primaryWeapon;
 	CWeaponInfo* secondaryWeapon;
+	CWeaponInfo* tertiaryWeapon;
 	std::vector <CWeaponInfo*> Weapons;
 };

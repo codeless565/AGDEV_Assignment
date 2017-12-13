@@ -28,6 +28,7 @@ CPlayerInfo::CPlayerInfo(void)
 	, currWeapon(NULL)
 	, primaryWeapon(NULL)
 	, secondaryWeapon(NULL)
+	, tertiaryWeapon(NULL)
 {
 }
 
@@ -63,18 +64,22 @@ void CPlayerInfo::Init(void)
 	minBoundary.Set(-1, -1, -1);
 
 	// Set the assault rifle as the primary weapon
-	primaryWeapon = new CLaserBlaster();
+	primaryWeapon = new CAssaultRifle();
 	primaryWeapon->Init();
 
 	// Set the pistol as the secondary weapon
 	//secondaryWeapon = new CPistol();
 	//secondaryWeapon->Init();
 
-	secondaryWeapon = new CGrenadeThrow();
+	secondaryWeapon = new CPistol();
 	secondaryWeapon->Init();
+
+	tertiaryWeapon = new CGrenadeThrow();
+	tertiaryWeapon->Init();
 
 	Weapons.push_back(primaryWeapon);
 	Weapons.push_back(secondaryWeapon);
+	Weapons.push_back(tertiaryWeapon);
 
 	currWeapon = Weapons[0];
 }
@@ -193,6 +198,11 @@ void CPlayerInfo::Reset(void)
 
 	// Stop vertical movement too
 	StopVerticalMovement();
+
+	for (auto i : Weapons)
+	{
+		i->ResetWeapon();
+	}
 }
 
 // Get position x of the player
@@ -280,51 +290,72 @@ void CPlayerInfo::UpdateFreeFall(double dt)
  ********************************************************************************/
 void CPlayerInfo::Update(double dt)
 {
+	PlayerUpdate(dt);
+	WeaponUpdate(dt);
+	CameraUpdate(dt);
+
+	// If the user presses P key, then reset the view to default values
+	if (KeyboardController::GetInstance()->IsKeyDown('P'))
+		Reset();
+	else
+	{
+		UpdateJumpUpwards(dt);
+		UpdateFreeFall(dt);
+	}
+
+	// If a camera is attached to this playerInfo class, then update it
+	if (attachedCamera)
+	{
+		attachedCamera->SetCameraPos(position);
+		attachedCamera->SetCameraTarget(target);
+		attachedCamera->SetCameraUp(up);
+	}
+}
+
+// Constrain the position within the borders
+void CPlayerInfo::Constrain(void)
+{
+	// Constrain player within the boundary
+	if (position.x > maxBoundary.x - 1.0f)
+		position.x = maxBoundary.x - 1.0f;
+	//if (position.y > maxBoundary.y - 1.0f)
+	//	position.y = maxBoundary.y - 1.0f;
+	if (position.z > maxBoundary.z - 1.0f)
+		position.z = maxBoundary.z - 1.0f;
+	if (position.x < minBoundary.x + 1.0f)
+		position.x = minBoundary.x + 1.0f;
+	//if (position.y < minBoundary.y + 1.0f)
+	//	position.y = minBoundary.y + 1.0f;
+	if (position.z < minBoundary.z + 1.0f)
+		position.z = minBoundary.z + 1.0f;
+
+	// if the player is not jumping nor falling, then adjust his y position
+	if ((m_bJumpUpwards == false) && (m_bFallDownwards == false))
+	{
+		// if the y position is not equal to terrain height at that position, 
+		// then update y position to the terrain height
+		if (position.y != m_pTerrain->GetTerrainHeight(position))
+			position.y = m_pTerrain->GetTerrainHeight(position);
+	}
+}
+
+void CPlayerInfo::AttachCamera(FPSCamera* _cameraPtr)
+{
+	attachedCamera = _cameraPtr;
+}
+
+void CPlayerInfo::DetachCamera()
+{
+	attachedCamera = nullptr;
+}
+
+void CPlayerInfo::CameraUpdate(double dt)
+{
 	double mouse_diff_x, mouse_diff_y;
 	MouseController::GetInstance()->GetMouseDelta(mouse_diff_x, mouse_diff_y);
 
 	double camera_yaw = mouse_diff_x * 0.0174555555555556;		// 3.142 / 180.0
 	double camera_pitch = mouse_diff_y * 0.0174555555555556;	// 3.142 / 180.0
-
-	// Update the position if the WASD buttons were activated
-	if (KeyboardController::GetInstance()->IsKeyDown('W') ||
-		KeyboardController::GetInstance()->IsKeyDown('A') ||
-		KeyboardController::GetInstance()->IsKeyDown('S') ||
-		KeyboardController::GetInstance()->IsKeyDown('D'))
-	{
-		Vector3 viewVector = target - position;
-		Vector3 rightUV;
-		if (KeyboardController::GetInstance()->IsKeyDown('W'))
-		{
-			Vector3 temp(viewVector);
-			temp.y = 0;
-			position += temp.Normalized() * (float)m_dSpeed * (float)dt;
-		}
-		else if (KeyboardController::GetInstance()->IsKeyDown('S'))
-		{
-			Vector3 temp(viewVector);
-			temp.y = 0;
-			position -= temp.Normalized() * (float)m_dSpeed * (float)dt;
-		}
-		if (KeyboardController::GetInstance()->IsKeyDown('A'))
-		{
-			rightUV = (viewVector.Normalized()).Cross(up);
-			rightUV.y = 0;
-			rightUV.Normalize();
-			position -= rightUV * (float)m_dSpeed * (float)dt;
-		}
-		else if (KeyboardController::GetInstance()->IsKeyDown('D'))
-		{
-			rightUV = (viewVector.Normalized()).Cross(up);
-			rightUV.y = 0;
-			rightUV.Normalize();
-			position += rightUV * (float)m_dSpeed * (float)dt;
-		}
-		// Constrain the position
-		Constrain();
-		// Update the target
-		target = position + viewVector;
-	}
 
 	// Rotate the view direction
 	if (KeyboardController::GetInstance()->IsKeyDown(VK_LEFT) ||
@@ -413,6 +444,49 @@ void CPlayerInfo::Update(double dt)
 		}
 	}
 
+}
+
+void CPlayerInfo::PlayerUpdate(double dt)
+{
+	if (KeyboardController::GetInstance()->IsKeyDown('W') ||	// Update the position if the WASD buttons were activated
+		KeyboardController::GetInstance()->IsKeyDown('A') ||
+		KeyboardController::GetInstance()->IsKeyDown('S') ||
+		KeyboardController::GetInstance()->IsKeyDown('D'))
+	{
+		Vector3 viewVector = target - position;
+		Vector3 rightUV;
+		if (KeyboardController::GetInstance()->IsKeyDown('W'))
+		{
+			Vector3 temp(viewVector);
+			temp.y = 0;
+			position += temp.Normalized() * (float)m_dSpeed * (float)dt;
+		}
+		else if (KeyboardController::GetInstance()->IsKeyDown('S'))
+		{
+			Vector3 temp(viewVector);
+			temp.y = 0;
+			position -= temp.Normalized() * (float)m_dSpeed * (float)dt;
+		}
+		if (KeyboardController::GetInstance()->IsKeyDown('A'))
+		{
+			rightUV = (viewVector.Normalized()).Cross(up);
+			rightUV.y = 0;
+			rightUV.Normalize();
+			position -= rightUV * (float)m_dSpeed * (float)dt;
+		}
+		else if (KeyboardController::GetInstance()->IsKeyDown('D'))
+		{
+			rightUV = (viewVector.Normalized()).Cross(up);
+			rightUV.y = 0;
+			rightUV.Normalize();
+			position += rightUV * (float)m_dSpeed * (float)dt;
+		}
+		// Constrain the position
+		Constrain();
+		// Update the target
+		target = position + viewVector;
+	}
+
 	// If the user presses SPACEBAR, then make him jump
 	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) &&
 		position.y == m_pTerrain->GetTerrainHeight(position))
@@ -420,9 +494,13 @@ void CPlayerInfo::Update(double dt)
 		SetToJumpUpwards(true);
 	}
 
+}
 
-	// WEAPONS
-	// Update the weapons
+void CPlayerInfo::WeaponUpdate(double dt)
+{
+	if (currWeapon)
+		currWeapon->Update(dt);
+
 	if (KeyboardController::GetInstance()->IsKeyReleased('R'))
 	{
 		if (currWeapon)
@@ -431,8 +509,6 @@ void CPlayerInfo::Update(double dt)
 			//primaryWeapon->PrintSelf();
 		}
 	}
-	if (currWeapon)
-		currWeapon->Update(dt);
 
 	// if Mouse Buttons were activated, then act on them
 	if (MouseController::GetInstance()->IsButtonPressed(MouseController::LMB))
@@ -446,13 +522,23 @@ void CPlayerInfo::Update(double dt)
 
 			if (currWeapon == primaryWeapon)
 			{
-				currWeapon->Discharge("laser", position, target, currWeapon->GetFiringSpeed(), this);
+				currWeapon->Discharge("cube", position, target, currWeapon->GetFiringSpeed(), this);
 				target = position + viewdirection;
 			}
 			else if (currWeapon == secondaryWeapon)
 			{
-				secondaryWeapon->PrintSelf();
 				currWeapon->Discharge("sphere", position, target, currWeapon->GetFiringSpeed(), this);
+				target = position + viewdirection;
+			}
+			else if (currWeapon == tertiaryWeapon)
+			{
+				secondaryWeapon->PrintSelf();
+				if (KeyboardController::GetInstance()->IsKeyDown('W'))
+					currWeapon->Discharge("sphere", position, target, m_dSpeed + currWeapon->GetFiringSpeed(), this);
+				else if (KeyboardController::GetInstance()->IsKeyDown('S'))
+					currWeapon->Discharge("sphere", position, target, currWeapon->GetFiringSpeed() / m_dSpeed, this);
+				else
+					currWeapon->Discharge("sphere", position, target, currWeapon->GetFiringSpeed(), this);
 			}
 		}
 	}
@@ -461,64 +547,18 @@ void CPlayerInfo::Update(double dt)
 	{
 		currWeapon = Weapons[0];
 	}
-	else if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) == -3.0f)
+	else if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) == 0.0f)
 	{
 		currWeapon = Weapons[1];
 	}
-
-	// If the user presses R key, then reset the view to default values
-	if (KeyboardController::GetInstance()->IsKeyDown('P'))
+	else if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) == -3.0f)
 	{
-		Reset();
-	}
-	else
-	{
-		UpdateJumpUpwards(dt);
-		UpdateFreeFall(dt);
+		currWeapon = Weapons[2];
 	}
 
-	// If a camera is attached to this playerInfo class, then update it
-	if (attachedCamera)
-	{
-		attachedCamera->SetCameraPos(position);
-		attachedCamera->SetCameraTarget(target);
-		attachedCamera->SetCameraUp(up);
-	}
 }
 
-// Constrain the position within the borders
-void CPlayerInfo::Constrain(void)
-{
-	// Constrain player within the boundary
-	if (position.x > maxBoundary.x - 1.0f)
-		position.x = maxBoundary.x - 1.0f;
-	//if (position.y > maxBoundary.y - 1.0f)
-	//	position.y = maxBoundary.y - 1.0f;
-	if (position.z > maxBoundary.z - 1.0f)
-		position.z = maxBoundary.z - 1.0f;
-	if (position.x < minBoundary.x + 1.0f)
-		position.x = minBoundary.x + 1.0f;
-	//if (position.y < minBoundary.y + 1.0f)
-	//	position.y = minBoundary.y + 1.0f;
-	if (position.z < minBoundary.z + 1.0f)
-		position.z = minBoundary.z + 1.0f;
 
-	// if the player is not jumping nor falling, then adjust his y position
-	if ((m_bJumpUpwards == false) && (m_bFallDownwards == false))
-	{
-		// if the y position is not equal to terrain height at that position, 
-		// then update y position to the terrain height
-		if (position.y != m_pTerrain->GetTerrainHeight(position))
-			position.y = m_pTerrain->GetTerrainHeight(position);
-	}
-}
-
-void CPlayerInfo::AttachCamera(FPSCamera* _cameraPtr)
-{
-	attachedCamera = _cameraPtr;
-}
-
-void CPlayerInfo::DetachCamera()
-{
-	attachedCamera = nullptr;
-}
+// TODO //
+// RECOIL TARGET NOT ACCURATE // 
+// TODO // 
