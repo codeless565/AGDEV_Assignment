@@ -259,10 +259,9 @@ CSceneNode * CSceneNode::GetEntity(EntityBase * theEntity)
 		return this;
 	if (theChildren.size() != 0)
 	{
-		std::vector<CSceneNode*>::iterator it;
-		for (it = theChildren.begin(); it != theChildren.end(); ++it)
+		for (auto it : theChildren)
 		{
-			CSceneNode* theNode = (*it)->GetEntity(theEntity);
+			CSceneNode* theNode = it->GetEntity(theEntity);
 			if (theNode)
 			{
 				return theNode;
@@ -280,10 +279,9 @@ CSceneNode * CSceneNode::GetEntity(const int ID)
 	// Check the children
 	if (theChildren.size() != 0)
 	{
-		std::vector<CSceneNode*>::iterator it;
-		for (it = theChildren.begin(); it != theChildren.end(); ++it)
+		for (auto it : theChildren)
 		{
-			CSceneNode* theNode = (*it)->GetEntity(ID);
+			CSceneNode* theNode = it->GetEntity(ID);
 			if (theNode)
 			{
 				return theNode;
@@ -299,10 +297,9 @@ int CSceneNode::GetNumOfChild(void)
 	// Start with this node's children
 	int NumOfChild = theChildren.size();
 	// Ask the children to feedback how many children they have
-	std::vector<CSceneNode*>::iterator it;
-	for (it = theChildren.begin(); it != theChildren.end(); ++it)
+	for (auto it : theChildren)
 	{
-		NumOfChild += (*it)->GetNumOfChild();
+		NumOfChild += it->GetNumOfChild();
 	}
 	return NumOfChild;
 }
@@ -370,10 +367,9 @@ void CSceneNode::Update(void)
 	*/
 
 	// Update the children
-	std::vector<CSceneNode*>::iterator it;
-	for (it = theChildren.begin(); it != theChildren.end(); ++it)
+	for (auto it : theChildren)
 	{
-		(*it)->Update();
+		it->Update();
 	}
 }
 
@@ -388,29 +384,15 @@ void CSceneNode::Render(void)
 		{//modelStack.LoadMatrix(this->GetTransform());
 			modelStack.MultMatrix(this->GetTransform());
 
-			/*
-			Mtx44 Mtx = modelStack.Top();
-			cout << "======================================================================" << endl;
-			cout << "CSceneNode::PrintSelf" << endl;
-			cout << "----------------------------------------------------------------------" << endl;
-			cout << "[\t" << Mtx.a[0] << "\t" << Mtx.a[4] << "\t" << Mtx.a[8] << "\t" << Mtx.a[12] << "\t]" << endl;
-			cout << "[\t" << Mtx.a[1] << "\t" << Mtx.a[5] << "\t" << Mtx.a[9] << "\t" << Mtx.a[13] << "\t]" << endl;
-			cout << "[\t" << Mtx.a[2] << "\t" << Mtx.a[6] << "\t" << Mtx.a[10] << "\t" << Mtx.a[14] << "\t]" << endl;
-			cout << "[\t" << Mtx.a[3] << "\t" << Mtx.a[7] << "\t" << Mtx.a[11] << "\t" << Mtx.a[15] << "\t]" << endl;
-			cout << "======================================================================" << endl;
-			*/
-
-
 			// Render the entity
 			theEntity->Render();
 		}
 	}
 
 	// Render the children
-	std::vector<CSceneNode*>::iterator it;
-	for (it = theChildren.begin(); it != theChildren.end(); ++it)
+	for (auto it : theChildren)
 	{
-		(*it)->Render();
+		it->Render();
 	}
 
 	modelStack.PopMatrix();
