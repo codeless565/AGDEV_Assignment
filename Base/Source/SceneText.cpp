@@ -177,22 +177,22 @@ void SceneText::Init()
 	/*****************************************************
 	=\/========= Asset = non destructible =============\/= 
 	******************************************************/
-	GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
-	CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
+	//GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
+	//CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
 
-	GenericEntity* childCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
-	CSceneNode* childNode = baseNode->AddChild(childCube);
-	childNode->ApplyTranslate(0.0f, 1.0f, 0.0f);
+	//GenericEntity* childCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
+	//CSceneNode* childNode = baseNode->AddChild(childCube);
+	//childNode->ApplyTranslate(0.0f, 1.0f, 0.0f);
 
-	GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
-	CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
-	grandchildCube->SetCollider(true);
-	grandchildCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-	grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
-	CUpdateTransformation* aRotateMtx = new CUpdateTransformation();
-	aRotateMtx->ApplyUpdateScale(1.1f, 1.0f, 1.0f);
-	aRotateMtx->SetSteps(0, 90);
-	grandchildNode->SetUpdateTransformation(aRotateMtx);
+	//GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
+	//CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
+	//grandchildCube->SetCollider(true);
+	//grandchildCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	//grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
+	//CUpdateTransformation* aRotateMtx = new CUpdateTransformation();
+	//aRotateMtx->ApplyUpdateScale(1.1f, 1.0f, 1.0f);
+	//aRotateMtx->SetSteps(0, 90);
+	//grandchildNode->SetUpdateTransformation(aRotateMtx);
 
 	/*****************************************************
 	=\/=============== Destructibles ==================\/=
@@ -238,6 +238,21 @@ void SceneText::Init()
 	theEnemy = new CEnemy();
 	theEnemy->Init();
 	theEnemy->SetTerrain(groundEntity);
+
+
+	/*
+		#include "../SceneNode.h"
+		#include "../SceneGraph.h"
+
+		CSceneNode* adc = CSceneGraph::GetInstance()->AddNode(this);
+		GenericEntity* theHead = Create::Entity("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
+		theHead->SetCollider(true);
+		theHead->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+		CSceneNode* CNode = adc->AddChild(theHead);
+		CNode->ApplyTranslate(position.x, position.y + 5.f, position.z);
+	*/
+
+
 
 	// Setup the 2D entities
 	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
@@ -330,10 +345,26 @@ void SceneText::Update(double dt)
 	ss << "FPS: " << fps;
 	textObj[1]->SetText(ss.str());
 
-	std::ostringstream ss1;
+	std::ostringstream ss1;/*
 	ss1.precision(4);
 	ss1 << "Player:" << playerInfo->GetPos();
+	textObj[2]->SetText(ss1.str());*/
+
+	ss1.str("");
+	ss1.precision(4);
+	if (playerInfo->getCurrWeapon() == playerInfo->getPrimaryWeapon())
+		ss1 << "Assault Rifle " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
+	else if (playerInfo->getCurrWeapon() == playerInfo->getSecondaryWeapon())
+		ss1 << "Pistol " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
+	else if (playerInfo->getCurrWeapon() == playerInfo->getTertiaryWeapon())
+		ss1 << "Grenade " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
 	textObj[2]->SetText(ss1.str());
+
+	// ss1.str("");
+	// ss1.precision(4);
+	// if (theEnemy)
+		// ss1 << theEnemy->GetHealth();
+	// textObj[2]->SetText(ss1.str());
 }
 
 void SceneText::Render()
