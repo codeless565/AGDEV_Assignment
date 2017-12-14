@@ -402,15 +402,15 @@ void CSceneNode::Render(void)
 
 
 			// Render the entity
-			theEntity->Render();
-		}
-	}
 
-	// Render the children
-	std::vector<CSceneNode*>::iterator it;
-	for (it = theChildren.begin(); it != theChildren.end(); ++it)
-	{
-		(*it)->Render();
+			theEntity->Render();
+			// Render the children
+			std::vector<CSceneNode*>::iterator it;
+			for (it = theChildren.begin(); it != theChildren.end(); ++it)
+			{
+				(*it)->Render();
+			}
+		}
 	}
 
 	modelStack.PopMatrix();

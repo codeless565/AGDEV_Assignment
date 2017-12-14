@@ -49,7 +49,10 @@ public:
 	CSceneNode* GetEntity(EntityBase* theEntity);
 	// Get the entity inside this Scene Graph using its ID
 	CSceneNode* GetEntity(const int ID);
+
+	//Getter for Children
 	int GetNumOfChild(void);
+	std::vector<CSceneNode*> GetChildren() { return theChildren; }
 
 	// PrintSelf for debug purposes
 	void PrintSelf(const int numTabs = 0);
