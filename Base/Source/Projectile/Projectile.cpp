@@ -118,10 +118,14 @@ void CProjectile::Update(double dt)
 		return;
 	}
 
+
 	// Update Position
-	position.Set(	position.x + (float)(theDirection.x * dt * m_fSpeed),
-					position.y + (float)(theDirection.y * dt * m_fSpeed),
-					position.z + (float)(theDirection.z * dt * m_fSpeed));
+	position.Set(	position.x + (theDirection.x * dt * m_fSpeed),
+					position.y + (theDirection.y * dt * m_fSpeed),
+					position.z + (theDirection.z * dt * m_fSpeed));
+
+	std::cout << "Proj Position: " << position << std::endl;
+	std::cout << "Proj Direction: " << theDirection << std::endl;
 }
 
 
@@ -156,6 +160,9 @@ CProjectile* Create::Projectile(const std::string& _meshName,
 
 	CProjectile* result = new CProjectile(modelMesh);
 	result->Set(_position, _direction, m_fLifetime, m_fSpeed);
+
+	std::cout << "CProjectile Position: " << _position.x << " " << _position.y << " " << _position.z << std::endl;
+	std::cout << "CProjectile Direction: " << _direction.x << " " << _direction.y << " " << _direction.z << std::endl;
 	result->SetStatus(true);
 	result->SetCollider(true);
 	result->SetSource(_source);
