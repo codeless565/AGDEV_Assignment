@@ -24,6 +24,7 @@ void CSceneNode::Destroy(void)
 	std::vector<CSceneNode*>::iterator it;
 	for (it = theChildren.begin(); it != theChildren.end(); ++it)
 	{
+		(*it)->GetEntity()->SetIsDone(true);
 		(*it)->Destroy();
 		delete *it;
 	}
@@ -369,6 +370,14 @@ void CSceneNode::Update(void)
 	cout << "======================================================================" << endl;
 	*/
 
+	//if parent is dead, delete all its child
+	if (GetEntity()) //Root does not have an entity, this statement is used as precaution
+		if (GetEntity()->IsDone())
+		{
+			DeleteAllChildren();
+			return;
+		}
+
 	// Update the children
 	std::vector<CSceneNode*>::iterator it;
 	for (it = theChildren.begin(); it != theChildren.end(); ++it)
@@ -403,14 +412,15 @@ void CSceneNode::Render(void)
 
 			// Render the entity
 
+
 			theEntity->Render();
 			// Render the children
 		}
-			std::vector<CSceneNode*>::iterator it;
-			for (it = theChildren.begin(); it != theChildren.end(); ++it)
-			{
-				(*it)->Render();
-			}
+		std::vector<CSceneNode*>::iterator it;
+		for (it = theChildren.begin(); it != theChildren.end(); ++it)
+		{
+			(*it)->Render();
+		}
 	}
 
 	modelStack.PopMatrix();
