@@ -48,40 +48,12 @@ void CEnemy::Init(void)
 	// Initialise the LOD meshes
 	InitLOD("cube", "sphere", "cubeSG");
 
-	// Initialise the Collider
-	this->SetCollider(true);
-	this->SetAABB(Vector3(1, 1, 1), Vector3(-1, -1, -1));
+	//// Initialise the Collider
+	//this->SetCollider(true);
+	//this->SetAABB(Vector3(1, 1, 1), Vector3(-1, -1, -1));
 
 	// Add to EntityManager
-	this->setEntityType(ENTITY_TYPE::ENEMY);
 	EntityManager::GetInstance()->AddEntity(this, true);
-
-	BodyNode = CSceneGraph::GetInstance()->AddNode(this);
-
-	HeadCube = Create::Entity("cubeSG", Vector3(position.x, position.y + 1.5f, position.z));
-	HeadCube->SetCollider(true);
-	HeadCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-	HeadCube->setEntityType(EntityBase::ENEMY);
-	HeadNode = BodyNode->AddChild(HeadCube);
-
-	LeftArmCube = Create::Entity("cubeSG", Vector3(position.x-1.5f, position.y, position.z));
-	LeftArmCube->SetCollider(true);
-	LeftArmCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-	LeftArmCube->setEntityType(EntityBase::ENEMY);
-	LeftArmNode = BodyNode->AddChild(LeftArmCube);
-
-	RightArmCube= Create::Entity("cubeSG", Vector3(position.x + 1.5f, position.y, position.z));
-	RightArmCube->SetCollider(true);
-	RightArmCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-	RightArmCube->setEntityType(EntityBase::ENEMY);
-	RightArmNode = BodyNode->AddChild(RightArmCube);
-	
-	if (HeadNode != NULL)
-		Health += 10.f;
-	if (LeftArmNode != NULL)
-		Health += 5.f;
-	if (RightArmNode != NULL)
-		Health += 5.f;
 }
 
 // Reset this player instance to default
@@ -161,16 +133,6 @@ int CEnemy::GetHealth(void)
 // Update
 void CEnemy::Update(double dt)
 {
-	for (auto hi : BodyNode->getChild())
-	{
-		if (hi == HeadNode)
-			hi->GetEntity()->SetPosition(Vector3(position.x, position.y + 1.f, position.z));
-		else if (hi == LeftArmNode)
-			hi->GetEntity()->SetPosition(Vector3(position.x - 1, position.y, position.z));
-		else if (hi == RightArmNode)
-			hi->GetEntity()->SetPosition(Vector3(position.x + 1, position.y, position.z));
-	}
-
 	Vector3 viewVector = (target - position).Normalized();
 	position += viewVector * (float)m_dSpeed * (float)dt;
 	//cout << position << "..." << viewVector << endl;

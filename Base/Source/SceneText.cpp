@@ -354,12 +354,6 @@ void SceneText::Update(double dt)
 	else if (playerInfo->getCurrWeapon() == playerInfo->getTertiaryWeapon())
 		ss1 << "Grenade " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
 	textObj[2]->SetText(ss1.str());
-
-	// ss1.str("");
-	// ss1.precision(4);
-	// if (theEnemy)
-		// ss1 << theEnemy->GetHealth();
-	// textObj[2]->SetText(ss1.str());
 }
 
 void SceneText::Render()

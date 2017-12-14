@@ -18,17 +18,13 @@ protected:
 	double m_dAcceleration;
 
 	int Health;
-	CSceneNode* BodyNode;
-
-	GenericEntity* HeadCube;
-	CSceneNode* HeadNode;
-
-	GenericEntity* LeftArmCube;
-	GenericEntity* RightArmCube;
-	CSceneNode* LeftArmNode;
-	CSceneNode* RightArmNode;
 
 public:
+	void UpdateHealth(int hp)
+	{
+		Health += hp;
+	}
+
 	CEnemy(void);
 	virtual ~CEnemy();
 
