@@ -19,10 +19,18 @@ protected:
 	double m_dAcceleration;
 
 public:
+	enum COLOR
+	{
+		COLOR_RED = 0,
+		COLOR_BLUE,
+		COLOR_GREEN,
+		COLOR_YELLOW
+	};
+
 	CEnemy(void);
 	virtual ~CEnemy();
 
-	void Init(void);
+	void Init(COLOR _color);
 	// Reset this player instance to default
 	void Reset(void);
 
@@ -58,4 +66,8 @@ private:
 	CSceneNode* MasterNode;
 
 	float m_SpawnTimer;
+
+	COLOR Master_Color;
+
+	void SpawnChild();
 };

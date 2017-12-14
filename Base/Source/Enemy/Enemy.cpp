@@ -22,7 +22,7 @@ CEnemy::~CEnemy()
 {
 }
 
-void CEnemy::Init(void)
+void CEnemy::Init(COLOR _color)
 {
 	// Set the default values
 	defaultPosition.Set(0, 0, 10);
@@ -30,7 +30,8 @@ void CEnemy::Init(void)
 	defaultUp.Set(0, 1, 0);
 
 	// Set the current values
-	position.Set(11.0f, 0.0f, 0.0f); //<<<<<NEEd to change to distinctive position
+	position.Set(0.0f, 0.0f, 0.0f); //<<<<<NEEd to change to distinctive position
+	scale.Set(5.f, 5.f, 5.f);
 	target.Set(10.0f, 0.0f, 450.0f); // <<<<< Masterblock no need target
 	up.Set(0.0f, 1.0f, 0.0f);
 
@@ -41,18 +42,21 @@ void CEnemy::Init(void)
 	// Set speed
 	m_dSpeed = 1.0;
 
-	// Initialise the LOD meshes
-	InitLOD("cube", "sphere", "cubeSG"); // TODO LOD
-
 	// Initialise the Collider
 	this->SetCollider(true);
 	this->SetAABB(Vector3(1, 1, 1), Vector3(-1, -1, -1));
 
+	// Add to EntityManager
+	EntityManager::GetInstance()->AddEntity(this, true);
+
+	//=================== LOD ==========================
+	Master_Color = _color;
+
+	InitLOD("MS_High", "MS_Med", "MS_Low"); // TODO LOD
+
 	//Create a Graph for these Blocks
 	MasterNode = CSceneGraph::GetInstance()->AddNode(this);
 
-	// Add to EntityManager
-	EntityManager::GetInstance()->AddEntity(this, true);
 }
 
 // Reset this player instance to default
@@ -72,53 +76,7 @@ void CEnemy::Update(double dt)
 	if (m_SpawnTimer >= 0.5f)
 	{
 		m_SpawnTimer = 0.f;
-
-		bool Spawned = false;
-
-		vector<CSceneNode*> ChildBlocks = MasterNode->GetChildren();
-
-		std::vector<CSceneNode*>::iterator it, end;
-		end = ChildBlocks.end();
-
-		do
-		{
-			float RandPosX = Math::RandIntMinMax(-10, 10) * 2 + position.x;
-			float RandPosZ = Math::RandIntMinMax(-10, 10) * 2 + position.z;
-
-			Vector3 TempPos(RandPosX, position.y, RandPosZ);
-
-			if (RandPosX == position.x && RandPosZ == position.z)
-				continue;
-
-			if (ChildBlocks.empty())
-			{
-				GenericEntity* childBlock = Create::Entity("cubeSG", TempPos);
-				childBlock->InitLOD("cube", "sphere", "cubeSG");
-				childBlock->SetCollider(true);
-				childBlock->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-				MasterNode->AddChild(childBlock);
-				Spawned = true;
-			}
-			else
-			{
-
-				for (auto it : ChildBlocks)
-				{
-					Vector3 dist = TempPos - it->GetEntity()->GetPosition();
-
-					if (dist.Length() >= 0)
-					{
-						GenericEntity* childBlock = Create::Entity("cubeSG", TempPos);
-						childBlock->InitLOD("cube", "sphere", "cubeSG");
-						childBlock->SetCollider(true);
-						childBlock->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-						MasterNode->AddChild(childBlock);
-						Spawned = true;
-						break;
-					}
-				}
-			}
-		} while (Spawned == false);
+		SpawnChild();
 	}
 
 	//Vector3 viewVector = (target - position).Normalized();
@@ -171,6 +129,86 @@ void CEnemy::Render(void)
 	modelStack.PopMatrix();
 }
 
+void CEnemy::SpawnChild()
+{
+	vector<CSceneNode*> ChildBlocks = MasterNode->GetChildren();
+
+	std::vector<CSceneNode*>::iterator it, end;
+	end = ChildBlocks.end();
+
+	do
+	{
+		float RandPosX = Math::RandIntMinMax(-5, 5) * scale.x * 2 + position.x;
+		float RandPosY = Math::RandIntMinMax(2, 5) * scale.x * 2 + position.z;
+
+		Vector3 TempPos(RandPosX, RandPosY, position.z);
+
+		if (RandPosX == position.x && RandPosY == position.y)
+			continue;
+
+		if (ChildBlocks.empty())
+		{
+			GenericEntity* childBlock = Create::Entity("cubeSG", TempPos);
+			switch (Master_Color)
+			{
+			case COLOR_RED:
+				childBlock->InitLOD("CSRed_High", "CSRed_Med", "CSRed_Low");
+				break;
+			case COLOR_BLUE:
+				childBlock->InitLOD("CSBlue_High", "CSBlue_Med", "CSBlue_Low");
+				break;
+			case COLOR_GREEN:
+				childBlock->InitLOD("CSGreen_High", "CSGreen_Med", "CSGreen_Low");
+				break;
+			case COLOR_YELLOW:
+				childBlock->InitLOD("CSYellow_High", "CSYellow_Med", "CSYellow_Low");
+				break;
+			}
+			childBlock->SetScale(Vector3(5.f, 5.f, 5.f));
+			childBlock->SetCollider(true);
+			childBlock->SetAABB(Vector3(0.5f * GetScale().x, 0.5f* GetScale().y, 0.5f* GetScale().z), Vector3(-0.5f* GetScale().x, -0.5f* GetScale().y, -0.5f* GetScale().z));
+			MasterNode->AddChild(childBlock);
+			return;
+		}
+		else
+		{
+
+			for (auto it : ChildBlocks)
+			{
+				Vector3 dist = TempPos - it->GetEntity()->GetPosition();
+
+				if (dist.Length() >= 0)
+				{
+					GenericEntity* childBlock = Create::Entity("cubeSG", TempPos);
+					switch (Master_Color)
+					{
+					case COLOR_RED:
+						childBlock->InitLOD("CSRed_High", "CSRed_Med", "CSRed_Low");
+						break;
+					case COLOR_BLUE:
+						childBlock->InitLOD("CSBlue_High", "CSBlue_Med", "CSBlue_Low");
+						break;
+					case COLOR_GREEN:
+						childBlock->InitLOD("CSGreen_High", "CSGreen_Med", "CSGreen_Low");
+						break;
+					case COLOR_YELLOW:
+						childBlock->InitLOD("CSYellow_High", "CSYellow_Med", "CSYellow_Low");
+						break;
+					}
+					childBlock->SetScale(Vector3(5.f, 5.f, 5.f));
+					childBlock->SetCollider(true);
+					childBlock->SetAABB(Vector3(0.5f * GetScale().x, 0.5f* GetScale().y, 0.5f* GetScale().z), Vector3(-0.5f* GetScale().x, -0.5f* GetScale().y, -0.5f* GetScale().z));
+					MasterNode->AddChild(childBlock);
+					return;
+				}
+			}
+		}
+	} while (true);
+}
+
+/********************************************************
+***************** SETTER & GETTER ***********************
+*********************************************************/
 // Set position
 void CEnemy::SetPos(const Vector3& pos)
 {
