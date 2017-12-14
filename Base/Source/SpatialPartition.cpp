@@ -3,6 +3,7 @@
 #include "Collider\Collider.h"
 #include "GraphicsManager.h"
 #include "RenderHelper.h"
+#include "KeyboardController.h"
 
 template <typename T> vector<T> concat(vector<T> &a, vector<T> &b) {
 	vector<T> ret = vector<T>();
@@ -29,6 +30,7 @@ CSpatialPartition::CSpatialPartition(void)
 	, yOffset(0.0f)
 	, _meshName("")
 	, theCamera(NULL)
+	, GridOnly(false)
 {
 }
 
@@ -122,11 +124,27 @@ void CSpatialPartition::Update(void)
 			theGrid[i*zNumOfGrid + j].Update(&MigrationList);
 
 			//Check Visibility
-			if (IsVisible(theCamera->GetCameraPos(), theCamera->GetCameraTarget() - theCamera->GetCameraPos(), i, j) ||
+			if (!GridOnly &&
+				IsVisible(theCamera->GetCameraPos(), theCamera->GetCameraTarget() - theCamera->GetCameraPos(), i, j) ||
 				((theCamera->GetCameraPos().x > theGrid[i*zNumOfGrid + j].getMin().x) && (theCamera->GetCameraPos().x < theGrid[i*zNumOfGrid + j].getMax().x) &&
 				(theCamera->GetCameraPos().z > theGrid[i*zNumOfGrid + j].getMin().z) && (theCamera->GetCameraPos().z < theGrid[i*zNumOfGrid + j].getMax().z)))
 				// Player is in the grid
 			{
+				//if (AreaOnly)
+				//{
+				//	if ((i - xNumOfGrid > 0 && j + 1 < xNumOfGrid && theCamera->GetCameraPos().x > theGrid[(i - xNumOfGrid) * zNumOfGrid + (j - 1)].getMin().x) &&
+				//		(i - xNumOfGrid > 0 && j + 1 < xNumOfGrid&&theCamera->GetCameraPos().x < theGrid[(i - xNumOfGrid) *zNumOfGrid + (j + 1)].getMax().x) &&
+				//		(i - xNumOfGrid > 0 && j - 1 > 0 && theCamera->GetCameraPos().z > theGrid[(i - xNumOfGrid) * zNumOfGrid + (j - 1)].getMin().z) &&
+				//		(i + xNumOfGrid < zNumOfGrid && j - 1 > 0 && theCamera->GetCameraPos().z < theGrid[(i + xNumOfGrid) * zNumOfGrid + (j - 1)].getMax().z))
+				//		AreaOnly = false;
+
+				//	/*if (!(theCamera->GetCameraPos().z > theGrid[(i - 1)*zNumOfGrid + (j - 1)].getMin().z &&
+				//		theCamera->GetCameraPos().z < theGrid[(i - 1)*zNumOfGrid + (j + 1)].getMax().z &&
+				//		theCamera->GetCameraPos().x > theGrid[(i - 1)*xNumOfGrid + (j - 1)].getMin().x && 
+				//		theCamera->GetCameraPos().x < theGrid[(i + 1)*xNumOfGrid + (j - 1)].getMax().z))
+				//			theGrid[i*zNumOfGrid + j].SetDetailLevel(CLevelOfDetails::NO_DETAILS);*/
+				//}
+
 				//Calculate LOD for this Grid
 				float distance = CalculateDistanceSquare(&(theCamera->GetCameraPos()), i, j);
 				if (distance < LevelOfDetails_Distances[0])
@@ -152,6 +170,9 @@ void CSpatialPartition::Update(void)
 
 		MigrationList.clear();
 	}
+
+	if (KeyboardController::GetInstance()->IsKeyPressed('Y'))
+		GridOnly = !GridOnly;
 }
 
 /********************************************************************************
@@ -164,9 +185,10 @@ void CSpatialPartition::Render(Vector3* theCameraPosition)
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0.0f, yOffset, 0.0f);
-	for (int i = 0; i<xNumOfGrid; i++)
+
+	for (int i = 0; i < xNumOfGrid; i++)
 	{
-		for (int j = 0; j<zNumOfGrid; j++)
+		for (int j = 0; j < zNumOfGrid; j++)
 		{
 			modelStack.PushMatrix();
 			modelStack.Translate(xGridSize*i - (xSize >> 1), 0.0f, zGridSize*j - (zSize >> 1));
@@ -178,7 +200,6 @@ void CSpatialPartition::Render(Vector3* theCameraPosition)
 			modelStack.PopMatrix();
 		}
 	}
-
 	modelStack.PopMatrix();
 }
 
