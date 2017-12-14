@@ -236,6 +236,18 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GenerateOBJ("SandBag_Low", "OBJ//SandBag_Low.obj");
 	MeshBuilder::GetInstance()->GetMesh("SandBag_Low")->textureID = LoadTGA("Image//SandBag.tga");
 
+	groundEntity = Create::Ground("GRASS_DARKGREEN", "GEO_GRASS_LIGHTGREEN");
+	//	Create::Text3DObject("text", Vector3(0.0f, 0.0f, 0.0f), "DM2210", Vector3(10.0f, 10.0f, 10.0f), Color(0, 1, 1));
+	Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
+
+	SkyBoxEntity* theSkyBox = Create::SkyBox("SKYBOX_FRONT", "SKYBOX_BACK",
+		"SKYBOX_LEFT", "SKYBOX_RIGHT",
+		"SKYBOX_TOP", "SKYBOX_BOTTOM");
+
+	// Customise the ground entity
+	groundEntity->SetPosition(Vector3(0, -10, 0));
+	groundEntity->SetScale(Vector3(100.0f, 100.0f, 100.0f));
+	groundEntity->SetGrids(Vector3(10.0f, 1.0f, 10.0f));
 	/******************************************
 	******** SPATIAL PARTITIONING *************
 	*******************************************/
@@ -256,12 +268,14 @@ void SceneText::Init()
 	=\/========= Asset = non destructible =============\/=
 	******************************************************/
 	GenericEntity* Tree = Create::Entity("cubeSG", Vector3(20.0f, -10.0f, 0.0f), Vector3(20.f,20.f,20.f)); //Somehow cannot use Asset, it doesnt render
+	Tree->SetCollider(true);
+	Tree->SetAABB(Vector3(20.f, 20.f, 20.f), Vector3(-20.f, -20.f, -20.f));
 	Tree->InitLOD("Tree_High", "Tree_Med", "Tree_Low");
 	
 	GenericEntity* Pillar = Create::Entity("cubeSG", Vector3(-20.0f, 0.0f, 0.0f), Vector3(20.f, 20.f, 20.f)); //Somehow cannot use Asset, it doesnt render
 	Pillar->InitLOD("Pillar_High", "Pillar_Med", "Pillar_Low");
 
-	GenericEntity* Sandbag = Create::Entity("cubeSG", Vector3(-40.0f, 0.0f, 0.0f), Vector3(10.f, 10.f, 10.f)); //Somehow cannot use Asset, it doesnt render
+	GenericEntity* Sandbag = Create::Entity("cubeSG", Vector3(-40.0f, groundEntity->GetPosition().y, 0.0f), Vector3(10.f, 10.f, 10.f)); //Somehow cannot use Asset, it doesnt render
 	Sandbag->InitLOD("SandBag_High", "SandBag_Med", "SandBag_Low");
 
 
@@ -282,18 +296,6 @@ void SceneText::Init()
 	//	cout << "EntityManager::AddEntity: Unable to add to scenegraph!\n";
 
 	//=======================================================
-	groundEntity = Create::Ground("GRASS_DARKGREEN", "GEO_GRASS_LIGHTGREEN");
-	//	Create::Text3DObject("text", Vector3(0.0f, 0.0f, 0.0f), "DM2210", Vector3(10.0f, 10.0f, 10.0f), Color(0, 1, 1));
-	Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
-
-	SkyBoxEntity* theSkyBox = Create::SkyBox("SKYBOX_FRONT", "SKYBOX_BACK",
-		"SKYBOX_LEFT", "SKYBOX_RIGHT",
-		"SKYBOX_TOP", "SKYBOX_BOTTOM");
-
-	// Customise the ground entity
-	groundEntity->SetPosition(Vector3(0, -10, 0));
-	groundEntity->SetScale(Vector3(100.0f, 100.0f, 100.0f));
-	groundEntity->SetGrids(Vector3(10.0f, 1.0f, 10.0f));
 	playerInfo->SetTerrain(groundEntity);
 
 	// Create multiple MasterBlocks
@@ -335,7 +337,7 @@ void SceneText::Init()
 
 void SceneText::Update(double dt)
 {
-	if (playerInfo->getScore() >= 20)
+	if (playerInfo->getScore() >= 150 || KeyboardController::GetInstance()->IsKeyPressed('U'))
 		gameOver = true;
 
 	// Update our entities
