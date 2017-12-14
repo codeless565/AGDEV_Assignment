@@ -38,6 +38,7 @@ public:
 		ENTITY_FIXED,
 		ENTITY_NPCS,
 		ENTITY_PROJECTILES,
+		ENTITY_ENEMIES,
 		TOTAL_ENTITY
 	};
 	void setEntityType(ENTITY_TYPE _type);

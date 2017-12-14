@@ -31,6 +31,9 @@ public:
 	bool bFire;
 	std::list<CProjectile*>bullets;
 
+	//GetProjectiles
+	std::list<CProjectile*> GetProj();
+
 	// Set the number of ammunition in the magazine for this player
 	virtual void SetMagRound(const int magRounds);
 	// Set the maximum number of ammunition in the magazine for this weapon
@@ -79,6 +82,5 @@ public:
 	// Print Self
 	void PrintSelf(void);
 
-	//GetProjectiles
-	std::list<CProjectile*> GetProj();
+	virtual void ResetWeapon();
 };

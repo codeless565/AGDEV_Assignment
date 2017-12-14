@@ -27,6 +27,7 @@ protected:
 	//LOD distances
 	float LevelOfDetails_Distances[2];
 
+	bool GridOnly;
 public:
 	static CSpatialPartition *GetInstance()
 	{

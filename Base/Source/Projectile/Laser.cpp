@@ -133,6 +133,7 @@ CLaser* Create::Laser(const std::string& _meshName,
 	result->SetCollider(true);
 	result->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
 	result->SetSource(_source);
+	result->setEntityType(EntityBase::ENTITY_PROJECTILES);
 	EntityManager::GetInstance()->AddEntity(result);
 
 	Vector3 base = Vector3(1.0f, 0.0f, 0.0f);

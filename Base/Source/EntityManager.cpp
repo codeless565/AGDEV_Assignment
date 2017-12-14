@@ -2,7 +2,7 @@
 #include "EntityBase.h"
 #include "Collider/Collider.h"
 #include "Projectile/Laser.h"
-
+#include "PlayerInfo\PlayerInfo.h"
 #include "SceneGraph.h"
 
 #include <iostream>
@@ -390,6 +390,12 @@ bool EntityManager::CheckForCollision(void)
 					{
 						if (CheckAABBCollision(thisEntity, thatEntity))
 						{
+							if (thisEntity->getEntityType() == EntityBase::ENTITY_PROJECTILES || thatEntity->getEntityType() == EntityBase::ENTITY_PROJECTILES)
+							{
+								CPlayerInfo::GetInstance()->addScore(10);
+								CPlayerInfo::GetInstance()->addShots(1);
+							}
+
 							thisEntity->SetIsDone(true);
 							thatEntity->SetIsDone(true);
 						}

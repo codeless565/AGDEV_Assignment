@@ -55,6 +55,7 @@ void CEnemy::Init(COLOR _color)
 	InitLOD("MS_High", "MS_Med", "MS_Low"); // TODO LOD
 
 	//Create a Graph for these Blocks
+	this->setEntityType(EntityBase::ENTITY_ENEMIES);
 	MasterNode = CSceneGraph::GetInstance()->AddNode(this);
 
 }
@@ -76,7 +77,53 @@ void CEnemy::Update(double dt)
 	if (m_SpawnTimer >= 0.5f)
 	{
 		m_SpawnTimer = 0.f;
-		SpawnChild();
+
+		bool Spawned = false;
+
+		vector<CSceneNode*> ChildBlocks = MasterNode->GetChildren();
+
+		std::vector<CSceneNode*>::iterator it, end;
+		end = ChildBlocks.end();
+
+		do
+		{
+			float RandPosX = Math::RandIntMinMax(-10, 10) * 2 + position.x;
+			float RandPosZ = Math::RandIntMinMax(-10, 10) * 2 + position.z;
+
+			Vector3 TempPos(RandPosX, position.y, RandPosZ);
+
+			if (RandPosX == position.x && RandPosZ == position.z)
+				continue;
+
+			if (ChildBlocks.empty())
+			{
+				GenericEntity* childBlock = Create::Entity("cubeSG", TempPos);
+				childBlock->InitLOD("cube", "sphere", "cubeSG");
+				childBlock->SetCollider(true);
+				childBlock->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+				MasterNode->AddChild(childBlock);
+				Spawned = true;
+			}
+			else
+			{
+
+				for (auto it : ChildBlocks)
+				{
+					Vector3 dist = TempPos - it->GetEntity()->GetPosition();
+
+					if (dist.Length() >= 0)
+					{
+						GenericEntity* childBlock = Create::Entity("cubeSG", TempPos);
+						childBlock->InitLOD("cube", "sphere", "cubeSG");
+						childBlock->SetCollider(true);
+						childBlock->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+						MasterNode->AddChild(childBlock);
+						Spawned = true;
+						break;
+					}
+				}
+			}
+		} while (Spawned == false);
 	}
 
 	//Vector3 viewVector = (target - position).Normalized();
@@ -120,7 +167,7 @@ void CEnemy::Render(void)
 	modelStack.Scale(scale.x, scale.y, scale.z);
 	if (GetLODStatus())
 	{
-		cout << theDetailLevel << endl;
+		//cout << theDetailLevel << endl;
 		if (theDetailLevel != NO_DETAILS)
 		{
 			RenderHelper::RenderMesh(GetLODMesh());
@@ -264,3 +311,5 @@ GroundEntity* CEnemy::GetTerrain(void)
 	return m_pTerrain;
 }
 
+
+		SpawnChild();

@@ -40,9 +40,6 @@ private:
 	bool CheckForCollision(void);
 
 	std::list<EntityBase*> entityList;
-	std::list<EntityBase*> list_fixedEntity;
-	std::list<EntityBase*> list_NPC;
-	std::list<EntityBase*> list_Projectile;
 
 	//Handler to Spatial Partition
 	CSpatialPartition* theSpatialPartition;

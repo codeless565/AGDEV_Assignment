@@ -59,3 +59,8 @@ void CAssaultRifle::Discharge(const std::string& _meshName, Vector3 position, Ve
 		}
 	}
 }
+
+void CAssaultRifle::ResetWeapon()
+{
+	CAssaultRifle::Init();
+}
