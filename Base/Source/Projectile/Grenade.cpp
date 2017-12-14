@@ -45,7 +45,9 @@ void CGrenade::Update(double dt)
 			for (auto *it : DestroyList)
 			{
 				EntityManager::GetInstance()->MarkForDeletion(it);
+				CPlayerInfo::GetInstance()->addScore(10);
 			}
+			CPlayerInfo::GetInstance()->addShots(1);
 		}
 
 		SetIsDone(true); // This method informs EntityManager to remove this instance
@@ -94,6 +96,7 @@ CGrenade* Create::Grenade(const std::string& _meshName,
 	result->SetCollider(true);
 	result->SetSource(_source);
 	result->SetTerrain(_source->GetTerrain());
+	result->setEntityType(EntityBase::ENTITY_PROJECTILES);
 	EntityManager::GetInstance()->AddEntity(result, true);
 	return result;
 }

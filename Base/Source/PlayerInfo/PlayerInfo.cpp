@@ -29,6 +29,7 @@ CPlayerInfo::CPlayerInfo(void)
 	, primaryWeapon(NULL)
 	, secondaryWeapon(NULL)
 	, tertiaryWeapon(NULL)
+	, score(0)
 {
 }
 
@@ -452,6 +453,7 @@ void CPlayerInfo::Update(double dt)
 				else
 					currWeapon->Discharge("sphere", position, target, currWeapon->GetFiringSpeed(), this);
 			}
+			TotalShots++;
 		}
 	}
 
