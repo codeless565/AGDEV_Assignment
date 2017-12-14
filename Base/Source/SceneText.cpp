@@ -145,6 +145,8 @@ void SceneText::Init()
 	MeshBuilder::GetInstance()->GetMesh("GRASS_DARKGREEN")->textureID = LoadTGA("Image//grass_darkgreen.tga");
 	MeshBuilder::GetInstance()->GenerateQuad("GEO_GRASS_LIGHTGREEN", Color(1, 1, 1), 1.f);
 	MeshBuilder::GetInstance()->GetMesh("GEO_GRASS_LIGHTGREEN")->textureID = LoadTGA("Image//grass_lightgreen.tga");
+	MeshBuilder::GetInstance()->GenerateQuad("METALGROUND", Color(1, 1, 1), 1.f);
+	MeshBuilder::GetInstance()->GetMesh("METALGROUND")->textureID = LoadTGA("Image//METALGROUND.tga");
 
 	MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_FRONT", Color(1, 1, 1), 1.f);
 	MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_BACK", Color(1, 1, 1), 1.f);
@@ -220,7 +222,7 @@ void SceneText::Init()
 	}
 
 	//=======================================================
-	groundEntity = Create::Ground("GRASS_DARKGREEN", "GEO_GRASS_LIGHTGREEN");
+	groundEntity = Create::Ground("METALGROUND", "METALGROUND");
 //	Create::Text3DObject("text", Vector3(0.0f, 0.0f, 0.0f), "DM2210", Vector3(10.0f, 10.0f, 10.0f), Color(0, 1, 1));
 	Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
 
@@ -238,21 +240,6 @@ void SceneText::Init()
 	theEnemy = new CEnemy();
 	theEnemy->Init();
 	theEnemy->SetTerrain(groundEntity);
-
-
-	/*
-		#include "../SceneNode.h"
-		#include "../SceneGraph.h"
-
-		CSceneNode* adc = CSceneGraph::GetInstance()->AddNode(this);
-		GenericEntity* theHead = Create::Entity("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
-		theHead->SetCollider(true);
-		theHead->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-		CSceneNode* CNode = adc->AddChild(theHead);
-		CNode->ApplyTranslate(position.x, position.y + 5.f, position.z);
-	*/
-
-
 
 	// Setup the 2D entities
 	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
@@ -308,26 +295,26 @@ void SceneText::Update(double dt)
 		lights[0]->position.y += (float)(10.f * dt);
 
 	// if the left mouse button was released
-	if (MouseController::GetInstance()->IsButtonReleased(MouseController::LMB))
-	{
-		cout << "Left Mouse Button was released!" << endl;
-	}
-	if (MouseController::GetInstance()->IsButtonReleased(MouseController::RMB))
-	{
-		cout << "Right Mouse Button was released!" << endl;
-	}
-	if (MouseController::GetInstance()->IsButtonReleased(MouseController::MMB))
-	{
-		cout << "Middle Mouse Button was released!" << endl;
-	}
-	if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_XOFFSET) != 0.0)
-	{
-		cout << "Mouse Wheel has offset in X-axis of " << MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_XOFFSET) << endl;
-	}
-	if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) != 0.0)
-	{
-		cout << "Mouse Wheel has offset in Y-axis of " << MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) << endl;
-	}
+	//if (MouseController::GetInstance()->IsButtonReleased(MouseController::LMB))
+	//{
+	//	cout << "Left Mouse Button was released!" << endl;
+	//}
+	//if (MouseController::GetInstance()->IsButtonReleased(MouseController::RMB))
+	//{
+	//	cout << "Right Mouse Button was released!" << endl;
+	//}
+	//if (MouseController::GetInstance()->IsButtonReleased(MouseController::MMB))
+	//{
+	//	cout << "Middle Mouse Button was released!" << endl;
+	//}
+	//if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_XOFFSET) != 0.0)
+	//{
+	//	cout << "Mouse Wheel has offset in X-axis of " << MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_XOFFSET) << endl;
+	//}
+	//if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) != 0.0)
+	//{
+	//	cout << "Mouse Wheel has offset in Y-axis of " << MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) << endl;
+	//}
 	// <THERE>
 
 	// Update the player position and other details based on keyboard and mouse inputs
