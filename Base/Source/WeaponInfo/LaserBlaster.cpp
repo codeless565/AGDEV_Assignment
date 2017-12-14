@@ -61,3 +61,8 @@ void CLaserBlaster::Discharge(const std::string& _meshName, Vector3 position, Ve
 		}
 	}
 }
+
+void CLaserBlaster::ResetWeapon()
+{
+	CLaserBlaster::Init();
+}

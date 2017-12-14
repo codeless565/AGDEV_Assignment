@@ -178,7 +178,9 @@ void CWeaponInfo::Reload(void)
 {
 	if (magRounds < maxMagRounds)
 	{
-		if (maxMagRounds - magRounds <= totalRounds)
+		magRounds = maxMagRounds; // Unlimited ammo
+
+		/*if (maxMagRounds - magRounds <= totalRounds)
 		{
 			totalRounds -= maxMagRounds - magRounds;
 			magRounds = maxMagRounds;
@@ -187,7 +189,7 @@ void CWeaponInfo::Reload(void)
 		{
 			magRounds += totalRounds;
 			totalRounds = 0;
-		}
+		}*/
 	}
 }
 
@@ -212,6 +214,10 @@ void CWeaponInfo::PrintSelf(void)
 	cout << "timeBetweenShots\t:\t" << timeBetweenShots << endl;
 	cout << "elapsedTime\t\t:\t" << elapsedTime << endl;
 	cout << "bFire\t\t:\t" << bFire << endl;
+}
+
+void CWeaponInfo::ResetWeapon()
+{
 }
 
 std::list<CProjectile*> CWeaponInfo::GetProj()

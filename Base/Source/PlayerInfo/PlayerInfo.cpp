@@ -28,6 +28,7 @@ CPlayerInfo::CPlayerInfo(void)
 	, currWeapon(NULL)
 	, primaryWeapon(NULL)
 	, secondaryWeapon(NULL)
+	, tertiaryWeapon(NULL)
 {
 }
 
@@ -66,15 +67,15 @@ void CPlayerInfo::Init(void)
 	primaryWeapon = new CLaserBlaster();
 	primaryWeapon->Init();
 
-	// Set the pistol as the secondary weapon
-	//secondaryWeapon = new CPistol();
-	//secondaryWeapon->Init();
-
-	secondaryWeapon = new CGrenadeThrow();
+	secondaryWeapon = new CPistol();
 	secondaryWeapon->Init();
+
+	tertiaryWeapon = new CGrenadeThrow();
+	tertiaryWeapon->Init();
 
 	Weapons.push_back(primaryWeapon);
 	Weapons.push_back(secondaryWeapon);
+	Weapons.push_back(tertiaryWeapon);
 
 	currWeapon = Weapons[0];
 }
@@ -193,6 +194,9 @@ void CPlayerInfo::Reset(void)
 
 	// Stop vertical movement too
 	StopVerticalMovement();
+
+	for (auto i : Weapons)
+		i->ResetWeapon();
 }
 
 // Get position x of the player
@@ -424,13 +428,9 @@ void CPlayerInfo::Update(double dt)
 	// WEAPONS
 	// Update the weapons
 	if (KeyboardController::GetInstance()->IsKeyReleased('R'))
-	{
 		if (currWeapon)
-		{
 			currWeapon->Reload();
-			//primaryWeapon->PrintSelf();
-		}
-	}
+
 	if (currWeapon)
 		currWeapon->Update(dt);
 
@@ -439,38 +439,32 @@ void CPlayerInfo::Update(double dt)
 	{
 		if (currWeapon && currWeapon->GetMagRound() > 0)
 		{
-			Vector3 recoil = target;
-			recoil.y = target.y + Math::RandFloatMinMax(0.0f, 0.01f);
-			recoil.x = target.x + Math::RandFloatMinMax(-0.01f, 0.01f);
-			Vector3 viewdirection = recoil - position;
-
 			if (currWeapon == primaryWeapon)
-			{
 				currWeapon->Discharge("laser", position, target, currWeapon->GetFiringSpeed(), this);
-				target = position + viewdirection;
-			}
 			else if (currWeapon == secondaryWeapon)
-			{
-				secondaryWeapon->PrintSelf();
 				currWeapon->Discharge("sphere", position, target, currWeapon->GetFiringSpeed(), this);
+			else if (currWeapon == tertiaryWeapon)
+			{
+				if (KeyboardController::GetInstance()->IsKeyDown('W'))
+					currWeapon->Discharge("sphere", position, target, m_dSpeed + currWeapon->GetFiringSpeed(), this);
+				else if (KeyboardController::GetInstance()->IsKeyDown('S'))
+					currWeapon->Discharge("sphere", position, target, currWeapon->GetFiringSpeed() / m_dSpeed, this);
+				else
+					currWeapon->Discharge("sphere", position, target, currWeapon->GetFiringSpeed(), this);
 			}
 		}
 	}
 
 	if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) == 3.0f)
-	{
 		currWeapon = Weapons[0];
-	}
-	else if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) == -3.0f)
-	{
+	else if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) == 0.0f)
 		currWeapon = Weapons[1];
-	}
+	else if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) == -3.0f)
+		currWeapon = Weapons[2];
 
 	// If the user presses R key, then reset the view to default values
 	if (KeyboardController::GetInstance()->IsKeyDown('P'))
-	{
 		Reset();
-	}
 	else
 	{
 		UpdateJumpUpwards(dt);

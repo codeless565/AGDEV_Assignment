@@ -177,47 +177,42 @@ void SceneText::Init()
 	/*****************************************************
 	=\/========= Asset = non destructible =============\/= 
 	******************************************************/
-	GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
-	CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
+	//GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
+	//CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
 
-	GenericEntity* childCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
-	CSceneNode* childNode = baseNode->AddChild(childCube);
-	childNode->ApplyTranslate(0.0f, 1.0f, 0.0f);
+	//GenericEntity* childCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
+	//CSceneNode* childNode = baseNode->AddChild(childCube);
+	//childNode->ApplyTranslate(0.0f, 1.0f, 0.0f);
 
-	GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
-	CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
-	grandchildCube->SetCollider(true);
-	grandchildCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-	grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
-	CUpdateTransformation* aRotateMtx = new CUpdateTransformation();
-	aRotateMtx->ApplyUpdateScale(1.1f, 1.0f, 1.0f);
-	aRotateMtx->SetSteps(0, 90);
-	grandchildNode->SetUpdateTransformation(aRotateMtx);
+	//GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
+	//CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
+	//grandchildCube->SetCollider(true);
+	//grandchildCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	//grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
+	//CUpdateTransformation* aRotateMtx = new CUpdateTransformation();
+	//aRotateMtx->ApplyUpdateScale(1.1f, 1.0f, 1.0f);
+	//aRotateMtx->SetSteps(0, 90);
+	//grandchildNode->SetUpdateTransformation(aRotateMtx);
 
 	/*****************************************************
 	=\/=============== Destructibles ==================\/=
 	******************************************************/
-	GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f,-20.0f));
-	aCube->SetCollider(true);
-	aCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-	aCube->InitLOD("cube", "sphere", "cubeSG");
+	//GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f,-20.0f));
+	//aCube->SetCollider(true);
+	//aCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	//aCube->InitLOD("cube", "sphere", "cubeSG");
+	////Add the pointer to this new entity to the SceneGraph
+	//CSceneNode* theNode = CSceneGraph::GetInstance()->AddNode(aCube);
+	//if (theNode == NULL)
+	//	cout << "EntityManager::AddEntity: Unable to add to scenegraph!\n";
 
-	//Add the pointer to this new entity to the SceneGraph
-	CSceneNode* theNode = CSceneGraph::GetInstance()->AddNode(aCube);
-	if (theNode == NULL)
-	{
-		cout << "EntityManager::AddEntity: Unable to add to scenegraph!\n";
-	}
-
-	GenericEntity* anotherCube = Create::Entity("cube", Vector3(-20.0f, 1.1f, -20.0f));
-	anotherCube->SetCollider(true);
-	anotherCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-
-	CSceneNode* anotherNode = theNode->AddChild(anotherCube);
-	if (anotherCube == NULL)
-	{
-		cout << "EntityManager::AddEntity: Unable to add to scenegraph!\n";
-	}
+	//GenericEntity* anotherCube = Create::Entity("cube", Vector3(-20.0f, 1.1f, -20.0f));
+	//anotherCube->SetCollider(true);
+	//anotherCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	////Add the pointer to this new entity to the SceneGraph
+	//CSceneNode* anotherNode = theNode->AddChild(anotherCube);
+	//if (anotherCube == NULL)
+	//	cout << "EntityManager::AddEntity: Unable to add to scenegraph!\n";
 
 	//=======================================================
 	groundEntity = Create::Ground("GRASS_DARKGREEN", "GEO_GRASS_LIGHTGREEN");
@@ -235,14 +230,10 @@ void SceneText::Init()
 	playerInfo->SetTerrain(groundEntity);
 
 	// Create multiple MasterBlocks
-	for (int i = 0; i < 1; ++i)
-	{
-		CEnemy* temp = new CEnemy();
-		temp->Init();
-		temp->SetTerrain(groundEntity);
-
-		MasterBlocks.push_back(temp);
-	}
+	CEnemy* temp = new CEnemy();
+	temp->Init();
+	temp->SetTerrain(groundEntity);
+	MasterBlocks.push_back(temp);
 
 	// Setup the 2D entities
 	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
@@ -335,10 +326,15 @@ void SceneText::Update(double dt)
 	ss << "FPS: " << fps;
 	textObj[1]->SetText(ss.str());
 
-	std::ostringstream ss1;
-	ss1.precision(4);
-	ss1 << "Player:" << playerInfo->GetPos();
-	textObj[2]->SetText(ss1.str());
+	ss.str("");
+	ss.precision(4);
+	if (playerInfo->getCurrWeapon() == playerInfo->getPrimaryWeapon())
+		ss << "Laser Blaster " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
+	else if (playerInfo->getCurrWeapon() == playerInfo->getSecondaryWeapon())
+		ss << "Pistol " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
+	else if (playerInfo->getCurrWeapon() == playerInfo->getTertiaryWeapon())
+		ss << "Grenade " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
+	textObj[2]->SetText(ss.str());
 }
 
 void SceneText::Render()

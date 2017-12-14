@@ -98,13 +98,10 @@ public:
 	void AttachCamera(FPSCamera* _cameraPtr);
 	void DetachCamera();
 
-	//GetProj
-	std::list<CProjectile*>GetProj();
-
-	// Weapons
-	// Discharge Curr Weapon
-	//bool DischargeWeapon(const float deltaTime);
-
+	CWeaponInfo* getCurrWeapon() { return currWeapon; }
+	CWeaponInfo* getPrimaryWeapon() { return primaryWeapon; }
+	CWeaponInfo* getSecondaryWeapon() { return secondaryWeapon; }
+	CWeaponInfo* getTertiaryWeapon() { return tertiaryWeapon; }
 private:
 	Vector3 defaultPosition, defaultTarget, defaultUp;
 	Vector3 position, target, up;
@@ -127,5 +124,6 @@ private:
 	CWeaponInfo* currWeapon;
 	CWeaponInfo* primaryWeapon;
 	CWeaponInfo* secondaryWeapon;
+	CWeaponInfo* tertiaryWeapon;
 	std::vector <CWeaponInfo*> Weapons;
 };

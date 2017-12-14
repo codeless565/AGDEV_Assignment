@@ -162,7 +162,7 @@ void CEnemy::Render(void)
 	modelStack.Scale(scale.x, scale.y, scale.z);
 	if (GetLODStatus())
 	{
-		cout << theDetailLevel << endl;
+		//cout << theDetailLevel << endl;
 		if (theDetailLevel != NO_DETAILS)
 		{
 			RenderHelper::RenderMesh(GetLODMesh());
