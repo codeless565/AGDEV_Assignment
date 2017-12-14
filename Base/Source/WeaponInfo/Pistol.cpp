@@ -42,6 +42,8 @@ void CPistol::Discharge(const std::string& _meshName, Vector3 position, Vector3 
 		// If there is still ammo in the magazine, then fire
 		if (magRounds > 0)
 		{
+			std::cout << "Discharge Position: " << position << std::endl;
+			std::cout << "Discharge Direction: " << target << std::endl;
 			// Create a projectile with a cube mesh. Its position and direction is same as the player.
 			// It will last for 3.0 seconds and travel at 500 units per second
 			CProjectile* aProjectile = Create::Projectile(_meshName,

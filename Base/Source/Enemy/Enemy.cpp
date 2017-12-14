@@ -53,24 +53,27 @@ void CEnemy::Init(void)
 	this->SetAABB(Vector3(1, 1, 1), Vector3(-1, -1, -1));
 
 	// Add to EntityManager
+	this->setEntityType(ENTITY_TYPE::ENEMY);
 	EntityManager::GetInstance()->AddEntity(this, true);
 
 	BodyNode = CSceneGraph::GetInstance()->AddNode(this);
 
-	HeadCube = Create::Asset("cubeSG", Vector3(position.x, position.y + 1.f, position.z));
+	HeadCube = Create::Entity("cubeSG", Vector3(position.x, position.y + 1.5f, position.z));
 	HeadCube->SetCollider(true);
 	HeadCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-	HeadCube->setEntityType(ENTITY_TYPE::ENEMY);
+	HeadCube->setEntityType(EntityBase::ENEMY);
 	HeadNode = BodyNode->AddChild(HeadCube);
 
-	LeftArmCube = Create::Asset("cubeSG", Vector3(position.x-1.f, position.y, position.z));
+	LeftArmCube = Create::Entity("cubeSG", Vector3(position.x-1.5f, position.y, position.z));
 	LeftArmCube->SetCollider(true);
 	LeftArmCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	LeftArmCube->setEntityType(EntityBase::ENEMY);
 	LeftArmNode = BodyNode->AddChild(LeftArmCube);
 
-	RightArmCube= Create::Asset("cubeSG", Vector3(position.x + 1.f, position.y, position.z));
+	RightArmCube= Create::Entity("cubeSG", Vector3(position.x + 1.5f, position.y, position.z));
 	RightArmCube->SetCollider(true);
 	RightArmCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	RightArmCube->setEntityType(EntityBase::ENEMY);
 	RightArmNode = BodyNode->AddChild(RightArmCube);
 	
 	if (HeadNode != NULL)

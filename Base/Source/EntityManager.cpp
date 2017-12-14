@@ -17,6 +17,9 @@ void EntityManager::Update(double _dt)
 	for (it = entityList.begin(); it != end; ++it)
 	{
 		(*it)->Update(_dt);
+		std::cout << "=============" << std::endl;
+		std::cout << (*it)->getEntityType() << std::endl;
+		std::cout << "=============" << std::endl;
 	}
 
 	// Update the SceneGraph
@@ -396,8 +399,11 @@ bool EntityManager::CheckForCollision(void)
 					{
 						if (CheckAABBCollision(thisEntity, thatEntity))
 						{
+							if (thisEntity->getEntityType() == thatEntity->getEntityType())
+								continue;
 							thisEntity->SetIsDone(true);
 							thatEntity->SetIsDone(true);
+							
 						}
 					}
 				}
