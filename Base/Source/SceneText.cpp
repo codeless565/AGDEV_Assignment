@@ -214,6 +214,28 @@ void SceneText::Init()
 		MeshBuilder::GetInstance()->GetMesh("CSYellow_Low")->textureID = LoadTGA("Image//Camo_Yellow.tga");
 	}
 
+	//Asset - Pillar
+	MeshBuilder::GetInstance()->GenerateOBJ("Pillar_High", "OBJ//Pillar_High.obj");
+	MeshBuilder::GetInstance()->GetMesh("Pillar_High")->textureID = LoadTGA("Image//Pillar.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("Pillar_Med", "OBJ//Pillar_Med.obj");
+	MeshBuilder::GetInstance()->GetMesh("Pillar_Med")->textureID = LoadTGA("Image//Pillar.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("Pillar_Low", "OBJ//Pillar_Low.obj");
+	MeshBuilder::GetInstance()->GetMesh("Pillar_Low")->textureID = LoadTGA("Image//Pillar.tga");
+	//Asset - Tree
+	MeshBuilder::GetInstance()->GenerateOBJ("Tree_High", "OBJ//Tree_High.obj");
+	MeshBuilder::GetInstance()->GetMesh("Tree_High")->textureID = LoadTGA("Image//Tree.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("Tree_Med", "OBJ//Tree_Med.obj");
+	MeshBuilder::GetInstance()->GetMesh("Tree_Med")->textureID = LoadTGA("Image//Tree.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("Tree_Low", "OBJ//Tree_Low.obj");
+	MeshBuilder::GetInstance()->GetMesh("Tree_Low")->textureID = LoadTGA("Image//Tree.tga");
+	//Asset - SandBag
+	MeshBuilder::GetInstance()->GenerateOBJ("SandBag_High", "OBJ//SandBag_High.obj");
+	MeshBuilder::GetInstance()->GetMesh("SandBag_High")->textureID = LoadTGA("Image//SandBag.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("SandBag_Med", "OBJ//SandBag_Med.obj");
+	MeshBuilder::GetInstance()->GetMesh("SandBag_Med")->textureID = LoadTGA("Image//SandBag.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("SandBag_Low", "OBJ//SandBag_Low.obj");
+	MeshBuilder::GetInstance()->GetMesh("SandBag_Low")->textureID = LoadTGA("Image//SandBag.tga");
+
 	/******************************************
 	******** SPATIAL PARTITIONING *************
 	*******************************************/
@@ -221,7 +243,7 @@ void SceneText::Init()
 	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
 	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
 	CSpatialPartition::GetInstance()->SetCamera(&camera);
-	CSpatialPartition::GetInstance()->SetLevelofDetails(10000.f, 40000.f);
+	CSpatialPartition::GetInstance()->SetLevelofDetails(20000.f, 80000.f);
 	EntityManager::GetInstance()->SetSpatialPartition(CSpatialPartition::GetInstance());
 
 	// Create entities into the scene
@@ -233,22 +255,15 @@ void SceneText::Init()
 	/*****************************************************
 	=\/========= Asset = non destructible =============\/=
 	******************************************************/
-	//GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
-	//CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
+	GenericEntity* Tree = Create::Entity("cubeSG", Vector3(20.0f, -10.0f, 0.0f), Vector3(20.f,20.f,20.f)); //Somehow cannot use Asset, it doesnt render
+	Tree->InitLOD("Tree_High", "Tree_Med", "Tree_Low");
+	
+	GenericEntity* Pillar = Create::Entity("cubeSG", Vector3(-20.0f, 0.0f, 0.0f), Vector3(20.f, 20.f, 20.f)); //Somehow cannot use Asset, it doesnt render
+	Pillar->InitLOD("Pillar_High", "Pillar_Med", "Pillar_Low");
 
-	//GenericEntity* childCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
-	//CSceneNode* childNode = baseNode->AddChild(childCube);
-	//childNode->ApplyTranslate(0.0f, 1.0f, 0.0f);
+	GenericEntity* Sandbag = Create::Entity("cubeSG", Vector3(-40.0f, 0.0f, 0.0f), Vector3(10.f, 10.f, 10.f)); //Somehow cannot use Asset, it doesnt render
+	Sandbag->InitLOD("SandBag_High", "SandBag_Med", "SandBag_Low");
 
-	//GenericEntity* grandchildCube = Create::Asset("cubeSG", Vector3(0.0f, 0.0f, 0.0f));
-	//CSceneNode* grandchildNode = childNode->AddChild(grandchildCube);
-	//grandchildCube->SetCollider(true);
-	//grandchildCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-	//grandchildNode->ApplyTranslate(0.0f, 0.0f, 1.0f);
-	//CUpdateTransformation* aRotateMtx = new CUpdateTransformation();
-	//aRotateMtx->ApplyUpdateScale(1.1f, 1.0f, 1.0f);
-	//aRotateMtx->SetSteps(0, 90);
-	//grandchildNode->SetUpdateTransformation(aRotateMtx);
 
 	/*****************************************************
 	=\/=============== Destructibles ==================\/=
@@ -282,13 +297,27 @@ void SceneText::Init()
 	playerInfo->SetTerrain(groundEntity);
 
 	// Create multiple MasterBlocks
-	for (int i = 0; i < 1; ++i)
+	for (int i = 0; i < 2; ++i)
 	{
-		CEnemy* temp = new CEnemy();
-		temp->Init();
-		temp->SetTerrain(groundEntity);
+		Vector3 Pos, Target;
 
-		MasterBlocks.push_back(temp);
+		switch (i)
+		{
+		case 0:
+			Pos = Vector3(0, 25, 100);
+			Target = Vector3(0, 25, 0);
+			break;
+		case 1:
+			Pos = Vector3(0, 25, -100);
+			Target = Vector3(0, 25, 0);
+			break;
+		}
+		CEnemy* temp = new CEnemy();
+		temp->Init((CEnemy::COLOR)i, Pos, Target);
+		temp->SetTerrain(groundEntity);
+		temp->InitSpawnChild(10);
+
+		MasterSpheres.push_back(temp);
 	}
 
 	// Setup the 2D entities
@@ -456,15 +485,3 @@ void SceneText::Exit()
 	delete lights[0];
 	delete lights[1];
 }
-
-	GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f, -20.0f));
-	aCube->SetCollider(true);
-	aCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-	aCube->InitLOD("cube", "sphere", "cubeSG");
-	for (int i = 0; i < 1; ++i)
-	{
-		CEnemy* temp = new CEnemy();
-		temp->Init((CEnemy::COLOR)i);
-		temp->SetTerrain(groundEntity);
-		MasterSpheres.push_back(temp);
-	}
