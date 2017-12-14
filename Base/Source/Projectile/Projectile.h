@@ -12,7 +12,7 @@ public:
 	CProjectile(void);
 	CProjectile(Mesh* _modelMesh);
 	~CProjectile(void);
-public:
+
 	// Activate the projectile. true == active, false == inactive
 	void SetStatus(const bool m_bStatus);
 	// get status of the projectile. true == active, false == inactive
@@ -42,6 +42,8 @@ public:
 	virtual void Update(double dt = 0.0333f);
 	// Render this projectile
 	virtual void Render(void);
+	int test;
+
 protected:
 	// The model mesh for this projectile
 	Mesh* modelMesh;

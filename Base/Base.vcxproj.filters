@@ -209,5 +209,8 @@
     <ClInclude Include="Source\Enemy\Enemy.h">
       <Filter>Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -5,11 +5,12 @@
 #include "GraphicsManager.h"
 #include "RenderHelper.h"
 
+#include "../Debug.h"
 
 CProjectile::CProjectile(void)
 	: modelMesh(NULL)
 	, m_bStatus(false)
-	, theDirection(0, 0, 0)
+	, theDirection(0.f, 0.f, 0.f)
 	, m_fLifetime(-1.0f)
 	, m_fSpeed(10.0f)
 	, theSource(NULL)
@@ -19,7 +20,7 @@ CProjectile::CProjectile(void)
 CProjectile::CProjectile(Mesh* _modelMesh)
 	: modelMesh(_modelMesh)
 	, m_bStatus(false)
-	, theDirection(0, 0, 0)
+	, theDirection(0.f, 0.f, 0.f)
 	, m_fLifetime(-1)
 	, m_fSpeed(10.0f)
 	, theSource(NULL)
@@ -49,8 +50,8 @@ bool CProjectile::GetStatus(void) const
 // Set the position and direction of the projectile
 void CProjectile::Set(Vector3 theNewPosition, Vector3 theNewDirection, const float m_fLifetime, const float m_fSpeed)
 {
-	position = theNewPosition;
-	theDirection = theNewDirection;
+	this->position = theNewPosition;
+	this->theDirection = theNewDirection;
 	this->m_fLifetime = m_fLifetime;
 	this->m_fSpeed = m_fSpeed;
 }
@@ -111,6 +112,7 @@ void CProjectile::Update(double dt)
 
 	// Update TimeLife of projectile. Set to inactive if too long
 	m_fLifetime -= (float)dt;
+
 	if (m_fLifetime < 0.0f)
 	{
 		SetStatus(false);
@@ -118,14 +120,19 @@ void CProjectile::Update(double dt)
 		return;
 	}
 
+#ifdef DEBUG_COUT
+	std::cout << "Proj Position(PRE-uD): " << position << std::endl;
+	std::cout << "Proj Direction(PRE-uD): " << theDirection << std::endl << std::endl;
+#endif // 
 
 	// Update Position
-	position.Set(	position.x + (theDirection.x * dt * m_fSpeed),
-					position.y + (theDirection.y * dt * m_fSpeed),
-					position.z + (theDirection.z * dt * m_fSpeed));
+	position += theDirection * (float)dt * m_fSpeed;
 
-	std::cout << "Proj Position: " << position << std::endl;
-	std::cout << "Proj Direction: " << theDirection << std::endl;
+	//position.Set(	position.x + (float)(theDirection.x * dt * m_fSpeed),position.y + (float)(theDirection.y * dt * m_fSpeed),position.z + (float)(theDirection.z * dt * m_fSpeed));
+#ifdef DEBUG_COUT
+	std::cout << "Proj Position(POST-uD): " << position << std::endl;
+	std::cout << "Proj Direction(POST-uD): " << theDirection << std::endl << std::endl;
+#endif // 
 }
 
 
@@ -161,14 +168,18 @@ CProjectile* Create::Projectile(const std::string& _meshName,
 	CProjectile* result = new CProjectile(modelMesh);
 	result->Set(_position, _direction, m_fLifetime, m_fSpeed);
 
+#ifdef DEBUG_COUT
 	std::cout << "CProjectile Position: " << _position.x << " " << _position.y << " " << _position.z << std::endl;
-	std::cout << "CProjectile Direction: " << _direction.x << " " << _direction.y << " " << _direction.z << std::endl;
+	std::cout << "CProjectile Direction: " << result->GetDirection().x << " " << result->GetDirection().y << " " << result->GetDirection().z << std::endl << std::endl;
+#endif
+
 	result->SetStatus(true);
 	result->SetCollider(true);
 	result->SetSource(_source);
 	result->setEntityType(EntityBase::ENTITY_PROJECTILES);
 	result->SetAABB(Vector3(0.5f,0.5f,0.5f),Vector3(-0.5f,-0.5f,-0.5f));
 	EntityManager::GetInstance()->AddEntity(result,true);
+	result->test = 0;
 
 	return result;
 }
