@@ -50,8 +50,6 @@ void CAssaultRifle::Discharge(const std::string& _meshName, Vector3 position, Ve
 				2.0f,
 				bulletSpeed,
 				_source);
-			aProjectile->SetCollider(true);
-			aProjectile->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
 			bFire = false;
 			magRounds--;
 
