@@ -26,8 +26,8 @@ void CSceneNode::Destroy(void)
 	{
 		(*it)->Destroy();
 		delete *it;
-		theChildren.erase(it);
 	}
+	theChildren.clear();
 
 	if (theEntity)
 	{
@@ -405,12 +405,12 @@ void CSceneNode::Render(void)
 
 			theEntity->Render();
 			// Render the children
+		}
 			std::vector<CSceneNode*>::iterator it;
 			for (it = theChildren.begin(); it != theChildren.end(); ++it)
 			{
 				(*it)->Render();
 			}
-		}
 	}
 
 	modelStack.PopMatrix();
