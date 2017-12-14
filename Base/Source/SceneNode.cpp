@@ -386,14 +386,14 @@ void CSceneNode::Render(void)
 
 			// Render the entity
 			theEntity->Render();
+			// Render the children
+			for (auto it : theChildren)
+			{
+				it->Render();
+			}
 		}
 	}
 
-	// Render the children
-	for (auto it : theChildren)
-	{
-		it->Render();
-	}
 
 	modelStack.PopMatrix();
 

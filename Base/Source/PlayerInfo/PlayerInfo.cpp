@@ -68,11 +68,11 @@ void CPlayerInfo::Init(void)
 	primaryWeapon->Init();
 
 	// Set the pistol as the secondary weapon
+	secondaryWeapon = new CLaserBlaster();
+	secondaryWeapon->Init();
+
 	//secondaryWeapon = new CPistol();
 	//secondaryWeapon->Init();
-
-	secondaryWeapon = new CPistol();
-	secondaryWeapon->Init();
 
 	tertiaryWeapon = new CGrenadeThrow();
 	tertiaryWeapon->Init();

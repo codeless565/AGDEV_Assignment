@@ -55,6 +55,8 @@ public:
 	GroundEntity* GetTerrain(void);
 	// Get Health
 	int GetHealth(void);
+	
+	GenericEntity* GetHead() { return Head; }
 
 	// Update
 	void Update(double dt = 0.0333f);
@@ -63,4 +65,15 @@ public:
 	void Constrain(void);
 	// Render
 	void Render(void);
+
+private:
+	GenericEntity* Body;
+	GenericEntity* Head;
+	GenericEntity* ArmL;
+	GenericEntity* ArmR;
+
+	CSceneNode* HeadNode;
+	CSceneNode* BodyNode;
+	CSceneNode* ArmLNode;
+	CSceneNode* ArmRNode;
 };

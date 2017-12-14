@@ -43,17 +43,41 @@ void CEnemy::Init(void)
 	minBoundary.Set(-1, -1, -1);
 
 	// Set speed
-	m_dSpeed = 1.0;
-
-	// Initialise the LOD meshes
-	InitLOD("cube", "sphere", "cubeSG");
-
+	m_dSpeed = 10.f;
+	
 	//// Initialise the Collider
 	//this->SetCollider(true);
 	//this->SetAABB(Vector3(1, 1, 1), Vector3(-1, -1, -1));
 
+	//Body
+	Body = Create::Entity("cube", Vector3(position.x, position.y, position.z), Vector3(5.f, 5.f, 5.f));
+	Body->SetCollider(true);
+	Body->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	Body->InitLOD("cube", "cube", "cube");
+	BodyNode = CSceneGraph::GetInstance()->AddNode(Body);
+
+	Head = Create::Entity("sphereHigh", Vector3(position.x, position.y + 5.f, position.z), Vector3(5.f, 5.f, 5.f));
+	Head->SetCollider(true);
+	Head->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	Head->InitLOD("sphereHigh", "sphereMed", "sphereLow");
+	HeadNode = BodyNode->AddChild(Head);
+
+	ArmL = Create::Entity("cubeSG", Vector3(position.x -5.f, position.y, position.z), Vector3(5.f, 5.f, 5.f));
+	ArmL->SetCollider(true);
+	ArmL->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	ArmL->InitLOD("cubeSG", "cubeSG", "cubeSG");
+	ArmLNode = BodyNode->AddChild(ArmL);
+
+	ArmR = Create::Entity("cubeSG", Vector3(position.x + 5.f, position.y, position.z), Vector3(5.f, 5.f, 5.f));
+	ArmR->SetCollider(true);
+	ArmR->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	ArmR->InitLOD("cubeSG", "cubeSG", "cubeSG");
+	ArmRNode = BodyNode->AddChild(ArmR);
+
+	Health = 100.f;
+
 	// Add to EntityManager
-	EntityManager::GetInstance()->AddEntity(this, true);
+	
 }
 
 // Reset this player instance to default
@@ -133,6 +157,16 @@ int CEnemy::GetHealth(void)
 // Update
 void CEnemy::Update(double dt)
 {
+	if (Health <= 0)
+	{
+		SetIsDone(true);
+		for (auto it : BodyNode->getChild())
+		{
+			it->GetEntity()->SetIsDone(true);
+		}
+		return;
+	}
+
 	Vector3 viewVector = (target - position).Normalized();
 	position += viewVector * (float)m_dSpeed * (float)dt;
 	//cout << position << "..." << viewVector << endl;
@@ -145,6 +179,13 @@ void CEnemy::Update(double dt)
 		target.z = position.z * -1;
 	else if (position.z < -400.0f)
 		target.z = position.z * -1;
+
+	BodyNode->GetEntity()->SetPosition(Vector3(BodyNode->GetEntity()->GetPosition().x, BodyNode->GetEntity()->GetPosition().y, position.z));
+
+	for (auto it : BodyNode->getChild())
+	{
+		it->GetEntity()->SetPosition(Vector3(it->GetEntity()->GetPosition().x, it->GetEntity()->GetPosition().y,position.z));
+	}
 }
 
 // Constrain the position within the borders
@@ -183,6 +224,7 @@ void CEnemy::Render(void)
 	}
 	modelStack.PopMatrix();
 }
+
 // TODO //
 // CHANGE TO CREATE::ENTITY //
 // TODO // 

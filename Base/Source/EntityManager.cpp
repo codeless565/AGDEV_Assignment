@@ -4,6 +4,7 @@
 #include "Projectile/Laser.h"
 
 #include "SceneGraph.h"
+#include "Enemy\Enemy.h"
 
 #include <iostream>
 using namespace std;
@@ -398,6 +399,15 @@ bool EntityManager::CheckForCollision(void)
 						{
 							if (thisEntity->getEntityType() == thatEntity->getEntityType())
 								continue;
+							if (thisEntity->getEntityType() == EntityBase::ENTITY_ENEMY)
+							{
+								CEnemy* thisEnemy = dynamic_cast<CEnemy*>(thisEntity);
+								GenericEntity* thishead = dynamic_cast<GenericEntity*>(thisEntity);
+								if(thisEnemy->GetHead() == thishead)
+									thisEnemy->SetHealth(thisEnemy->GetHealth() - 100.f);
+								else
+									thisEnemy->SetHealth(thisEnemy->GetHealth() - 10.f);
+							}
 							thisEntity->SetIsDone(true);
 							thatEntity->SetIsDone(true);
 							
