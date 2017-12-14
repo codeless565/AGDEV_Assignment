@@ -49,6 +49,7 @@ void CEnemy::Init(void)
 	this->SetAABB(Vector3(1, 1, 1), Vector3(-1, -1, -1));
 
 	//Create a Graph for these Blocks
+	this->setEntityType(EntityBase::ENTITY_ENEMIES);
 	MasterNode = CSceneGraph::GetInstance()->AddNode(this);
 
 	// Add to EntityManager
@@ -92,10 +93,8 @@ void CEnemy::Update(double dt)
 
 			if (ChildBlocks.empty())
 			{
-				GenericEntity* childBlock = Create::Entity("cubeSG", TempPos);
+				GenericEntity* childBlock = Create::Enemies("cubeSG", TempPos);
 				childBlock->InitLOD("cube", "sphere", "cubeSG");
-				childBlock->SetCollider(true);
-				childBlock->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
 				MasterNode->AddChild(childBlock);
 				Spawned = true;
 			}
@@ -108,10 +107,8 @@ void CEnemy::Update(double dt)
 
 					if (dist.Length() >= 0)
 					{
-						GenericEntity* childBlock = Create::Entity("cubeSG", TempPos);
+						GenericEntity* childBlock = Create::Enemies("cubeSG", TempPos);
 						childBlock->InitLOD("cube", "sphere", "cubeSG");
-						childBlock->SetCollider(true);
-						childBlock->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
 						MasterNode->AddChild(childBlock);
 						Spawned = true;
 						break;
