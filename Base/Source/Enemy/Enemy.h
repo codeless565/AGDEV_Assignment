@@ -1,6 +1,8 @@
 #pragma once
 #include "../GenericEntity.h"
 #include "../GroundEntity.h"
+#include "../SceneGraph.h"
+#include "../SceneNode.h"
 
 class Mesh;
 
@@ -51,4 +53,9 @@ public:
 	void Constrain(void);
 	// Render
 	void Render(void);
+
+private:
+	CSceneNode* MasterNode;
+
+	float m_SpawnTimer;
 };
