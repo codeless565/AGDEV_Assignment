@@ -26,6 +26,7 @@ public:
 	virtual void Render();
 	virtual void Exit();
 
+	bool gameOver;
 private:
 	SceneText(SceneManager* _sceneMgr); // This is used to register to SceneManager
 

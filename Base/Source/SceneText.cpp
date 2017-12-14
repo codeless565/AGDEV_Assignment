@@ -244,11 +244,15 @@ void SceneText::Init()
 	{
 		textObj[i] = Create::Text2DObject("text", Vector3(-halfWindowWidth, -halfWindowHeight + fontSize*i + halfFontSize, 0.0f), "", Vector3(fontSize, fontSize, fontSize), Color(0.0f,1.0f,0.0f));
 	}
-	textObj[0]->SetText("HELLO WORLD");
+
+	gameOver = false;
 }
 
 void SceneText::Update(double dt)
 {
+	if (playerInfo->getScore() >= 20)
+		gameOver = true;
+
 	// Update our entities
 	EntityManager::GetInstance()->Update(dt);
 
@@ -321,20 +325,43 @@ void SceneText::Update(double dt)
 	// Update the 2 text object values. NOTE: Can do this in their own class but i'm lazy to do it now :P
 	// Eg. FPSRenderEntity or inside RenderUI for LightEntity
 	std::ostringstream ss;
-	ss.precision(5);
-	float fps = (float)(1.f / dt);
-	ss << "FPS: " << fps;
-	textObj[1]->SetText(ss.str());
+	if (gameOver)
+	{
+		ss.str("");
+		ss << "Final Score: " << playerInfo->getScore();
+		textObj[0]->SetText(ss.str());
 
-	ss.str("");
-	ss.precision(4);
-	if (playerInfo->getCurrWeapon() == playerInfo->getPrimaryWeapon())
-		ss << "Laser Blaster " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
-	else if (playerInfo->getCurrWeapon() == playerInfo->getSecondaryWeapon())
-		ss << "Pistol " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
-	else if (playerInfo->getCurrWeapon() == playerInfo->getTertiaryWeapon())
-		ss << "Grenade " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
-	textObj[2]->SetText(ss.str());
+		ss.str("");
+		ss.precision(4);
+		ss << "Accuracy: " << (playerInfo->getShots()/playerInfo->getTotalShots()) << "%";
+		textObj[1]->SetText(ss.str());
+
+		ss.str("");
+		ss << "Game Over!";
+		textObj[2]->SetText(ss.str());
+	}
+	else
+	{
+		ss.str("");
+		ss << "Score: " << playerInfo->getScore();
+		textObj[0]->SetText(ss.str());
+
+		ss.str("");
+		ss.precision(5);
+		float fps = (float)(1.f / dt);
+		ss << "FPS: " << fps;
+		textObj[1]->SetText(ss.str());
+
+		ss.str("");
+		ss.precision(4);
+		if (playerInfo->getCurrWeapon() == playerInfo->getPrimaryWeapon())
+			ss << "Laser Blaster " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
+		else if (playerInfo->getCurrWeapon() == playerInfo->getSecondaryWeapon())
+			ss << "Pistol " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
+		else if (playerInfo->getCurrWeapon() == playerInfo->getTertiaryWeapon())
+			ss << "Grenade " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
+		textObj[2]->SetText(ss.str());
+	}
 }
 
 void SceneText::Render()
