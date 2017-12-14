@@ -17,6 +17,9 @@ void EntityManager::Update(double _dt)
 	for (it = entityList.begin(); it != end; ++it)
 	{
 		(*it)->Update(_dt);
+		std::cout << "=============" << std::endl;
+		std::cout << (*it)->getEntityType() << std::endl;
+		std::cout << "=============" << std::endl;
 	}
 
 	// Update the SceneGraph
