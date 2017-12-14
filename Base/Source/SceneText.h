@@ -37,7 +37,7 @@ private:
 	Light* lights[2];
 
 	GenericEntity* theCube;
-	std::vector<CEnemy*> MasterBlocks;
+	std::vector<CEnemy*> MasterSpheres;
 
 	static SceneText* sInstance; // The pointer to the object that gets registered
 };

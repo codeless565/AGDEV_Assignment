@@ -47,7 +47,7 @@ SceneText::~SceneText()
 void SceneText::Init()
 {
 	currProg = GraphicsManager::GetInstance()->LoadShader("default", "Shader//Texture.vertexshader", "Shader//Texture.fragmentshader");
-	
+
 	// Tell the shader program to store these uniform locations
 	currProg->AddUniform("MVP");
 	currProg->AddUniform("MV");
@@ -84,7 +84,7 @@ void SceneText::Init()
 	currProg->AddUniform("colorTexture");
 	currProg->AddUniform("textEnabled");
 	currProg->AddUniform("textColor");
-	
+
 	// Tell the graphics manager to use the shader we just loaded
 	GraphicsManager::GetInstance()->SetActiveShader("default");
 
@@ -113,7 +113,7 @@ void SceneText::Init()
 
 	currProg->UpdateInt("numLights", 1);
 	currProg->UpdateInt("textEnabled", 0);
-	
+
 	// Create the playerinfo instance, which manages all information about the player
 	playerInfo = CPlayerInfo::GetInstance();
 	playerInfo->Init();
@@ -124,58 +124,114 @@ void SceneText::Init()
 	playerInfo->AttachCamera(&camera);
 	GraphicsManager::GetInstance()->AttachCamera(&camera);
 
-	// Load all the meshes
-	MeshBuilder::GetInstance()->GenerateAxes("reference");
-	MeshBuilder::GetInstance()->GenerateCrossHair("crosshair");
-	MeshBuilder::GetInstance()->GenerateQuad("quad", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("quad")->textureID = LoadTGA("Image//calibri.tga");
-	MeshBuilder::GetInstance()->GenerateText("text", 16, 16);
-	MeshBuilder::GetInstance()->GetMesh("text")->textureID = LoadTGA("Image//calibri.tga");
-	MeshBuilder::GetInstance()->GetMesh("text")->material.kAmbient.Set(1, 0, 0);
-	MeshBuilder::GetInstance()->GenerateOBJ("Chair", "OBJ//chair.obj");
-	MeshBuilder::GetInstance()->GetMesh("Chair")->textureID = LoadTGA("Image//chair.tga");
-	MeshBuilder::GetInstance()->GenerateRing("ring", Color(1, 0, 1), 36, 1, 0.5f);
-	MeshBuilder::GetInstance()->GenerateSphere("lightball", Color(1, 1, 1), 18, 36, 1.f);
-	MeshBuilder::GetInstance()->GenerateSphere("sphere", Color(1, 0, 0), 18, 36, 0.5f);
-	MeshBuilder::GetInstance()->GenerateCone("cone", Color(0.5f, 1, 0.3f), 36, 10.f, 10.f);
-	MeshBuilder::GetInstance()->GenerateCube("cube", Color(1.0f, 1.0f, 0.0f), 1.0f);
-	MeshBuilder::GetInstance()->GetMesh("cone")->material.kDiffuse.Set(0.99f, 0.99f, 0.99f);
-	MeshBuilder::GetInstance()->GetMesh("cone")->material.kSpecular.Set(0.f, 0.f, 0.f);
-	MeshBuilder::GetInstance()->GenerateQuad("GRASS_DARKGREEN", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("GRASS_DARKGREEN")->textureID = LoadTGA("Image//grass_darkgreen.tga");
-	MeshBuilder::GetInstance()->GenerateQuad("GEO_GRASS_LIGHTGREEN", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("GEO_GRASS_LIGHTGREEN")->textureID = LoadTGA("Image//grass_lightgreen.tga");
+	/********************************************************
+	********************* MESHES ****************************
+	********************************************************/
+	{
+		MeshBuilder::GetInstance()->GenerateAxes("reference");
+		MeshBuilder::GetInstance()->GenerateCrossHair("crosshair");
+		MeshBuilder::GetInstance()->GenerateQuad("quad", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("quad")->textureID = LoadTGA("Image//calibri.tga");
+		MeshBuilder::GetInstance()->GenerateText("text", 16, 16);
+		MeshBuilder::GetInstance()->GetMesh("text")->textureID = LoadTGA("Image//calibri.tga");
+		MeshBuilder::GetInstance()->GetMesh("text")->material.kAmbient.Set(1, 0, 0);
+		MeshBuilder::GetInstance()->GenerateOBJ("Chair", "OBJ//chair.obj");
+		MeshBuilder::GetInstance()->GetMesh("Chair")->textureID = LoadTGA("Image//chair.tga");
+		MeshBuilder::GetInstance()->GenerateRing("ring", Color(1, 0, 1), 36, 1, 0.5f);
+		MeshBuilder::GetInstance()->GenerateSphere("lightball", Color(1, 1, 1), 18, 36, 1.f);
+		MeshBuilder::GetInstance()->GenerateSphere("sphere", Color(1, 0, 0), 18, 36, 0.5f);
+		MeshBuilder::GetInstance()->GenerateCone("cone", Color(0.5f, 1, 0.3f), 36, 10.f, 10.f);
+		MeshBuilder::GetInstance()->GenerateCube("cube", Color(1.0f, 1.0f, 0.0f), 1.0f);
+		MeshBuilder::GetInstance()->GetMesh("cone")->material.kDiffuse.Set(0.99f, 0.99f, 0.99f);
+		MeshBuilder::GetInstance()->GetMesh("cone")->material.kSpecular.Set(0.f, 0.f, 0.f);
+		MeshBuilder::GetInstance()->GenerateQuad("GRASS_DARKGREEN", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("GRASS_DARKGREEN")->textureID = LoadTGA("Image//grass_darkgreen.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("GEO_GRASS_LIGHTGREEN", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("GEO_GRASS_LIGHTGREEN")->textureID = LoadTGA("Image//grass_lightgreen.tga");
 
-	MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_FRONT", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_BACK", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_LEFT", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_RIGHT", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_TOP", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_BOTTOM", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SKYBOX_FRONT")->textureID = LoadTGA("Image//SkyBox//skybox_front.tga");
-	MeshBuilder::GetInstance()->GetMesh("SKYBOX_BACK")->textureID = LoadTGA("Image//SkyBox//skybox_back.tga");
-	MeshBuilder::GetInstance()->GetMesh("SKYBOX_LEFT")->textureID = LoadTGA("Image//SkyBox//skybox_left.tga");
-	MeshBuilder::GetInstance()->GetMesh("SKYBOX_RIGHT")->textureID = LoadTGA("Image//SkyBox//skybox_right.tga");
-	MeshBuilder::GetInstance()->GetMesh("SKYBOX_TOP")->textureID = LoadTGA("Image//SkyBox//skybox_top.tga");
-	MeshBuilder::GetInstance()->GetMesh("SKYBOX_BOTTOM")->textureID = LoadTGA("Image//SkyBox//skybox_bottom.tga");
-	MeshBuilder::GetInstance()->GenerateRay("laser", 10.0f);
-	MeshBuilder::GetInstance()->GenerateQuad("GRIDMESH", Color(1, 1, 1), 10.f);
+		MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_FRONT", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_BACK", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_LEFT", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_RIGHT", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_TOP", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_BOTTOM", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("SKYBOX_FRONT")->textureID = LoadTGA("Image//SkyBox//skybox_front.tga");
+		MeshBuilder::GetInstance()->GetMesh("SKYBOX_BACK")->textureID = LoadTGA("Image//SkyBox//skybox_back.tga");
+		MeshBuilder::GetInstance()->GetMesh("SKYBOX_LEFT")->textureID = LoadTGA("Image//SkyBox//skybox_left.tga");
+		MeshBuilder::GetInstance()->GetMesh("SKYBOX_RIGHT")->textureID = LoadTGA("Image//SkyBox//skybox_right.tga");
+		MeshBuilder::GetInstance()->GetMesh("SKYBOX_TOP")->textureID = LoadTGA("Image//SkyBox//skybox_top.tga");
+		MeshBuilder::GetInstance()->GetMesh("SKYBOX_BOTTOM")->textureID = LoadTGA("Image//SkyBox//skybox_bottom.tga");
+		MeshBuilder::GetInstance()->GenerateRay("laser", 10.0f);
+		MeshBuilder::GetInstance()->GenerateQuad("GRIDMESH", Color(1, 1, 1), 10.f);
+	}
 
+	//MasterSphere
+	MeshBuilder::GetInstance()->GenerateOBJ("MS_High", "OBJ//MasterSphere_High.obj");
+	MeshBuilder::GetInstance()->GetMesh("MS_High")->textureID = LoadTGA("Image//MasterSphere.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("MS_Med", "OBJ//MasterSphere_Med.obj");
+	MeshBuilder::GetInstance()->GetMesh("MS_Med")->textureID = LoadTGA("Image//MasterSphere.tga");
+	MeshBuilder::GetInstance()->GenerateOBJ("MS_Low", "OBJ//MasterSphere_Low.obj");
+	MeshBuilder::GetInstance()->GetMesh("MS_Low")->textureID = LoadTGA("Image//MasterSphere.tga");
+
+	//================== CHILD RED ================================
+	{
+		//ChildSphere Red
+		MeshBuilder::GetInstance()->GenerateOBJ("CSRed_High", "OBJ//ChildSphere_High.obj");
+		MeshBuilder::GetInstance()->GetMesh("CSRed_High")->textureID = LoadTGA("Image//Camo_Red.tga");
+		MeshBuilder::GetInstance()->GenerateOBJ("CSRed_Med", "OBJ//ChildSphere_Med.obj");
+		MeshBuilder::GetInstance()->GetMesh("CSRed_Med")->textureID = LoadTGA("Image//Camo_Red.tga");
+		MeshBuilder::GetInstance()->GenerateOBJ("CSRed_Low", "OBJ//ChildSphere_Low.obj");
+		MeshBuilder::GetInstance()->GetMesh("CSRed_Low")->textureID = LoadTGA("Image//Camo_Red.tga");
+	}
+	//================== CHILD BLUE ===============================
+	{
+		//ChildSphere Blue
+		MeshBuilder::GetInstance()->GenerateOBJ("CSBlue_High", "OBJ//ChildSphere_High.obj");
+		MeshBuilder::GetInstance()->GetMesh("CSBlue_High")->textureID = LoadTGA("Image//Camo_Blue.tga");
+		MeshBuilder::GetInstance()->GenerateOBJ("CSBlue_Med", "OBJ//ChildSphere_Med.obj");
+		MeshBuilder::GetInstance()->GetMesh("CSBlue_Med")->textureID = LoadTGA("Image//Camo_Blue.tga");
+		MeshBuilder::GetInstance()->GenerateOBJ("CSBlue_Low", "OBJ//ChildSphere_Low.obj");
+		MeshBuilder::GetInstance()->GetMesh("CSBlue_Low")->textureID = LoadTGA("Image//Camo_Blue.tga");
+	}
+	//================== CHILD GREEN ==============================
+	{
+		//ChildSphere Green
+		MeshBuilder::GetInstance()->GenerateOBJ("CSGreen_High", "OBJ//ChildSphere_High.obj");
+		MeshBuilder::GetInstance()->GetMesh("CSGreen_High")->textureID = LoadTGA("Image//Camo_Green.tga");
+		MeshBuilder::GetInstance()->GenerateOBJ("CSGreen_Med", "OBJ//ChildSphere_Med.obj");
+		MeshBuilder::GetInstance()->GetMesh("CSGreen_Med")->textureID = LoadTGA("Image//Camo_Green.tga");
+		MeshBuilder::GetInstance()->GenerateOBJ("CSGreen_Low", "OBJ//ChildSphere_Low.obj");
+		MeshBuilder::GetInstance()->GetMesh("CSGreen_Low")->textureID = LoadTGA("Image//Camo_Green.tga");
+	}
+	//================== CHILD YELLOW =============================
+	{
+		//ChildSphere Yellow
+		MeshBuilder::GetInstance()->GenerateOBJ("CSYellow_High", "OBJ//ChildSphere_High.obj");
+		MeshBuilder::GetInstance()->GetMesh("CSYellow_High")->textureID = LoadTGA("Image//Camo_Yellow.tga");
+		MeshBuilder::GetInstance()->GenerateOBJ("CSYellow_Med", "OBJ//ChildSphere_Med.obj");
+		MeshBuilder::GetInstance()->GetMesh("CSYellow_Med")->textureID = LoadTGA("Image//Camo_Yellow.tga");
+		MeshBuilder::GetInstance()->GenerateOBJ("CSYellow_Low", "OBJ//ChildSphere_Low.obj");
+		MeshBuilder::GetInstance()->GetMesh("CSYellow_Low")->textureID = LoadTGA("Image//Camo_Yellow.tga");
+	}
+
+	/******************************************
+	******** SPATIAL PARTITIONING *************
+	*******************************************/
 	//Setup the Spatial Parition and pass it to EntityManager to manage
 	CSpatialPartition::GetInstance()->Init(100, 100, 10, 10);
 	CSpatialPartition::GetInstance()->SetMesh("GRIDMESH");
 	CSpatialPartition::GetInstance()->SetCamera(&camera);
-	CSpatialPartition::GetInstance()->SetLevelofDetails(5000.f, 10000.f);
+	CSpatialPartition::GetInstance()->SetLevelofDetails(10000.f, 40000.f);
 	EntityManager::GetInstance()->SetSpatialPartition(CSpatialPartition::GetInstance());
 
 	// Create entities into the scene
 	Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
 	Create::Entity("lightball", Vector3(lights[0]->position.x, lights[0]->position.y, lights[0]->position.z)); // Lightball
-	
+
 	MeshBuilder::GetInstance()->GenerateCube("cubeSG", Color(1.0f, 0.64f, 0.0f), 1.0f);
-	
+
 	/*****************************************************
-	=\/========= Asset = non destructible =============\/= 
+	=\/========= Asset = non destructible =============\/=
 	******************************************************/
 	GenericEntity* baseCube = Create::Asset("cube", Vector3(0.0f, 0.0f, 0.0f));
 	CSceneNode* baseNode = CSceneGraph::GetInstance()->AddNode(baseCube);
@@ -197,7 +253,7 @@ void SceneText::Init()
 	/*****************************************************
 	=\/=============== Destructibles ==================\/=
 	******************************************************/
-	GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f,-20.0f));
+	GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f, -20.0f));
 	aCube->SetCollider(true);
 	aCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
 	aCube->InitLOD("cube", "sphere", "cubeSG");
@@ -221,12 +277,12 @@ void SceneText::Init()
 
 	//=======================================================
 	groundEntity = Create::Ground("GRASS_DARKGREEN", "GEO_GRASS_LIGHTGREEN");
-//	Create::Text3DObject("text", Vector3(0.0f, 0.0f, 0.0f), "DM2210", Vector3(10.0f, 10.0f, 10.0f), Color(0, 1, 1));
+	//	Create::Text3DObject("text", Vector3(0.0f, 0.0f, 0.0f), "DM2210", Vector3(10.0f, 10.0f, 10.0f), Color(0, 1, 1));
 	Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
 
 	SkyBoxEntity* theSkyBox = Create::SkyBox("SKYBOX_FRONT", "SKYBOX_BACK",
-											 "SKYBOX_LEFT", "SKYBOX_RIGHT",
-											 "SKYBOX_TOP", "SKYBOX_BOTTOM");
+		"SKYBOX_LEFT", "SKYBOX_RIGHT",
+		"SKYBOX_TOP", "SKYBOX_BOTTOM");
 
 	// Customise the ground entity
 	groundEntity->SetPosition(Vector3(0, -10, 0));
@@ -238,10 +294,10 @@ void SceneText::Init()
 	for (int i = 0; i < 1; ++i)
 	{
 		CEnemy* temp = new CEnemy();
-		temp->Init();
+		temp->Init((CEnemy::COLOR)i);
 		temp->SetTerrain(groundEntity);
 
-		MasterBlocks.push_back(temp);
+		MasterSpheres.push_back(temp);
 	}
 
 	// Setup the 2D entities
@@ -251,7 +307,7 @@ void SceneText::Init()
 	float halfFontSize = fontSize / 2.0f;
 	for (int i = 0; i < 3; ++i)
 	{
-		textObj[i] = Create::Text2DObject("text", Vector3(-halfWindowWidth, -halfWindowHeight + fontSize*i + halfFontSize, 0.0f), "", Vector3(fontSize, fontSize, fontSize), Color(0.0f,1.0f,0.0f));
+		textObj[i] = Create::Text2DObject("text", Vector3(-halfWindowWidth, -halfWindowHeight + fontSize*i + halfFontSize, 0.0f), "", Vector3(fontSize, fontSize, fontSize), Color(0.0f, 1.0f, 0.0f));
 	}
 	textObj[0]->SetText("HELLO WORLD");
 }
@@ -262,39 +318,39 @@ void SceneText::Update(double dt)
 	EntityManager::GetInstance()->Update(dt);
 
 	// THIS WHOLE CHUNK TILL <THERE> CAN REMOVE INTO ENTITIES LOGIC! Or maybe into a scene function to keep the update clean
-	if(KeyboardController::GetInstance()->IsKeyDown('1'))
+	if (KeyboardController::GetInstance()->IsKeyDown('1'))
 		glEnable(GL_CULL_FACE);
-	if(KeyboardController::GetInstance()->IsKeyDown('2'))
+	if (KeyboardController::GetInstance()->IsKeyDown('2'))
 		glDisable(GL_CULL_FACE);
-	if(KeyboardController::GetInstance()->IsKeyDown('3'))
+	if (KeyboardController::GetInstance()->IsKeyDown('3'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	if(KeyboardController::GetInstance()->IsKeyDown('4'))
+	if (KeyboardController::GetInstance()->IsKeyDown('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	
-	if(KeyboardController::GetInstance()->IsKeyDown('5'))
+
+	if (KeyboardController::GetInstance()->IsKeyDown('5'))
 	{
 		lights[0]->type = Light::LIGHT_POINT;
 	}
-	else if(KeyboardController::GetInstance()->IsKeyDown('6'))
+	else if (KeyboardController::GetInstance()->IsKeyDown('6'))
 	{
 		lights[0]->type = Light::LIGHT_DIRECTIONAL;
 	}
-	else if(KeyboardController::GetInstance()->IsKeyDown('7'))
+	else if (KeyboardController::GetInstance()->IsKeyDown('7'))
 	{
 		lights[0]->type = Light::LIGHT_SPOT;
 	}
 
-	if(KeyboardController::GetInstance()->IsKeyDown('I'))
+	if (KeyboardController::GetInstance()->IsKeyDown('I'))
 		lights[0]->position.z -= (float)(10.f * dt);
-	if(KeyboardController::GetInstance()->IsKeyDown('K'))
+	if (KeyboardController::GetInstance()->IsKeyDown('K'))
 		lights[0]->position.z += (float)(10.f * dt);
-	if(KeyboardController::GetInstance()->IsKeyDown('J'))
+	if (KeyboardController::GetInstance()->IsKeyDown('J'))
 		lights[0]->position.x -= (float)(10.f * dt);
-	if(KeyboardController::GetInstance()->IsKeyDown('L'))
+	if (KeyboardController::GetInstance()->IsKeyDown('L'))
 		lights[0]->position.x += (float)(10.f * dt);
-	if(KeyboardController::GetInstance()->IsKeyDown('O'))
+	if (KeyboardController::GetInstance()->IsKeyDown('O'))
 		lights[0]->position.y -= (float)(10.f * dt);
-	if(KeyboardController::GetInstance()->IsKeyDown('P'))
+	if (KeyboardController::GetInstance()->IsKeyDown('P'))
 		lights[0]->position.y += (float)(10.f * dt);
 
 	// if the left mouse button was released
