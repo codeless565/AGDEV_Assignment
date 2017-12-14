@@ -30,7 +30,7 @@ public:
 	CEnemy(void);
 	virtual ~CEnemy();
 
-	void Init(COLOR _color);
+	void Init(COLOR _color, Vector3 _Pos, Vector3 _Target);
 	// Reset this player instance to default
 	void Reset(void);
 
@@ -62,12 +62,16 @@ public:
 	// Render
 	void Render(void);
 
+
+	void InitSpawnChild(int _num);
+
 private:
-	CSceneNode* MasterNode;
-
-	float m_SpawnTimer;
-
-	COLOR Master_Color;
-
 	void SpawnChild();
+	void SwapPosition();
+
+	CSceneNode* MasterNode;
+	COLOR Master_Color;
+	
+	float m_SpawnTimer;
+	float m_SwapTimer;
 };

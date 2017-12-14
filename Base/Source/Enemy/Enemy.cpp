@@ -14,6 +14,7 @@ CEnemy::CEnemy()
 	, minBoundary(Vector3(0.0f, 0.0f, 0.0f))
 	, m_pTerrain(NULL)
 	, m_SpawnTimer(0.f)
+	, m_SwapTimer(0.f)
 {
 }
 
@@ -22,7 +23,7 @@ CEnemy::~CEnemy()
 {
 }
 
-void CEnemy::Init(COLOR _color)
+void CEnemy::Init(COLOR _color, Vector3 _Pos, Vector3 _Target)
 {
 	// Set the default values
 	defaultPosition.Set(0, 0, 10);
@@ -30,9 +31,9 @@ void CEnemy::Init(COLOR _color)
 	defaultUp.Set(0, 1, 0);
 
 	// Set the current values
-	position.Set(0.0f, 0.0f, 0.0f); //<<<<<NEEd to change to distinctive position
+	SetPosition(_Pos); //<<<<<NEEd to change to distinctive position
+	SetTarget(_Target);
 	scale.Set(5.f, 5.f, 5.f);
-	target.Set(10.0f, 0.0f, 450.0f); // <<<<< Masterblock no need target
 	up.Set(0.0f, 1.0f, 0.0f);
 
 	// Set Boundary
@@ -44,7 +45,7 @@ void CEnemy::Init(COLOR _color)
 
 	// Initialise the Collider
 	this->SetCollider(true);
-	this->SetAABB(Vector3(1, 1, 1), Vector3(-1, -1, -1));
+	this->SetAABB(Vector3(0.5f * scale.x, 0.5f * scale.y, 0.5f * scale.z), Vector3(-0.5f * scale.x, -0.5f * scale.y, -0.5f * scale.z));
 
 	// Add to EntityManager
 	EntityManager::GetInstance()->AddEntity(this, true);
@@ -57,7 +58,6 @@ void CEnemy::Init(COLOR _color)
 	//Create a Graph for these Blocks
 	this->setEntityType(EntityBase::ENTITY_ENEMIES);
 	MasterNode = CSceneGraph::GetInstance()->AddNode(this);
-
 }
 
 // Reset this player instance to default
@@ -73,57 +73,18 @@ void CEnemy::Reset(void)
 void CEnemy::Update(double dt)
 {
 	m_SpawnTimer += (float)dt;
+	m_SwapTimer += (float)dt;
 
-	if (m_SpawnTimer >= 0.5f)
+	if (m_SpawnTimer >= 1.0f)
 	{
 		m_SpawnTimer = 0.f;
+		SpawnChild();
+	}
 
-		bool Spawned = false;
-
-		vector<CSceneNode*> ChildBlocks = MasterNode->GetChildren();
-
-		std::vector<CSceneNode*>::iterator it, end;
-		end = ChildBlocks.end();
-
-		do
-		{
-			float RandPosX = Math::RandIntMinMax(-10, 10) * 2 + position.x;
-			float RandPosZ = Math::RandIntMinMax(-10, 10) * 2 + position.z;
-
-			Vector3 TempPos(RandPosX, position.y, RandPosZ);
-
-			if (RandPosX == position.x && RandPosZ == position.z)
-				continue;
-
-			if (ChildBlocks.empty())
-			{
-				GenericEntity* childBlock = Create::Entity("cubeSG", TempPos);
-				childBlock->InitLOD("cube", "sphere", "cubeSG");
-				childBlock->SetCollider(true);
-				childBlock->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-				MasterNode->AddChild(childBlock);
-				Spawned = true;
-			}
-			else
-			{
-
-				for (auto it : ChildBlocks)
-				{
-					Vector3 dist = TempPos - it->GetEntity()->GetPosition();
-
-					if (dist.Length() >= 0)
-					{
-						GenericEntity* childBlock = Create::Entity("cubeSG", TempPos);
-						childBlock->InitLOD("cube", "sphere", "cubeSG");
-						childBlock->SetCollider(true);
-						childBlock->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-						MasterNode->AddChild(childBlock);
-						Spawned = true;
-						break;
-					}
-				}
-			}
-		} while (Spawned == false);
+	if (m_SwapTimer >= 1.f)
+	{
+		m_SwapTimer = 0.f;
+		//SwapPosition();
 	}
 
 	//Vector3 viewVector = (target - position).Normalized();
@@ -176,6 +137,12 @@ void CEnemy::Render(void)
 	modelStack.PopMatrix();
 }
 
+void CEnemy::InitSpawnChild(int _num)
+{
+	for (int i = 0; i < _num; ++i)
+		SpawnChild();
+}
+
 void CEnemy::SpawnChild()
 {
 	vector<CSceneNode*> ChildBlocks = MasterNode->GetChildren();
@@ -185,13 +152,13 @@ void CEnemy::SpawnChild()
 
 	do
 	{
-		float RandPosX = Math::RandIntMinMax(-5, 5) * scale.x * 2 + position.x;
-		float RandPosY = Math::RandIntMinMax(2, 5) * scale.x * 2 + position.z;
-
-		Vector3 TempPos(RandPosX, RandPosY, position.z);
+		float RandPosX = Math::RandIntMinMax(-3, 3) * scale.x * 2 + position.x;
+		float RandPosY = Math::RandIntMinMax(-3, 3) * scale.x * 2 + position.y;
 
 		if (RandPosX == position.x && RandPosY == position.y)
 			continue;
+
+		Vector3 TempPos(RandPosX, RandPosY, position.z);
 
 		if (ChildBlocks.empty())
 		{
@@ -224,7 +191,7 @@ void CEnemy::SpawnChild()
 			{
 				Vector3 dist = TempPos - it->GetEntity()->GetPosition();
 
-				if (dist.Length() >= 0)
+				if (dist.Length() > scale.x * 2)
 				{
 					GenericEntity* childBlock = Create::Entity("cubeSG", TempPos);
 					switch (Master_Color)
@@ -251,6 +218,32 @@ void CEnemy::SpawnChild()
 			}
 		}
 	} while (true);
+}
+
+void CEnemy::SwapPosition()
+{
+	vector<CSceneNode*> ChildBlocks = MasterNode->GetChildren();
+
+	std::vector<CSceneNode*>::iterator it;
+	it = ChildBlocks.begin();
+
+	int counter = 0;
+
+	do
+	{
+		int random = Math::RandIntMinMax(0, ChildBlocks.size() - 1);
+		std::vector<CSceneNode*>::iterator randit = it + random;
+
+		if ((*randit)->GetEntity())
+		{
+			Vector3 tempChildPos = (*randit)->GetEntity()->GetPosition();
+			(*randit)->GetEntity()->SetPosition(position);
+			SetPosition(tempChildPos);
+			return;
+		}
+		++counter;
+
+	} while (counter < 5);
 }
 
 /********************************************************
@@ -310,6 +303,3 @@ GroundEntity* CEnemy::GetTerrain(void)
 {
 	return m_pTerrain;
 }
-
-
-		SpawnChild();
