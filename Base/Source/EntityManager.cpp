@@ -393,8 +393,11 @@ bool EntityManager::CheckForCollision(void)
 					{
 						if (CheckAABBCollision(thisEntity, thatEntity))
 						{
+							if (thisEntity->getEntityType() == thatEntity->getEntityType())
+								continue;
 							thisEntity->SetIsDone(true);
 							thatEntity->SetIsDone(true);
+							
 						}
 					}
 				}

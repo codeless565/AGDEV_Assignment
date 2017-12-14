@@ -222,7 +222,7 @@ void SceneText::Init()
 	}
 
 	//=======================================================
-	groundEntity = Create::Ground("METALGROUND", "METALGROUND");
+	groundEntity = Create::Ground("GEO_GRASS_LIGHTGREEN", "GRASS_DARKGREEN");
 //	Create::Text3DObject("text", Vector3(0.0f, 0.0f, 0.0f), "DM2210", Vector3(10.0f, 10.0f, 10.0f), Color(0, 1, 1));
 	Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
 
