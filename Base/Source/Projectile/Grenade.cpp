@@ -55,7 +55,7 @@ void CGrenade::Update(double dt)
 	if (position.y >= m_pTerrain->GetTerrainHeight(position) - 10.0f + Math::EPSILON)
 	{
 		// Update Position
-		m_fElapsedTime += dt;
+		m_fElapsedTime += (float)dt;
 		position.Set(position.x + (float)(theDirection.x * m_fElapsedTime * m_fSpeed),
 			position.y + (float)(theDirection.y * m_fElapsedTime * m_fSpeed)
 			+ (0.5 * m_fGravity * m_fElapsedTime * m_fElapsedTime),

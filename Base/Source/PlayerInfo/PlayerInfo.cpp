@@ -515,33 +515,23 @@ void CPlayerInfo::WeaponUpdate(double dt)
 	{
 		if (currWeapon && currWeapon->GetMagRound() > 0)
 		{
-			Vector3 recoil = target;
-			recoil.x = target.x + Math::RandFloatMinMax(-0.01f, 0.01f);
-			recoil.y = target.y + Math::RandFloatMinMax(0.01f, 0.02f);
-			recoil.z = target.z + Math::RandFloatMinMax(-0.01f, 0.01f);
-			Vector3 viewdirection = recoil - position;
-
-			std::cout << "Position: " << position << std::endl;
-			std::cout << "Target: " << target << std::endl;
 			if (currWeapon == primaryWeapon)
 			{
 				currWeapon->Discharge("cube", position, target, currWeapon->GetFiringSpeed(), this);
-				this->target = position + viewdirection;
 			}
 			else if (currWeapon == secondaryWeapon)
 			{
-				currWeapon->Discharge("sphere", position, target, currWeapon->GetFiringSpeed(), this);
-				target = position + viewdirection;
+				currWeapon->Discharge("sphereLow", position, target, currWeapon->GetFiringSpeed(), this);
 			}
 			else if (currWeapon == tertiaryWeapon)
 			{
 				//secondaryWeapon->PrintSelf();
 				if (KeyboardController::GetInstance()->IsKeyDown('W'))
-					currWeapon->Discharge("sphere", position, target, m_dSpeed + currWeapon->GetFiringSpeed(), this);
+					currWeapon->Discharge("sphereLow", position, target, m_dSpeed + currWeapon->GetFiringSpeed(), this);
 				else if (KeyboardController::GetInstance()->IsKeyDown('S'))
-					currWeapon->Discharge("sphere", position, target, currWeapon->GetFiringSpeed() / m_dSpeed, this);
+					currWeapon->Discharge("sphereLow", position, target, currWeapon->GetFiringSpeed() / m_dSpeed, this);
 				else
-					currWeapon->Discharge("sphere", position, target, currWeapon->GetFiringSpeed(), this);
+					currWeapon->Discharge("sphereLow", position, target, currWeapon->GetFiringSpeed(), this);
 			}
 		}
 	}
