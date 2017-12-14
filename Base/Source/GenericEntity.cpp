@@ -88,5 +88,6 @@ GenericEntity* Create::Asset(	const std::string& _meshName,
 	result->SetPosition(_position);
 	result->SetScale(_scale);
 	result->SetCollider(false);
+	EntityManager::GetInstance()->AddSPLOD(result);
 	return result;
 }
