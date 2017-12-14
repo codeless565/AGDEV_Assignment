@@ -42,6 +42,9 @@ public:
 	virtual void Update(double dt = 0.0333f);
 	// Render this projectile
 	virtual void Render(void);
+
+	int test;
+
 protected:
 	// The model mesh for this projectile
 	Mesh* modelMesh;

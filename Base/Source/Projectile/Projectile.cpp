@@ -162,6 +162,7 @@ CProjectile* Create::Projectile(const std::string& _meshName,
 	result->setEntityType(EntityBase::ENTITY_PROJECTILES);
 	result->SetAABB(Vector3(0.5f,0.5f,0.5f),Vector3(-0.5f,-0.5f,-0.5f));
 	EntityManager::GetInstance()->AddEntity(result,true);
+	result->test = 0;
 
 	return result;
 }
