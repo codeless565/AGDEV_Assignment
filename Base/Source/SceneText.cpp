@@ -234,10 +234,15 @@ void SceneText::Init()
 	groundEntity->SetGrids(Vector3(10.0f, 1.0f, 10.0f));
 	playerInfo->SetTerrain(groundEntity);
 
-	// Create a CEnemy instance
-	theEnemy = new CEnemy();
-	theEnemy->Init();
-	theEnemy->SetTerrain(groundEntity);
+	// Create multiple MasterBlocks
+	for (int i = 0; i < 1; ++i)
+	{
+		CEnemy* temp = new CEnemy();
+		temp->Init();
+		temp->SetTerrain(groundEntity);
+
+		MasterBlocks.push_back(temp);
+	}
 
 	// Setup the 2D entities
 	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
