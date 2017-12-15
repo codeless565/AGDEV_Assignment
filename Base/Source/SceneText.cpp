@@ -39,6 +39,17 @@ SceneText::SceneText(SceneManager* _sceneMgr)
 	_sceneMgr->AddScene("Start", this);
 }
 
+void SceneText::SpawnSandBag()
+{
+	for (int i = 0; i < 15; ++i)
+	{
+		float xPos = Math::RandFloatMinMax(0.f, 50.f);
+		float zPos = Math::RandFloatMinMax(0.f, 50.f);
+		GenericEntity* Sandbag = Create::Entity("cubeSG", Vector3(xPos, groundEntity->GetPosition().y, 30.0f*i), Vector3(10.f, 10.f, 10.f)); //Somehow cannot use Asset, it doesnt render
+		Sandbag->InitLOD("SandBag_High", "SandBag_Med", "SandBag_Low");
+	}
+}
+
 SceneText::~SceneText()
 {
 	CSceneGraph::GetInstance()->Destroy();
@@ -145,9 +156,11 @@ void SceneText::Init()
 		MeshBuilder::GetInstance()->GetMesh("cone")->material.kDiffuse.Set(0.99f, 0.99f, 0.99f);
 		MeshBuilder::GetInstance()->GetMesh("cone")->material.kSpecular.Set(0.f, 0.f, 0.f);
 		MeshBuilder::GetInstance()->GenerateQuad("GRASS_DARKGREEN", Color(1, 1, 1), 1.f);
-		MeshBuilder::GetInstance()->GetMesh("GRASS_DARKGREEN")->textureID = LoadTGA("Image//grass_darkgreen.tga");
+		//MeshBuilder::GetInstance()->GetMesh("GRASS_DARKGREEN")->textureID = LoadTGA("Image//grass_darkgreen.tga");
+		MeshBuilder::GetInstance()->GetMesh("GRASS_DARKGREEN")->textureID = LoadTGA("Image//ground_pebble.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("GEO_GRASS_LIGHTGREEN", Color(1, 1, 1), 1.f);
-		MeshBuilder::GetInstance()->GetMesh("GEO_GRASS_LIGHTGREEN")->textureID = LoadTGA("Image//grass_lightgreen.tga");
+		//MeshBuilder::GetInstance()->GetMesh("GEO_GRASS_LIGHTGREEN")->textureID = LoadTGA("Image//grass_lightgreen.tga");
+		MeshBuilder::GetInstance()->GetMesh("GEO_GRASS_LIGHTGREEN")->textureID = LoadTGA("Image//ground_pebble.tga");
 
 		MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_FRONT", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_BACK", Color(1, 1, 1), 1.f);
@@ -155,12 +168,18 @@ void SceneText::Init()
 		MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_RIGHT", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_TOP", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GenerateQuad("SKYBOX_BOTTOM", Color(1, 1, 1), 1.f);
-		MeshBuilder::GetInstance()->GetMesh("SKYBOX_FRONT")->textureID = LoadTGA("Image//SkyBox//skybox_front.tga");
-		MeshBuilder::GetInstance()->GetMesh("SKYBOX_BACK")->textureID = LoadTGA("Image//SkyBox//skybox_back.tga");
-		MeshBuilder::GetInstance()->GetMesh("SKYBOX_LEFT")->textureID = LoadTGA("Image//SkyBox//skybox_left.tga");
-		MeshBuilder::GetInstance()->GetMesh("SKYBOX_RIGHT")->textureID = LoadTGA("Image//SkyBox//skybox_right.tga");
-		MeshBuilder::GetInstance()->GetMesh("SKYBOX_TOP")->textureID = LoadTGA("Image//SkyBox//skybox_top.tga");
-		MeshBuilder::GetInstance()->GetMesh("SKYBOX_BOTTOM")->textureID = LoadTGA("Image//SkyBox//skybox_bottom.tga");
+		//MeshBuilder::GetInstance()->GetMesh("SKYBOX_FRONT")->textureID = LoadTGA("Image//SkyBox//skybox_front.tga");
+		//MeshBuilder::GetInstance()->GetMesh("SKYBOX_BACK")->textureID = LoadTGA("Image//SkyBox//skybox_back.tga");
+		//MeshBuilder::GetInstance()->GetMesh("SKYBOX_LEFT")->textureID = LoadTGA("Image//SkyBox//skybox_left.tga");
+		//MeshBuilder::GetInstance()->GetMesh("SKYBOX_RIGHT")->textureID = LoadTGA("Image//SkyBox//skybox_right.tga");
+		//MeshBuilder::GetInstance()->GetMesh("SKYBOX_TOP")->textureID = LoadTGA("Image//SkyBox//skybox_top.tga");
+		//MeshBuilder::GetInstance()->GetMesh("SKYBOX_BOTTOM")->textureID = LoadTGA("Image//SkyBox//skybox_bottom.tga");
+		MeshBuilder::GetInstance()->GetMesh("SKYBOX_FRONT")->textureID = LoadTGA("Image//CastleBox//sandcastle_ft.tga");
+		MeshBuilder::GetInstance()->GetMesh("SKYBOX_BACK")->textureID = LoadTGA("Image//CastleBox//sandcastle_bk.tga");
+		MeshBuilder::GetInstance()->GetMesh("SKYBOX_LEFT")->textureID = LoadTGA("Image//CastleBox//sandcastle_lf.tga");
+		MeshBuilder::GetInstance()->GetMesh("SKYBOX_RIGHT")->textureID = LoadTGA("Image//CastleBox//sandcastle_rt.tga");
+		MeshBuilder::GetInstance()->GetMesh("SKYBOX_TOP")->textureID = LoadTGA("Image//CastleBox//sandcastle_up.tga");
+		MeshBuilder::GetInstance()->GetMesh("SKYBOX_BOTTOM")->textureID = LoadTGA("Image//CastleBox//sandcastle_dn.tga");
 		MeshBuilder::GetInstance()->GenerateRay("laser", 10.0f);
 		MeshBuilder::GetInstance()->GenerateQuad("GRIDMESH", Color(1, 1, 1), 10.f);
 	}
@@ -267,25 +286,34 @@ void SceneText::Init()
 	/*****************************************************
 	=\/========= Asset = non destructible =============\/=
 	******************************************************/
-	GenericEntity* Tree = Create::Entity("cubeSG", Vector3(20.0f, -10.0f, 0.0f), Vector3(20.f,20.f,20.f)); //Somehow cannot use Asset, it doesnt render
+	GenericEntity* Tree = Create::Entity("cubeSG", Vector3(20.0f, -10.0f, 0.0f), Vector3(20.f, 20.f, 20.f)); //Somehow cannot use Asset, it doesnt render
 	Tree->SetCollider(true);
 	Tree->SetAABB(Vector3(20.f, 20.f, 20.f), Vector3(-20.f, -20.f, -20.f));
 	Tree->InitLOD("Tree_High", "Tree_Med", "Tree_Low");
-	
-	GenericEntity* Pillar = Create::Entity("cubeSG", Vector3(-20.0f, 0.0f, 0.0f), Vector3(20.f, 20.f, 20.f)); //Somehow cannot use Asset, it doesnt render
+
+
+
+	GenericEntity* Pillar = Create::Entity("cubeSG", Vector3(50.f, 0.0f, 50.f), Vector3(20.f, 20.f, 20.f)); //Somehow cannot use Asset, it doesnt render
 	Pillar->InitLOD("Pillar_High", "Pillar_Med", "Pillar_Low");
 
-	GenericEntity* Sandbag = Create::Entity("cubeSG", Vector3(-40.0f, groundEntity->GetPosition().y, 0.0f), Vector3(10.f, 10.f, 10.f)); //Somehow cannot use Asset, it doesnt render
-	Sandbag->InitLOD("SandBag_High", "SandBag_Med", "SandBag_Low");
+	GenericEntity* Pillar2 = Create::Entity("cubeSG", Vector3(-50.f, 0.0f, 50.f), Vector3(20.f, 20.f, 20.f)); //Somehow cannot use Asset, it doesnt render
+	Pillar2->InitLOD("Pillar_High", "Pillar_Med", "Pillar_Low");
 
+	GenericEntity* Pillar3 = Create::Entity("cubeSG", Vector3(50.f, 0.0f, -50.f), Vector3(20.f, 20.f, 20.f)); //Somehow cannot use Asset, it doesnt render
+	Pillar3->InitLOD("Pillar_High", "Pillar_Med", "Pillar_Low");
+
+	GenericEntity* Pillar4 = Create::Entity("cubeSG", Vector3(-50.f, 0.0f, -50.f), Vector3(20.f, 20.f, 20.f)); //Somehow cannot use Asset, it doesnt render
+	Pillar4->InitLOD("Pillar_High", "Pillar_Med", "Pillar_Low");
+
+	SpawnSandBag();
 
 	/*****************************************************
 	=\/=============== Destructibles ==================\/=
 	******************************************************/
-	GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f,-20.0f));
-	aCube->SetCollider(true);
-	aCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
-	aCube->InitLOD("cube", "sphere", "cubeSG");
+	//GenericEntity* aCube = Create::Entity("cube", Vector3(-20.0f, 0.0f,-20.0f));
+	//aCube->SetCollider(true);
+	//aCube->SetAABB(Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, -0.5f));
+	//aCube->InitLOD("cube", "sphere", "cubeSG");
 
 	//GenericEntity* anotherCube = Create::Entity("cube", Vector3(-20.0f, 1.1f, -20.0f));
 	//anotherCube->SetCollider(true);
@@ -420,7 +448,7 @@ void SceneText::Update(double dt)
 
 		ss.str("");
 		ss.precision(4);
-		ss << "Accuracy: " << (playerInfo->getShots()/playerInfo->getTotalShots()) << "%";
+		ss << "Accuracy: " << (playerInfo->getShots() / playerInfo->getTotalShots()) << "%";
 		textObj[1]->SetText(ss.str());
 
 		ss.str("");

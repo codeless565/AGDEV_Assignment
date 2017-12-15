@@ -234,6 +234,9 @@ void CEnemy::SwapPosition()
 		int random = Math::RandIntMinMax(0, ChildBlocks.size() - 1);
 		std::vector<CSceneNode*>::iterator randit = it + random;
 
+		if ((*randit)->GetEntity()->IsDone())
+			continue;
+
 		if ((*randit)->GetEntity())
 		{
 			Vector3 tempChildPos = (*randit)->GetEntity()->GetPosition();

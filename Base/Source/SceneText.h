@@ -41,6 +41,8 @@ private:
 	std::vector<CEnemy*> MasterSpheres;
 
 	static SceneText* sInstance; // The pointer to the object that gets registered
+
+	void SpawnSandBag();
 };
 
 #endif
