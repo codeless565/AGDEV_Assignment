@@ -34,6 +34,9 @@
     <Filter Include="Enemy">
       <UniqueIdentifier>{7a56a863-4e57-492a-b34b-a234e88974df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameStateManagement">
+      <UniqueIdentifier>{4d71322b-1236-402c-871b-6ad8cdd23b04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -123,6 +126,12 @@
     <ClCompile Include="Source\Enemy\Enemy.cpp">
       <Filter>Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameStateManagement\IntroState.cpp">
+      <Filter>GameStateManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateManagement\MenuState.cpp">
+      <Filter>GameStateManagement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -208,6 +217,12 @@
     </ClInclude>
     <ClInclude Include="Source\Enemy\Enemy.h">
       <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\MenuState.h">
+      <Filter>GameStateManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\IntroState.h">
+      <Filter>GameStateManagement</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

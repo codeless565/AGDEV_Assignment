@@ -1,8 +1,12 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include "GameStateManagement\IntroState.h"
+#include "GameStateManagement\MenuState.h"
+
 #include "timer.h"
 
+class ShaderProgram;
 struct GLFWwindow;
 
 class Application
@@ -31,6 +35,7 @@ private:
 	~Application();
 
 	static bool IsKeyPressed(unsigned short key);
+	void InitDisplay(void);
 
 	// Should make these not hard-coded :P
 	const static int m_window_width = 800;
@@ -38,6 +43,9 @@ private:
 
 	//Declare a window object
 	StopWatch m_timer;
+
+	//Pointer to shader program
+	ShaderProgram* currProg;
 };
 
 #endif
