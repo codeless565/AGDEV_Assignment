@@ -23,6 +23,7 @@
     <ClCompile Include="Source\GroundEntity.cpp" />
     <ClCompile Include="Source\LevelOfDetails\LevelOfDetails.cpp" />
     <ClCompile Include="Source\Light.cpp" />
+    <ClCompile Include="Source\Lua\CLuaInterface.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\OBJMesh.cpp" />
     <ClCompile Include="Source\PlayerInfo\PlayerInfo.cpp" />
@@ -44,6 +45,11 @@
     <ClCompile Include="Source\WeaponInfo\WeaponInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Lua\lauxlib.h" />
+    <ClInclude Include="..\Lua\lua.h" />
+    <ClInclude Include="..\Lua\lua.hpp" />
+    <ClInclude Include="..\Lua\luaconf.h" />
+    <ClInclude Include="..\Lua\lualib.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\CUpdateTransformation.h" />
     <ClInclude Include="Source\Enemy\Enemy.h" />
@@ -56,6 +62,7 @@
     <ClInclude Include="Source\GroundEntity.h" />
     <ClInclude Include="Source\LevelOfDetails\LevelOfDetails.h" />
     <ClInclude Include="Source\Light.h" />
+    <ClInclude Include="Source\Lua\CLuaInterface.h" />
     <ClInclude Include="Source\OBJMesh.h" />
     <ClInclude Include="Source\PlayerInfo\PlayerInfo.h" />
     <ClInclude Include="Source\Projectile\Grenade.h" />
@@ -74,6 +81,9 @@
     <ClInclude Include="Source\WeaponInfo\LaserBlaster.h" />
     <ClInclude Include="Source\WeaponInfo\Pistol.h" />
     <ClInclude Include="Source\WeaponInfo\WeaponInfo.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\Lua\lua5.1.lib" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9B172635-4E2B-46F1-A403-08F4194D00F5}</ProjectGuid>
@@ -119,7 +129,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_VARIADIC_MAX=10;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)/Common/Source;$(SolutionDir)/glfw/include;$(SolutionDir)/glew/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/Lua;$(SolutionDir)/Common/Source;$(SolutionDir)/glfw/include;$(SolutionDir)/glew/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>

@@ -37,6 +37,9 @@
     <Filter Include="GameStateManagement">
       <UniqueIdentifier>{4d71322b-1236-402c-871b-6ad8cdd23b04}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lua">
+      <UniqueIdentifier>{43a16020-18a3-4734-bc37-f232d0501128}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -132,6 +135,9 @@
     <ClCompile Include="Source\GameStateManagement\MenuState.cpp">
       <Filter>GameStateManagement</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Lua\CLuaInterface.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -224,5 +230,28 @@
     <ClInclude Include="Source\GameStateManagement\IntroState.h">
       <Filter>GameStateManagement</Filter>
     </ClInclude>
+    <ClInclude Include="..\Lua\lauxlib.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Lua\lua.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Lua\lua.hpp">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Lua\luaconf.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Lua\lualib.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Lua\CLuaInterface.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\Lua\lua5.1.lib">
+      <Filter>Lua</Filter>
+    </Library>
   </ItemGroup>
 </Project>

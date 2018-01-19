@@ -16,6 +16,8 @@
 #include <stdlib.h>
 
 #include "SceneText.h"
+#include "../Base/Source/Lua/CLuaInterface.h"
+
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -94,6 +96,8 @@ void Application::InitDisplay(void)
 }
 
 Application::Application()
+	:m_window_width(640)
+	, m_window_height(400)
 {
 }
 
@@ -103,6 +107,18 @@ Application::~Application()
 
 void Application::Init()
 {
+	// Initialise the Lua system
+	CLuaInterface::GetInstance()->Init();
+
+	// get the OpenGL resolution
+	m_window_width = CLuaInterface::GetInstance()->getIntValue("width");
+	m_window_height = CLuaInterface::GetInstance()->getIntValue("height");
+	
+
+	CLuaInterface::GetInstance()->saveFloatValue("Player2", 200.10);
+	CLuaInterface::GetInstance()->saveIntValue("Player1", 200);
+	CLuaInterface::GetInstance()->saveBooleanValue("test", false);
+
 	//Set the error callback
 	glfwSetErrorCallback(error_callback);
 
@@ -167,6 +183,7 @@ void Application::Init()
 
 void Application::Run()
 {
+	CLuaInterface::GetInstance()->Run();
 	InitDisplay(); //Call the starting screen
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
@@ -191,6 +208,9 @@ void Application::Run()
 
 void Application::Exit()
 {
+	// Drop the lua system
+	CLuaInterface::GetInstance()->Drop();
+
 	//Close OpenGL window and terminate GLFW
 	glfwDestroyWindow(m_window);
 	//Finalize and clean up GLFW
