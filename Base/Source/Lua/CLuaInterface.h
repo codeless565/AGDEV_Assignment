@@ -1,6 +1,8 @@
 #pragma once
 // includes the lua headers
 #include <lua.hpp>
+#include "Vector3.h"
+
 class CLuaInterface
 {
 protected:
@@ -38,8 +40,13 @@ public:
 	int getIntValue(const char* varName);
 	float getFloatValue(const char* varName);
 	bool getBooleanValue(const char* varName);
+	char getcharValue(const char* varName);
+	Vector3 getVector3Values(const char* varName);
 
 	void saveIntValue(const char* varName, int value, bool overwrite = false);
 	void saveFloatValue(const char* varName, float value, bool overwrite = false);
 	void saveBooleanValue(const char* varName, bool value, bool overwrite = false);
+
+	float getDistanceSquareValue(Vector3 source, Vector3 destination);
+	int getVariableValues(const char* varName, int &a, int &b, int &c, int &d);
 };

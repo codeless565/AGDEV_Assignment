@@ -139,6 +139,12 @@ private:
 	CWeaponInfo* tertiaryWeapon;
 	std::vector <CWeaponInfo*> Weapons;
 
+	// Key to move the player
+	char keyMoveForward;
+	char keyMoveBackward;
+	char keyMoveLeft;
+	char keyMoveRight;
+
 	int score;
 	int Shots;
 	int TotalShots;
