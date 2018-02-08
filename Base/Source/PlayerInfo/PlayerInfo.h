@@ -114,6 +114,15 @@ public:
 	int getTotalShots() { return TotalShots; }
 	void setTotalShots(int _TotalShots) { TotalShots = _TotalShots; }
 	void addTotalShots(int _TotalShots) { TotalShots += _TotalShots; }
+
+	bool getOptionsState() { return options; }
+	void setOptionsState(bool _options) { options = _options; }
+	void SaveOptionsState();
+
+	char getkeyMoveForward() { return keyMoveForward; }
+	char getkeyMoveBackward() { return keyMoveBackward; }
+	char getkeyMoveLeft() { return keyMoveLeft; }
+	char getkeyMoveRight() { return keyMoveRight; }
 private:
 	Vector3 defaultPosition, defaultTarget, defaultUp;
 	Vector3 position, target, up;
@@ -148,4 +157,6 @@ private:
 	int score;
 	int Shots;
 	int TotalShots;
+
+	bool options;
 };

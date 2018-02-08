@@ -46,7 +46,20 @@ public:
 	void saveIntValue(const char* varName, int value, bool overwrite = false);
 	void saveFloatValue(const char* varName, float value, bool overwrite = false);
 	void saveBooleanValue(const char* varName, bool value, bool overwrite = false);
+	
 
 	float getDistanceSquareValue(Vector3 source, Vector3 destination);
 	int getVariableValues(const char* varName, int &a, int &b, int &c, int &d);
+
+	// Extract a field from a table
+	float getField(const char *key);
+
+	lua_State *theErrorState;
+	// Ger error message using an error code
+	void error(const char *errorCode);
+
+	
+	lua_State *theOptionState;
+	char getKeyBoardValue(const char* varName);
+	void saveKeyBoardValue(const char* varName, std::string value, bool overwrite = false);
 };

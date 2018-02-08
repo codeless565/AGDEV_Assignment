@@ -38,6 +38,8 @@
     <ClCompile Include="Source\SpriteEntity.cpp" />
     <ClCompile Include="Source\TextEntity.cpp" />
     <ClCompile Include="Source\Transform.cpp" />
+    <ClCompile Include="Source\Waypoint\Waypoint.cpp" />
+    <ClCompile Include="Source\Waypoint\WaypointManager.cpp" />
     <ClCompile Include="Source\WeaponInfo\AssaultRifle.cpp" />
     <ClCompile Include="Source\WeaponInfo\GrenadeThrow.cpp" />
     <ClCompile Include="Source\WeaponInfo\LaserBlaster.cpp" />
@@ -76,6 +78,8 @@
     <ClInclude Include="Source\SpriteEntity.h" />
     <ClInclude Include="Source\TextEntity.h" />
     <ClInclude Include="Source\Transform.h" />
+    <ClInclude Include="Source\Waypoint\Waypoint.h" />
+    <ClInclude Include="Source\Waypoint\WaypointManager.h" />
     <ClInclude Include="Source\WeaponInfo\AssaultRifle.h" />
     <ClInclude Include="Source\WeaponInfo\GrenadeThrow.h" />
     <ClInclude Include="Source\WeaponInfo\LaserBlaster.h" />

@@ -40,6 +40,9 @@
     <Filter Include="Lua">
       <UniqueIdentifier>{43a16020-18a3-4734-bc37-f232d0501128}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Waypoint">
+      <UniqueIdentifier>{cba348f4-c988-4b01-9009-7c7253292fa8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -137,6 +140,12 @@
     </ClCompile>
     <ClCompile Include="Source\Lua\CLuaInterface.cpp">
       <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Waypoint\Waypoint.cpp">
+      <Filter>Waypoint</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Waypoint\WaypointManager.cpp">
+      <Filter>Waypoint</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +256,12 @@
     </ClInclude>
     <ClInclude Include="Source\Lua\CLuaInterface.h">
       <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Waypoint\Waypoint.h">
+      <Filter>Waypoint</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Waypoint\WaypointManager.h">
+      <Filter>Waypoint</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

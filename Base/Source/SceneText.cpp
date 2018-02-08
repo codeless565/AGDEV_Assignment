@@ -20,6 +20,7 @@
 #include "SpriteEntity.h"
 #include "Light.h"
 #include "SkyBox/SkyBoxEntity.h"
+#include "Waypoint\WaypointManager.h"
 
 #include "SceneGraph.h"
 #include "SceneNode.h"
@@ -57,8 +58,6 @@ SceneText::~SceneText()
 
 void SceneText::Init()
 {
-
-
 	lights[0] = new Light();
 	GraphicsManager::GetInstance()->AddLight("lights[0]", lights[0]);
 	lights[0]->type = Light::LIGHT_DIRECTIONAL;
@@ -313,12 +312,27 @@ void SceneText::Init()
 	float halfWindowHeight = Application::GetInstance().GetWindowHeight() / 2.0f;
 	float fontSize = 25.0f;
 	float halfFontSize = fontSize / 2.0f;
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 10; ++i)
 	{
 		textObj[i] = Create::Text2DObject("text", Vector3(-halfWindowWidth, -halfWindowHeight + fontSize*i + halfFontSize, 0.0f), "", Vector3(fontSize, fontSize, fontSize), Color(0.0f, 1.0f, 0.0f));
 	}
 
 	gameOver = false;
+
+	// Create a Waypoint inside WaypointManager
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Waypoint_A_1");
+	int aWayPoint = CWaypointManager::GetInstance()->AddWaypoint(Vector3(CLuaInterface::GetInstance()->getField("x"),
+		CLuaInterface::GetInstance()->getField("y"),
+		CLuaInterface::GetInstance()->getField("z")));
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Waypoint_A_2");
+	int anotherWaypoint = CWaypointManager::GetInstance()->AddWaypoint(aWayPoint, Vector3(CLuaInterface::GetInstance()->getField("x"),
+		CLuaInterface::GetInstance()->getField("y"),
+		CLuaInterface::GetInstance()->getField("z")));
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Waypoint_A_3");
+	CWaypointManager::GetInstance()->AddWaypoint(anotherWaypoint, Vector3(CLuaInterface::GetInstance()->getField("x"),
+		CLuaInterface::GetInstance()->getField("y"),
+		CLuaInterface::GetInstance()->getField("z")));
+	CWaypointManager::GetInstance()->PrintSelf();
 }
 
 void SceneText::Update(double dt)
@@ -434,6 +448,11 @@ void SceneText::Update(double dt)
 		else if (playerInfo->getCurrWeapon() == playerInfo->getTertiaryWeapon())
 			ss << "Grenade " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
 		textObj[2]->SetText(ss.str());
+
+		if (playerInfo->getOptionsState())
+			RenderOptionsOnScreen();
+		else
+			ClearOptionsOnScreen();
 	}
 }
 
@@ -472,4 +491,24 @@ void SceneText::Exit()
 	// Delete the lights
 	delete lights[0];
 	delete lights[1];
+}
+
+void SceneText::RenderOptionsOnScreen()
+{
+	std::ostringstream ss;
+	ss.str("");
+	ss << "MoveForward " << playerInfo->getkeyMoveForward();
+	textObj[3]->SetText(ss.str());
+
+	ss.str("");
+	ss << "MoveBackward " << playerInfo->getkeyMoveBackward();
+	textObj[4]->SetText(ss.str());
+}
+
+void SceneText::ClearOptionsOnScreen()
+{
+	std::ostringstream ss;
+	ss.str("");
+	textObj[3]->SetText(ss.str());
+	textObj[4]->SetText(ss.str());
 }

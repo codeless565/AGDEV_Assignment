@@ -10,6 +10,7 @@
 #include "MatrixStack.h"
 #include "GenericEntity.h"
 #include "Enemy\Enemy.h"
+#include "../Base/Source/Lua/CLuaInterface.h"
 
 class ShaderProgram;
 class SceneManager;
@@ -27,6 +28,8 @@ public:
 	virtual void Exit();
 
 	bool gameOver;
+	void RenderOptionsOnScreen();
+	void ClearOptionsOnScreen();
 private:
 	//SceneText(SceneManager* _sceneMgr); // This is used to register to SceneManager
 
@@ -34,7 +37,7 @@ private:
 	CPlayerInfo* playerInfo;
 	GroundEntity* groundEntity;
 	FPSCamera camera;
-	TextEntity* textObj[3];
+	TextEntity* textObj[10];
 	Light* lights[2];
 
 	GenericEntity* theCube;

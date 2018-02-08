@@ -37,6 +37,32 @@ bool CLuaInterface::Init()
 		result = true;
 	}
 
+	theErrorState = lua_open();
+
+	if (theErrorState)
+	{
+		// 2. Load lua auxiliary libraries
+		luaL_openlibs(theErrorState);
+
+		// 3. Load lua script
+		luaL_dofile(theErrorState, "Image//errorLookup.lua");
+
+		result = true;
+	}
+
+	theOptionState = lua_open();
+
+	if (theOptionState)
+	{
+		// 2. Load lua auxiliary libraries
+		luaL_openlibs(theOptionState);
+
+		// 3. Load lua script
+		luaL_dofile(theOptionState, "Image//Options.lua");
+
+		result = true;
+	}
+
 	return result;
 }
 
@@ -70,6 +96,14 @@ void CLuaInterface::Drop()
 	// Close the lua state
 	if (theLuaState)
 		lua_close(theLuaState);
+
+	// Close the lua state
+	if (theErrorState)
+		lua_close(theErrorState);
+
+	// Close the lua state
+	if (theOptionState)
+		lua_close(theOptionState);
 }
 
 int CLuaInterface::getIntValue(const char * varName)
@@ -171,6 +205,36 @@ void CLuaInterface::saveBooleanValue(const char * varName, bool value, bool over
 	lua_call(theLuaState, 2, 0);
 }
 
+char CLuaInterface::getKeyBoardValue(const char * varName)
+{
+	lua_getglobal(theOptionState, varName);
+
+	size_t len;
+	const char* cstr = lua_tolstring(theOptionState, -1, &len);
+	// if the string is not empty, then return the first char
+	if (len > 0)
+		return cstr[0];
+	// else return a default value of <SPACE>
+	else
+		return ' ';
+}
+
+void CLuaInterface::saveKeyBoardValue(const char * varName, std::string value, bool overwrite)
+{
+	std::string temp = varName;
+	temp.append(" = \"");
+	temp.append((value));
+	temp.append("\"\n");
+
+	if (theOptionState)
+	{
+		lua_getglobal(theOptionState, "SaveToOptionsFile");
+		lua_pushstring(theOptionState, temp.c_str());
+		lua_pushinteger(theOptionState, overwrite);
+	}
+	lua_call(theOptionState, 2, 0);
+}
+
 float CLuaInterface::getDistanceSquareValue(Vector3 source, Vector3 destination)
 {
 	lua_getglobal(theLuaState, "CalculateDistanceSquare");
@@ -205,4 +269,34 @@ int CLuaInterface::getVariableValues(const char * varName, int & a, int & b, int
 	lua_pop(theLuaState, 1);
 
 	return true;
+}
+
+float CLuaInterface::getField(const char * key)
+{
+	int result;
+	if (!lua_istable(theLuaState, -1))  // if the pointer is not pointing to a table
+		error("error100");
+
+	lua_pushstring(theLuaState, key);
+	lua_gettable(theLuaState, -2);
+
+	if (!lua_isnumber(theLuaState, -1)) // if return from table is not a number
+		error("error101");
+
+	result = (int)lua_tonumber(theLuaState, -1);
+	lua_pop(theLuaState, 1);// remove number
+	return result;
+}
+
+void CLuaInterface::error(const char * errorCode)
+{
+	if (theErrorState == NULL)
+		return;
+
+	lua_getglobal(theErrorState, errorCode);
+	const char* errorMsg = lua_tostring(theErrorState, -1);
+	if (errorMsg != NULL)
+		cout << errorMsg << endl;
+	else
+		cout << errorCode << " is not value. \n Please contact the developer. " << endl;
 }
