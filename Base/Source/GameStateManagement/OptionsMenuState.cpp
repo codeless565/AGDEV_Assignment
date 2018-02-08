@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 using namespace std;
 
 #include "OptionsMenuState.h"
@@ -35,6 +36,10 @@ void COptionsMenuState::Init()
 	float halfWindowHeight = Application::GetInstance().GetWindowHeight() / 2.0f;
 
 	// Load all the meshes
+	MeshBuilder::GetInstance()->GenerateText("text", 16, 16);
+	MeshBuilder::GetInstance()->GetMesh("text")->textureID = LoadTGA("Image//calibri.tga");
+	MeshBuilder::GetInstance()->GetMesh("text")->material.kAmbient.Set(1, 0, 0);
+
 	MeshBuilder::GetInstance()->GenerateQuad("INTROSTATE_BKGROUND", Color(1, 1, 1), 1.f);
 	MeshBuilder::GetInstance()->GetMesh("INTROSTATE_BKGROUND")->textureID = LoadTGA("Image//OptionsMenu.tga");
 
@@ -54,14 +59,9 @@ void COptionsMenuState::Init()
 		textObj[i] = Create::Text2DObject("text", Vector3(startingPointX, startingPointY - fontSize * i + halfFontSize, 1.0f), "control string here", Vector3(fontSize, fontSize, fontSize), Color(1.0f, 0.0f, 0.0f));
 	}
 
-	// >>>>> "bottom 1" is here
-	textObj[0]->SetText("test"); // 1st
-	textObj[1]->SetText("test"); // 2nd
-	textObj[2]->SetText("test"); // 3rd
-
-
-
 	cout << "COptionsMenuState loaded\n" << endl;
+
+	EditGraphics = false;
 }
 void COptionsMenuState::Update(double dt)
 {
@@ -69,6 +69,15 @@ void COptionsMenuState::Update(double dt)
 	{
 		SceneManager::GetInstance()->SetActiveScene("MainMenuState");
 	}
+	static bool bPad1 = false;
+	if (!bPad1 && KeyboardController::GetInstance()->IsKeyReleased(VK_NUMPAD1))
+	{
+		bPad1 = true;
+		EditGraphics = true;
+	}
+	else if (bPad1 && !KeyboardController::GetInstance()->IsKeyReleased(VK_NUMPAD1))
+		bPad1 = false;
+
 }
 void COptionsMenuState::Render()
 {
@@ -93,6 +102,16 @@ void COptionsMenuState::Render()
 
 	// Render the required entities
 	EntityManager::GetInstance()->RenderUI();
+
+	// >>>>> "bottom 1" is here
+	std::stringstream ss;
+	
+	ss.str("");
+	ss << "Press 1 to Change Graphic size";
+	textObj[0]->SetText(ss.str());
+	
+	textObj[1]->SetText("test"); // 2nd
+	textObj[2]->SetText("test"); // 3rd
 }
 void COptionsMenuState::Exit()
 {
