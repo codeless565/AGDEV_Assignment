@@ -64,4 +64,7 @@ public:
 	void saveKeyBoardValue(const char* varName, char value, bool overwrite = false);
 	int getOptionsValue(const char* varName);
 	void saveOptionsValue(const char* varName, int value, bool overwrite = false);
+
+	lua_State *theHSState;
+	int getHSValue(const char* varName);
 };

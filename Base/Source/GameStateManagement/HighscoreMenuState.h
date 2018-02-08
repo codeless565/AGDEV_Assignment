@@ -24,6 +24,8 @@ public:
 	virtual void Exit();
 	virtual bool getKeepState() { return false; }
 
+
+	int score;
 private:
 	FPSCamera camera;
 	SpriteEntity* MenuStateBackground;

@@ -432,6 +432,8 @@ void SceneText::Update(double dt)
 		ss.str("");
 		ss << "Game Over!";
 		textObj[2]->SetText(ss.str());
+
+		CLuaInterface::GetInstance()->saveIntValue("HighScore", playerInfo->getScore(), true);
 	}
 	else
 	{
@@ -532,9 +534,7 @@ void SceneText::RenderOptionsOnScreen()
 
 	ss.str("");
 	if (playerInfo->getEditingForwardKey())
-	{
 		ss << "Edit forward key to:" << PrevChar << " " << playerInfo->getCurrentChar() << " " << NextChar;
-	}
 	else if (playerInfo->getEditingBackwardKey())
 		ss << "Edit backward key to:" << PrevChar << " " << playerInfo->getCurrentChar() << " " << NextChar;
 	else if (playerInfo->getEditingLeftKey())

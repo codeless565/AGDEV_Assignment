@@ -693,8 +693,7 @@ void CPlayerInfo::SaveOptionsState()
 	CLuaInterface::GetInstance()->saveKeyBoardValue("options", keyOptions);
 	CLuaInterface::GetInstance()->saveOptionsValue("width", Application::GetInstance().GetWindowWidth());
 	CLuaInterface::GetInstance()->saveOptionsValue("height", Application::GetInstance().GetWindowHeight());
-
-
+	
 	std::remove("Image/Options.lua");
 	std::rename("Image/Options2.lua", "Image/Options.lua");
 }

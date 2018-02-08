@@ -11,7 +11,8 @@ CLuaInterface *CLuaInterface::s_instance = 0;
 CLuaInterface::CLuaInterface()
 	:theLuaState(NULL),
 	theErrorState(NULL),
-	theOptionState(NULL)
+	theOptionState(NULL),
+	theHSState(NULL)
 {
 }
 
@@ -65,6 +66,19 @@ bool CLuaInterface::Init()
 		result = true;
 	}
 
+	theHSState = lua_open();
+
+	if (theHSState)
+	{
+		// 2. Load lua auxiliary libraries
+		luaL_openlibs(theHSState);
+
+		// 3. Load lua script
+		luaL_dofile(theHSState, "Image//DM2240_HighScore.lua");
+
+		result = true;
+	}
+
 	return result;
 }
 
@@ -80,11 +94,11 @@ void CLuaInterface::Run()
 	// extract value, index -1 as variable is already retrieved using lua_getglobal
 	const char *title = lua_tostring(theLuaState, -1);
 
-	lua_getglobal(theLuaState, "width");
-	int width = lua_tointeger(theLuaState, -1);
+	lua_getglobal(theOptionState, "width");
+	int width = lua_tointeger(theOptionState, -1);
 
-	lua_getglobal(theLuaState, "height");
-	int height = lua_tointeger(theLuaState, -1);
+	lua_getglobal(theOptionState, "height");
+	int height = lua_tointeger(theOptionState, -1);
 
 	// Display on screen
 	cout << title << endl;
@@ -106,6 +120,10 @@ void CLuaInterface::Drop()
 	// Close the lua state
 	if (theOptionState)
 		lua_close(theOptionState);
+
+	// Close the lua state
+	if (theHSState)
+		lua_close(theHSState);
 }
 
 int CLuaInterface::getIntValue(const char * varName)
@@ -263,6 +281,13 @@ void CLuaInterface::saveOptionsValue(const char * varName, int value, bool overw
 		lua_pushinteger(theLuaState, overwrite);
 	}
 	lua_call(theLuaState, 2, 0);
+}
+
+int CLuaInterface::getHSValue(const char * varName)
+{
+	lua_getglobal(theHSState, varName);
+	int tempValue = lua_tointeger(theHSState, -1);
+	return tempValue;
 }
 
 float CLuaInterface::getDistanceSquareValue(Vector3 source, Vector3 destination)

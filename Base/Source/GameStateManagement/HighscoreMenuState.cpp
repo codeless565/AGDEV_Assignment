@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 using namespace std;
 
 #include "HighscoreMenuState.h"
@@ -11,6 +12,7 @@ using namespace std;
 #include "RenderHelper.h"
 #include "../SpriteEntity.h"
 #include "../EntityManager.h"
+#include "../Lua/CLuaInterface.h"
 
 #include "KeyboardController.h"
 #include "SceneManager.h"
@@ -55,20 +57,23 @@ void CHighscoreMenuState::Init()
 	for (int i = 0; i < TEXTARRAYLIMIT; ++i)
 	{
 		//Draw Downwards - u can write highscore string with this if you want or hard write using the "bottom 1"
-		textObj[i] = Create::Text2DObject("text", Vector3(startingPointX, startingPointY - fontSize * i + halfFontSize, 1.0f), "control string here", Vector3(fontSize, fontSize, fontSize), Color(1.0f, 0.0f, 0.0f));
+		textObj[i] = Create::Text2DObject("text", Vector3(startingPointX, startingPointY - fontSize * i + halfFontSize, 1.0f), "", Vector3(fontSize, fontSize, fontSize), Color(1.0f, 0.0f, 0.0f));
 	}
 
+	score = CLuaInterface::GetInstance()->getHSValue("HighScore");
 	// >>>>> "bottom 1" is here
-	textObj[0]->SetText("test"); // 1st
-	textObj[1]->SetText("test"); // 2nd
-	textObj[2]->SetText("test"); // 3rd
+	std::stringstream ss;
+	ss.str("");
+	ss << "Highest Score: " << score;
+	textObj[0]->SetText(ss.str()); // 1st
+	
 
 
 	cout << "CHighscoreMenuState loaded\n" << endl;
 }
 void CHighscoreMenuState::Update(double dt)
 {
-	if (KeyboardController::GetInstance()->IsKeyReleased(VK_RETURN))
+	if (KeyboardController::GetInstance()->IsKeyReleased(VK_BACK))
 	{
 		SceneManager::GetInstance()->SetActiveScene("MainMenuState");
 	}
