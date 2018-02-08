@@ -65,7 +65,7 @@ void COptionsMenuState::Init()
 }
 void COptionsMenuState::Update(double dt)
 {
-	if (KeyboardController::GetInstance()->IsKeyReleased(VK_RETURN))
+	if (KeyboardController::GetInstance()->IsKeyReleased(VK_BACK))
 	{
 		SceneManager::GetInstance()->SetActiveScene("MainMenuState");
 	}
