@@ -85,7 +85,8 @@ void EntityManager::AddEntity(EntityBase* _newEntity, bool bAddToSpatialPartitio
 	// Add to the Spatial Partition
 	if (theSpatialPartition && bAddToSpatialPartition)
 		theSpatialPartition->Add(_newEntity);
-}
+}
+
 // Add an entity to this EntityManager
 void EntityManager::AddSPLOD(EntityBase* _newEntity)
 {
@@ -137,6 +138,29 @@ bool EntityManager::MarkForDeletion(EntityBase * _existingEntity)
 	}
 	//Return false if not found
 	return false;
+}
+
+void EntityManager::Cleanthis_ForExit()
+{
+	while (!entityList.empty())
+	{
+		std::list<EntityBase*>::iterator findIter = entityList.begin();
+		EntityBase* entity = *findIter;
+		delete *findIter;
+		findIter = entityList.erase(findIter);
+
+		//Remove from SceneNode
+		if (CSceneGraph::GetInstance()->DeleteNode(entity))
+		{
+			cout << "EntityManager::RemoveEntity: Unable to remove\n";
+		}
+		else
+		{
+			//Remove from the Spatial Partition
+			if (theSpatialPartition)
+				theSpatialPartition->Remove(entity);
+		}
+	}
 }
 
 void EntityManager::SetSpatialPartition(CSpatialPartition * theSpatialPartition)

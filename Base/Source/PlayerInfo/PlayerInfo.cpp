@@ -518,8 +518,7 @@ void CPlayerInfo::Update(double dt)
 		// Check if key corresponds with any modifiable keys
 		if (KeyboardController::GetInstance()->IsKeyPressed(keyMoveForward))
 		{
-			if 
-		}
+					}
 		else
 			printf("Invalid keys");
 		

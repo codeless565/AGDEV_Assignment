@@ -17,11 +17,13 @@ void SceneManager::Update(double _dt)
 		if (activeScene)
 		{
 			// Scene is valid, need to call appropriate function to exit
-			activeScene->Exit();
+			if (!activeScene->getKeepState())
+				activeScene->Exit();
 		}
 		
 		activeScene = nextScene;
-		activeScene->Init();
+		if (!activeScene->getKeepState())
+			activeScene->Init();
 	}
 
 	if (activeScene)

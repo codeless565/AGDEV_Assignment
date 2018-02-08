@@ -22,6 +22,7 @@ public:
 
 	bool RemoveEntity(EntityBase* _existingEntity);
 	bool MarkForDeletion(EntityBase* _existingEntity);
+	void Cleanthis_ForExit();
 
 	void SetSpatialPartition(CSpatialPartition* theSpatialPartition);
 

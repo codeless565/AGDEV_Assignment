@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-#include "IntroState.h"
+#include "GameOverState.h"
 #include "GL\glew.h"
 #include "../Application.h"
 #include "LoadTGA.h"
@@ -15,40 +15,40 @@ using namespace std;
 #include "KeyboardController.h"
 #include "SceneManager.h"
 
-CIntroState::CIntroState()
+CGameOverState::CGameOverState()
 {
 }
-CIntroState::~CIntroState()
+CGameOverState::~CGameOverState()
 {
 
 }
 
-void CIntroState::Init()
+void CGameOverState::Init()
 {
 	// Create and attach the camera to the scene
 	camera.Init(Vector3(0, 0, 10), Vector3(0, 0, 0), Vector3(0, 1, 0));
 	GraphicsManager::GetInstance()->AttachCamera(&camera);
 
 	// Load all the meshes
-	MeshBuilder::GetInstance()->GenerateQuad("INTROSTATE_BKGROUND", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("INTROSTATE_BKGROUND")->textureID = LoadTGA("Image//IntroState_2.tga");
+	MeshBuilder::GetInstance()->GenerateQuad("GAMEOVERSTATE_BKGROUND", Color(1, 1, 1), 1.f);
+	MeshBuilder::GetInstance()->GetMesh("GAMEOVERSTATE_BKGROUND")->textureID = LoadTGA("Image//GameOverState.tga");
 	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
 	float halfWindowHeight = Application::GetInstance().GetWindowHeight() / 2.0f;
-	IntroStateBackground = Create::Sprite2DObject("INTROSTATE_BKGROUND", 
-													Vector3(halfWindowWidth, halfWindowHeight, 0.0f), 
-													Vector3(800.0f, 600.0f, 0.0f));
+	MenuStateBackground = Create::Sprite2DObject("GAMEOVERSTATE_BKGROUND",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(800.0f, 600.0f, 0.0f));
 
-	cout << "CIntroState loaded\n" << endl;
+	cout << "CGameOverState loaded\n" << endl;
 }
-void CIntroState::Update(double dt)
+void CGameOverState::Update(double dt)
 {
-	if (KeyboardController::GetInstance()->IsKeyReleased(VK_RETURN))
+	if (KeyboardController::GetInstance()->IsKeyReleased(VK_SPACE))
 	{
-		cout << "Loading MenuState" << endl;
-		SceneManager::GetInstance()->SetActiveScene("MenuState");
+		cout << "Loading CGameOverState" << endl;
+		SceneManager::GetInstance()->SetActiveScene("IntroState");
 	}
 }
-void CIntroState::Render()
+void CGameOverState::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -62,23 +62,23 @@ void CIntroState::Render()
 	EntityManager::GetInstance()->Render();
 
 	// Setup 2D pipeline then render 2D
-	GraphicsManager::GetInstance()->SetOrthographicProjection(0, 
-															  Application::GetInstance().GetWindowWidth(), 
-															  0, 
-															  Application::GetInstance().GetWindowHeight(), 
-															  -10, 10);
+	GraphicsManager::GetInstance()->SetOrthographicProjection(0,
+		Application::GetInstance().GetWindowWidth(),
+		0,
+		Application::GetInstance().GetWindowHeight(),
+		-10, 10);
 	GraphicsManager::GetInstance()->DetachCamera();
 
 	// Render the required entities
 	EntityManager::GetInstance()->RenderUI();
 }
-void CIntroState::Exit()
+void CGameOverState::Exit()
 {
 	// Remove the entity from EntityManager
-	EntityManager::GetInstance()->RemoveEntity(IntroStateBackground);
+	EntityManager::GetInstance()->RemoveEntity(MenuStateBackground);
 
-	// Remove the meshes which are specific to CIntroState
-	MeshBuilder::GetInstance()->RemoveMesh("INTROSTATE_BKGROUND");
+	// Remove the meshes which are specific to CGameOverState
+	MeshBuilder::GetInstance()->RemoveMesh("GAMEOVERSTATE_BKGROUND");
 
 	// Detach camera from other entities
 	GraphicsManager::GetInstance()->DetachCamera();

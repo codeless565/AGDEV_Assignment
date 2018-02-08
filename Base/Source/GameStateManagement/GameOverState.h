@@ -8,12 +8,11 @@
 #include "../SpriteEntity.h"
 
 class SceneManager;
-//class TextEntity;
-class CIntroState : public Scene
+class CGameOverState : public Scene
 {
 public:
-	CIntroState();
-	~CIntroState();
+	CGameOverState();
+	~CGameOverState();
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -23,6 +22,9 @@ public:
 
 private:
 	FPSCamera camera;
-	SpriteEntity* IntroStateBackground;
+	SpriteEntity* MenuStateBackground;
+
+	// Inherited via Scene
+
 	//	TextEntity* textObj[3];
 };

@@ -18,6 +18,7 @@ public:
 	virtual void Update(double dt);
 	virtual void Render();
 	virtual void Exit();
+	virtual bool getKeepState() { return false; }
 
 private:
 	FPSCamera camera;

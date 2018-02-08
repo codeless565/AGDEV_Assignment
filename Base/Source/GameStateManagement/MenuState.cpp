@@ -17,7 +17,6 @@ using namespace std;
 
 CMenuState::CMenuState()
 {
-
 }
 CMenuState::~CMenuState()
 {
@@ -32,7 +31,7 @@ void CMenuState::Init()
 
 	// Load all the meshes
 	MeshBuilder::GetInstance()->GenerateQuad("MENUSTATE_BKGROUND", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("MENUSTATE_BKGROUND")->textureID = LoadTGA("Image//MenuState.tga");
+	MeshBuilder::GetInstance()->GetMesh("MENUSTATE_BKGROUND")->textureID = LoadTGA("Image//MenuState_2.tga");
 	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
 	float halfWindowHeight = Application::GetInstance().GetWindowHeight() / 2.0f;
 	MenuStateBackground = Create::Sprite2DObject("MENUSTATE_BKGROUND", 
@@ -43,11 +42,20 @@ void CMenuState::Init()
 }
 void CMenuState::Update(double dt)
 {
-	if (KeyboardController::GetInstance()->IsKeyReleased(VK_SPACE))
-	{
-		cout << "Loading CMenuState" << endl;
+	if (KeyboardController::GetInstance()->IsKeyReleased('1') || KeyboardController::GetInstance()->IsKeyReleased(VK_NUMPAD1))
+	{//Enter Game
 		SceneManager::GetInstance()->SetActiveScene("GameState");
 	}
+	else if (KeyboardController::GetInstance()->IsKeyReleased('2') || KeyboardController::GetInstance()->IsKeyReleased(VK_NUMPAD2))
+	{//Help
+	}
+	else if (KeyboardController::GetInstance()->IsKeyReleased('3') || KeyboardController::GetInstance()->IsKeyReleased(VK_NUMPAD3))
+	{//High Score
+	}
+	else if (KeyboardController::GetInstance()->IsKeyReleased('4') || KeyboardController::GetInstance()->IsKeyReleased(VK_NUMPAD4))
+	{//Options
+	}
+
 }
 void CMenuState::Render()
 {

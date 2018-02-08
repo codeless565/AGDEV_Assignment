@@ -147,6 +147,9 @@
     <ClCompile Include="Source\Waypoint\WaypointManager.cpp">
       <Filter>Waypoint</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameStateManagement\GameOverState.cpp">
+      <Filter>GameStateManagement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -262,6 +265,9 @@
     </ClInclude>
     <ClInclude Include="Source\Waypoint\WaypointManager.h">
       <Filter>Waypoint</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\GameOverState.h">
+      <Filter>GameStateManagement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

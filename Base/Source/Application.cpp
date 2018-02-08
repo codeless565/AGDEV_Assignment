@@ -175,6 +175,7 @@ void Application::Init()
 	// Create the Game States
 	SceneManager::GetInstance()->AddScene("IntroState", new CIntroState());
 	SceneManager::GetInstance()->AddScene("MenuState", new CMenuState());
+	SceneManager::GetInstance()->AddScene("GameOverState", new CGameOverState());
 	SceneManager::GetInstance()->AddScene("GameState", new SceneText());
 
 	// Set the active scene

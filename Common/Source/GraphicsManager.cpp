@@ -291,6 +291,7 @@ void GraphicsManager::AddLight(const std::string& _name, LightBase* _newLight)
 	lightMap[_name] = _newLight;
 }
 
+
 void GraphicsManager::RemoveLight(const std::string& _name)
 {
 	if (lightMap.count(_name) == 0)

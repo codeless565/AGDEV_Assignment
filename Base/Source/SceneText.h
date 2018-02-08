@@ -26,6 +26,13 @@ public:
 	virtual void Update(double dt);
 	virtual void Render();
 	virtual void Exit();
+	virtual bool getKeepState() 
+	{
+		if (gameOver)
+			return false;
+		
+		return true;
+	}
 
 	bool gameOver;
 	void RenderOptionsOnScreen();
@@ -44,6 +51,8 @@ private:
 	std::vector<CEnemy*> MasterSpheres;
 
 	//static SceneText* sInstance; // The pointer to the object that gets registered
+
+	float fps;
 
 	void SpawnSandBag();
 };

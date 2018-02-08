@@ -247,9 +247,7 @@ void SceneText::Init()
 	Tree->SetCollider(true);
 	Tree->SetAABB(Vector3(20.f, 20.f, 20.f), Vector3(-20.f, -20.f, -20.f));
 	Tree->InitLOD("Tree_High", "Tree_Med", "Tree_Low");
-
-
-
+	
 	GenericEntity* Pillar = Create::Entity("cubeSG", Vector3(50.f, 0.0f, 50.f), Vector3(20.f, 20.f, 20.f)); //Somehow cannot use Asset, it doesnt render
 	Pillar->InitLOD("Pillar_High", "Pillar_Med", "Pillar_Low");
 
@@ -337,9 +335,12 @@ void SceneText::Init()
 
 void SceneText::Update(double dt)
 {
-	if (playerInfo->getScore() >= 150 || KeyboardController::GetInstance()->IsKeyPressed('U'))
-		gameOver = true;
+	fps = (float)(1.f / dt);
 
+	if (playerInfo->getScore() >= 150 || KeyboardController::GetInstance()->IsKeyPressed('U') || gameOver == true)
+	{
+		SceneManager::GetInstance()->SetActiveScene("GameOverState");
+	}
 	// Update our entities
 	EntityManager::GetInstance()->Update(dt);
 
@@ -378,6 +379,11 @@ void SceneText::Update(double dt)
 		lights[0]->position.y -= (float)(10.f * dt);
 	if (KeyboardController::GetInstance()->IsKeyDown('P'))
 		lights[0]->position.y += (float)(10.f * dt);
+
+	if (KeyboardController::GetInstance()->IsKeyReleased('Z'))
+	{
+		gameOver = true;
+	}
 
 	// if the left mouse button was released
 	if (MouseController::GetInstance()->IsButtonReleased(MouseController::LMB))
@@ -434,12 +440,6 @@ void SceneText::Update(double dt)
 		textObj[0]->SetText(ss.str());
 
 		ss.str("");
-		ss.precision(5);
-		float fps = (float)(1.f / dt);
-		ss << "FPS: " << fps;
-		textObj[1]->SetText(ss.str());
-
-		ss.str("");
 		ss.precision(4);
 		if (playerInfo->getCurrWeapon() == playerInfo->getPrimaryWeapon())
 			ss << "Laser Blaster " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
@@ -447,6 +447,11 @@ void SceneText::Update(double dt)
 			ss << "Pistol " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
 		else if (playerInfo->getCurrWeapon() == playerInfo->getTertiaryWeapon())
 			ss << "Grenade " << playerInfo->getCurrWeapon()->GetMagRound() << "/" << (playerInfo->getCurrWeapon()->GetMaxTotalRound() / playerInfo->getCurrWeapon()->GetMaxMagRound());
+		textObj[1]->SetText(ss.str());
+
+		ss.str("");
+		ss.precision(5);
+		ss << "FPS: " << fps;
 		textObj[2]->SetText(ss.str());
 
 		if (playerInfo->getOptionsState())
@@ -454,6 +459,7 @@ void SceneText::Update(double dt)
 		else
 			ClearOptionsOnScreen();
 	}
+
 }
 
 void SceneText::Render()
@@ -473,6 +479,7 @@ void SceneText::Render()
 	GraphicsManager::GetInstance()->SetOrthographicProjection(-halfWindowWidth, halfWindowWidth, -halfWindowHeight, halfWindowHeight, -10, 10);
 	GraphicsManager::GetInstance()->DetachCamera();
 	EntityManager::GetInstance()->RenderUI();
+
 }
 
 void SceneText::Exit()
@@ -488,9 +495,12 @@ void SceneText::Exit()
 #endif
 	}
 
-	// Delete the lights
-	delete lights[0];
-	delete lights[1];
+	// Delete the lights - USE REMOVELIGHT INSTEAD OF just "delete lights[0];" since its not removed from GraphicsManager's map/list
+	GraphicsManager::GetInstance()->RemoveLight("lights[0]");
+	GraphicsManager::GetInstance()->RemoveLight("lights[1]");
+
+	//delete all entity in the manager - new function
+	EntityManager::GetInstance()->Cleanthis_ForExit();	
 }
 
 void SceneText::RenderOptionsOnScreen()
