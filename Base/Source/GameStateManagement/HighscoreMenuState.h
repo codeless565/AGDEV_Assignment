@@ -11,6 +11,7 @@
 
 class TextEntity;
 class SceneManager;
+class TextEntity;
 class CHighscoreMenuState : public Scene
 {
 public:

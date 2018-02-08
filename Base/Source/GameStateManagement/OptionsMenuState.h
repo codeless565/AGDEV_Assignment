@@ -11,7 +11,7 @@
 
 class TextEntity;
 class SceneManager;
-//class TextEntity;
+class TextEntity;
 class COptionsMenuState : public Scene
 {
 public:
