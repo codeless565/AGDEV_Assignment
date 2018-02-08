@@ -18,6 +18,12 @@
 #include "SceneText.h"
 #include "../Base/Source/Lua/CLuaInterface.h"
 
+#include "GameStateManagement\IntroState.h"
+#include "GameStateManagement\MainMenuState.h"
+#include "GameStateManagement\HelpMenuState.h"
+#include "GameStateManagement\HighscoreMenuState.h"
+#include "GameStateManagement\OptionsMenuState.h"
+#include "GameStateManagement\GameOVerState.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -174,7 +180,10 @@ void Application::Init()
 
 	// Create the Game States
 	SceneManager::GetInstance()->AddScene("IntroState", new CIntroState());
-	SceneManager::GetInstance()->AddScene("MenuState", new CMenuState());
+	SceneManager::GetInstance()->AddScene("MainMenuState", new CMainMenuState());
+	SceneManager::GetInstance()->AddScene("HelpMenuState", new CHelpMenuState());
+	SceneManager::GetInstance()->AddScene("HighscoreMenuState", new CHighscoreMenuState());
+	SceneManager::GetInstance()->AddScene("OptionsMenuState", new COptionsMenuState());
 	SceneManager::GetInstance()->AddScene("GameOverState", new CGameOverState());
 	SceneManager::GetInstance()->AddScene("GameState", new SceneText());
 

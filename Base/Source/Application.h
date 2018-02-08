@@ -1,10 +1,6 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "GameStateManagement\IntroState.h"
-#include "GameStateManagement\MenuState.h"
-#include "GameStateManagement\GameOVerState.h"
-
 #include "timer.h"
 
 class ShaderProgram;

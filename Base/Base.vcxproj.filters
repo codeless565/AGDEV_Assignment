@@ -135,9 +135,6 @@
     <ClCompile Include="Source\GameStateManagement\IntroState.cpp">
       <Filter>GameStateManagement</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameStateManagement\MenuState.cpp">
-      <Filter>GameStateManagement</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Lua\CLuaInterface.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
@@ -148,6 +145,18 @@
       <Filter>Waypoint</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameStateManagement\GameOverState.cpp">
+      <Filter>GameStateManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateManagement\HelpMenuState.cpp">
+      <Filter>GameStateManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateManagement\MainMenuState.cpp">
+      <Filter>GameStateManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateManagement\OptionsMenuState.cpp">
+      <Filter>GameStateManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateManagement\HighscoreMenuState.cpp">
       <Filter>GameStateManagement</Filter>
     </ClCompile>
   </ItemGroup>
@@ -236,9 +245,6 @@
     <ClInclude Include="Source\Enemy\Enemy.h">
       <Filter>Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameStateManagement\MenuState.h">
-      <Filter>GameStateManagement</Filter>
-    </ClInclude>
     <ClInclude Include="Source\GameStateManagement\IntroState.h">
       <Filter>GameStateManagement</Filter>
     </ClInclude>
@@ -267,6 +273,18 @@
       <Filter>Waypoint</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameStateManagement\GameOverState.h">
+      <Filter>GameStateManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\HelpMenuState.h">
+      <Filter>GameStateManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\MainMenuState.h">
+      <Filter>GameStateManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\OptionsMenuState.h">
+      <Filter>GameStateManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManagement\HighscoreMenuState.h">
       <Filter>GameStateManagement</Filter>
     </ClInclude>
   </ItemGroup>
