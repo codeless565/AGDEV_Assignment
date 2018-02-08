@@ -85,7 +85,7 @@ void SceneText::CheckNearbyPlayer(CEnemy * go)
 {
 	Vector3 dist = playerInfo->GetPos() - go->GetPos();
 
-	if (dist.Length() <= 40)
+	if (dist.Length() <= 50)
 		go->nearby = playerInfo;
 }
 
@@ -369,27 +369,10 @@ void SceneText::Init()
 	gameOver = false;
 
 	// Create a Waypoint inside WaypointManager
-	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Waypoint_A_1");
-	int way1 = CWaypointManager::GetInstance()->AddWaypoint(Vector3(
-		CLuaInterface::GetInstance()->getField("x"),
-		CLuaInterface::GetInstance()->getField("y"),
-		CLuaInterface::GetInstance()->getField("z")));
-
-	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Waypoint_A_2");
-	int way2 = CWaypointManager::GetInstance()->AddWaypoint(way1, Vector3(
-		CLuaInterface::GetInstance()->getField("x"),
-		CLuaInterface::GetInstance()->getField("y"),
-		CLuaInterface::GetInstance()->getField("z")));
-
-	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Waypoint_A_3");
-	CWaypointManager::GetInstance()->AddWaypoint(way2, Vector3(
-		CLuaInterface::GetInstance()->getField("x"),
-		CLuaInterface::GetInstance()->getField("y"),
-		CLuaInterface::GetInstance()->getField("z")));
-	CWaypointManager::GetInstance()->PrintSelf();
+	ReadWayPoint();
 	
 	//Chase Mob
-	Vector3 way1Pos = CWaypointManager::GetInstance()->GetWaypoint(way1)->GetPosition();
+	Vector3 way1Pos = CWaypointManager::GetInstance()->GetWaypoint(0)->GetPosition();
 
 	CEnemy* temp = new CEnemy();
 	temp->Init((CEnemy::COLOR)0, way1Pos, way1Pos);
@@ -568,6 +551,8 @@ void SceneText::Exit()
 
 	//delete all entity in the manager - new function
 	EntityManager::GetInstance()->Cleanthis_ForExit();	
+
+	CWaypointManager::GetInstance()->CleanManager();
 }
 
 void SceneText::RenderOptionsOnScreen()
@@ -626,4 +611,37 @@ void SceneText::ClearOptionsOnScreen()
 	textObj[6]->SetText(ss.str());
 	textObj[8]->SetText(ss.str());
 	textObj[9]->SetText(ss.str());
+}
+
+void SceneText::ReadWayPoint()
+{
+	//TODO - MAKE check lua if field is valid in lua file, if not, break loop
+	// I NEED HELP HERE IDK HOW CHECK IF FIELD IS EMPTY
+	//bool contLoop = true;
+
+	//do 
+	//{
+	//	CLuaInterface::GetInstance()->getWaypointPos();
+
+
+	//} while (contLoop);
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Waypoint_A_1");
+	int way1 = CWaypointManager::GetInstance()->AddWaypoint(Vector3(
+		CLuaInterface::GetInstance()->getField("x"),
+		CLuaInterface::GetInstance()->getField("y"),
+		CLuaInterface::GetInstance()->getField("z")));
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Waypoint_A_2");
+	int way2 = CWaypointManager::GetInstance()->AddWaypoint(way1, Vector3(
+		CLuaInterface::GetInstance()->getField("x"),
+		CLuaInterface::GetInstance()->getField("y"),
+		CLuaInterface::GetInstance()->getField("z")));
+
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Waypoint_A_3");
+	CWaypointManager::GetInstance()->AddWaypoint(way2, Vector3(
+		CLuaInterface::GetInstance()->getField("x"),
+		CLuaInterface::GetInstance()->getField("y"),
+		CLuaInterface::GetInstance()->getField("z")));
+	CWaypointManager::GetInstance()->PrintSelf();
 }

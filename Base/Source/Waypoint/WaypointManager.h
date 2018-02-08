@@ -44,6 +44,9 @@ public:
 	// Get the number of related Waypoints
 	int GetNumberOfWaypoints(void) const;
 
+	//Delete all existing waypoints
+	void CleanManager();
+
 	// PrintSelf
 	void PrintSelf(void);
 

@@ -155,6 +155,12 @@ int CWaypointManager::GetNumberOfWaypoints(void) const
 	return listOfWaypoints.size();
 }
 
+void CWaypointManager::CleanManager()
+{
+	listOfWaypoints.clear();
+	listOfWaypoints.shrink_to_fit();
+}
+
 // PrintSelf
 void CWaypointManager::PrintSelf(void)
 {

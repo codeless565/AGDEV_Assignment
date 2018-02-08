@@ -62,6 +62,9 @@ private:
 
 	void SpawnSandBag();
 
+	//WayPoint Reading from Lua file
+	void ReadWayPoint();
+
 	// Message Functions
 	void GetNextNode(CEnemy* go);
 	void CheckNearbyPlayer(CEnemy* go);

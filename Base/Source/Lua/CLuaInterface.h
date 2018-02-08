@@ -67,4 +67,7 @@ public:
 
 	lua_State *theHSState;
 	int getHSValue(const char* varName);
+
+	lua_State* WaypointFile;
+	Vector3 getWaypointPos(const char* varName);
 };

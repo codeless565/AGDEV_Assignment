@@ -79,6 +79,17 @@ bool CLuaInterface::Init()
 		result = true;
 	}
 
+	//if (WaypointFile)
+	//{
+	//	// 2. Load lua auxiliary libraries
+	//	luaL_openlibs(WaypointFile);
+
+	//	// 3. Load lua script
+	//	luaL_dofile(WaypointFile, "Image//DM2240_WayPoints.lua");
+
+	//	result = true;
+	//}
+
 	return result;
 }
 
@@ -288,6 +299,16 @@ int CLuaInterface::getHSValue(const char * varName)
 	lua_getglobal(theHSState, varName);
 	int tempValue = lua_tointeger(theHSState, -1);
 	return tempValue;
+}
+
+Vector3 CLuaInterface::getWaypointPos(const char * varName)
+{
+	lua_getglobal(WaypointFile, varName);
+	float x = getField("x");
+	float y = getField("y");
+	float z = getField("z");
+
+	return Vector3(x, y, z);
 }
 
 float CLuaInterface::getDistanceSquareValue(Vector3 source, Vector3 destination)

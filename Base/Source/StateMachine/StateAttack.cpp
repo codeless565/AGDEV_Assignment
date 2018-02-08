@@ -26,7 +26,7 @@ void StateAttack::Update(double dt)
 	m_go->SetTarget(m_go->nearby->GetPos());
 
 	Vector3 dir = m_go->GetTarget() - m_go->GetPos();
-	if (dir.Length() >= 40 || !m_go->nearby)
+	if (dir.Length() >= 50 || !m_go->nearby)
 	{
 		m_go->sm->SetNextState("PathFind");
 	}
