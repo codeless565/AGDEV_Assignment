@@ -10,7 +10,7 @@
 #define TEXTARRAYLIMIT 3
 
 class SceneManager;
-//class TextEntity;
+class TextEntity;
 class COptionsMenuState : public Scene
 {
 public:

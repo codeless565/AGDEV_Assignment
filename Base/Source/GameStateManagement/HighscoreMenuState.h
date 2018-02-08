@@ -10,6 +10,7 @@
 #define TEXTARRAYLIMIT 3
 
 class SceneManager;
+class TextEntity;
 class CHighscoreMenuState : public Scene
 {
 public:
