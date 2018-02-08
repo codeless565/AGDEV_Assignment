@@ -7,6 +7,8 @@
 #include "../FPSCamera.h"
 #include "../SpriteEntity.h"
 
+#define TEXTARRAYLIMIT 3
+
 class SceneManager;
 //class TextEntity;
 class COptionsMenuState : public Scene
@@ -24,5 +26,5 @@ public:
 private:
 	FPSCamera camera;
 	SpriteEntity* IntroStateBackground;
-	//	TextEntity* textObj[3];
+	TextEntity* textObj[TEXTARRAYLIMIT];
 };
