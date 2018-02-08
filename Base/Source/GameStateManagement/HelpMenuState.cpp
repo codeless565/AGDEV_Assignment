@@ -67,21 +67,11 @@ void CHelpMenuState::Init()
 }
 void CHelpMenuState::Update(double dt)
 {
-	if (KeyboardController::GetInstance()->IsKeyReleased(VK_RETURN))
+	if (KeyboardController::GetInstance()->IsKeyReleased(VK_BACK))
 	{
 		cout << "Loading MenuState" << endl;
 		SceneManager::GetInstance()->SetActiveScene("MainMenuState");
 	}
-
-	if (KeyboardController::GetInstance()->IsKeyDown('1'))
-		glEnable(GL_CULL_FACE);
-	if (KeyboardController::GetInstance()->IsKeyDown('2'))
-		glDisable(GL_CULL_FACE);
-	if (KeyboardController::GetInstance()->IsKeyDown('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	if (KeyboardController::GetInstance()->IsKeyDown('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
 }
 void CHelpMenuState::Render()
 {
