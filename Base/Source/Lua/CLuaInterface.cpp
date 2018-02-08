@@ -9,7 +9,9 @@ using namespace std;
 CLuaInterface *CLuaInterface::s_instance = 0;
 
 CLuaInterface::CLuaInterface()
-	:theLuaState(NULL)
+	:theLuaState(NULL),
+	theErrorState(NULL),
+	theOptionState(NULL)
 {
 }
 
@@ -219,20 +221,21 @@ char CLuaInterface::getKeyBoardValue(const char * varName)
 		return ' ';
 }
 
-void CLuaInterface::saveKeyBoardValue(const char * varName, std::string value, bool overwrite)
+void CLuaInterface::saveKeyBoardValue(const char * varName, char value, bool overwrite)
 {
 	std::string temp = varName;
 	temp.append(" = \"");
-	temp.append((value));
+	temp += value;
 	temp.append("\"\n");
 
-	if (theOptionState)
+	cout << temp << endl;
+	if (theLuaState)
 	{
-		lua_getglobal(theOptionState, "SaveToOptionsFile");
-		lua_pushstring(theOptionState, temp.c_str());
-		lua_pushinteger(theOptionState, overwrite);
+		lua_getglobal(theLuaState, "SaveToOptionsFile");
+		lua_pushstring(theLuaState, temp.c_str());
+		lua_pushinteger(theLuaState, overwrite);
 	}
-	lua_call(theOptionState, 2, 0);
+	lua_call(theLuaState, 2, 0);
 }
 
 float CLuaInterface::getDistanceSquareValue(Vector3 source, Vector3 destination)
