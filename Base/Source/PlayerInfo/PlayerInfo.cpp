@@ -10,6 +10,7 @@
 #include "../WeaponInfo/LaserBlaster.h"
 #include "../WeaponInfo/GrenadeThrow.h"
 #include "../Lua/CLuaInterface.h"
+#include <fstream>
 
 // Allocating and initializing CPlayerInfo's static data member.  
 // The pointer is allocated but not the object's constructor.
@@ -95,6 +96,12 @@ void CPlayerInfo::Init(void)
 	int a = 1000, b = 2000, c = 3000, d = 4000;
 	CLuaInterface::GetInstance()->getVariableValues("GetMinMax", a, b, c, d);
 	options = false;
+	EditingForwardKey = false;
+	EditingBackwardKey = false;
+	EditingLeftKey = false;
+	EditingRightKey = false;
+
+	CurrentChar = 65;
 }
 
 // Returns true if the player is on ground
@@ -313,8 +320,6 @@ void CPlayerInfo::Update(double dt)
 	
 	if (!options)
 	{
-
-
 		double mouse_diff_x, mouse_diff_y;
 		MouseController::GetInstance()->GetMouseDelta(mouse_diff_x, mouse_diff_y);
 
@@ -517,17 +522,100 @@ void CPlayerInfo::Update(double dt)
 		// Read Any key
 		// Check if key corresponds with any modifiable keys
 		if (KeyboardController::GetInstance()->IsKeyPressed(keyMoveForward))
+			EditingForwardKey = true;
+
+		if (KeyboardController::GetInstance()->IsKeyPressed(keyMoveBackward))
+			EditingBackwardKey = true;
+
+		if (KeyboardController::GetInstance()->IsKeyPressed(keyMoveLeft))
+			EditingLeftKey = true;
+
+		if (KeyboardController::GetInstance()->IsKeyPressed(keyMoveRight))
+			EditingRightKey = true;
+
+		if (EditingForwardKey)
 		{
-			if 
+			if (KeyboardController::GetInstance()->IsKeyDown(VK_UP))
+			{
+				if (CurrentChar+1 <= 90)
+					CurrentChar++;
+			}
+			else if (KeyboardController::GetInstance()->IsKeyDown(VK_DOWN))
+			{
+				if (CurrentChar-1 >= 65)
+					CurrentChar--;	
+			}
+			if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
+			{
+				keyMoveForward = CurrentChar;
+				SaveOptionsState();
+				EditingForwardKey = false;
+				options = false;
+			}
 		}
-		else
-			printf("Invalid keys");
-		
-		// Read Another Key use bool to safeguard
-		// if another key is NOT taken with any modifiable keys
-		// save the keyMove
-		// Run SaveOptionsState();
-		printf("Options enabled");
+
+		if (EditingBackwardKey)
+		{
+			if (KeyboardController::GetInstance()->IsKeyDown(VK_UP))
+			{
+				if (CurrentChar + 1 <= 90)
+					CurrentChar++;
+			}
+			else if (KeyboardController::GetInstance()->IsKeyDown(VK_DOWN))
+			{
+				if (CurrentChar - 1 >= 65)
+					CurrentChar--;
+			}
+			if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
+			{
+				keyMoveBackward = CurrentChar;
+				SaveOptionsState();
+				EditingBackwardKey = false;
+				options = false;
+			}
+		}
+
+		if (EditingLeftKey)
+		{
+			if (KeyboardController::GetInstance()->IsKeyDown(VK_UP))
+			{
+				if (CurrentChar + 1 <= 90)
+					CurrentChar++;
+			}
+			else if (KeyboardController::GetInstance()->IsKeyDown(VK_DOWN))
+			{
+				if (CurrentChar - 1 >= 65)
+					CurrentChar--;
+			}
+			if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
+			{
+				keyMoveLeft = CurrentChar;
+				SaveOptionsState();
+				EditingLeftKey = false;
+				options = false;
+			}
+		}
+
+		if (EditingRightKey)
+		{
+			if (KeyboardController::GetInstance()->IsKeyDown(VK_UP))
+			{
+				if (CurrentChar + 1 <= 90)
+					CurrentChar++;
+			}
+			else if (KeyboardController::GetInstance()->IsKeyDown(VK_DOWN))
+			{
+				if (CurrentChar - 1 >= 65)
+					CurrentChar--;
+			}
+			if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
+			{
+				keyMoveRight = CurrentChar;
+				SaveOptionsState();
+				EditingRightKey = false;
+				options = false;
+			}
+		}
 	}
 }
 
@@ -570,16 +658,18 @@ void CPlayerInfo::DetachCamera()
 
 void CPlayerInfo::SaveOptionsState()
 {
-	CLuaInterface::GetInstance()->saveKeyBoardValue("moveForward", std::to_string(keyMoveForward));
-	CLuaInterface::GetInstance()->saveKeyBoardValue("moveBackward", std::to_string(keyMoveBackward));
-	CLuaInterface::GetInstance()->saveKeyBoardValue("moveLeft", std::to_string(keyMoveLeft));
-	CLuaInterface::GetInstance()->saveKeyBoardValue("moveRight", std::to_string(keyMoveRight));
+	CLuaInterface::GetInstance()->saveKeyBoardValue("moveForward",keyMoveForward);
+	CLuaInterface::GetInstance()->saveKeyBoardValue("moveBackward", keyMoveBackward);
+	CLuaInterface::GetInstance()->saveKeyBoardValue("moveLeft", keyMoveLeft);
+	CLuaInterface::GetInstance()->saveKeyBoardValue("moveRight", keyMoveRight);
 
-
-	keyMoveForward = CLuaInterface::GetInstance()->getKeyBoardValue("moveForward");
-	keyMoveBackward = CLuaInterface::GetInstance()->getKeyBoardValue("moveBackward");
-	keyMoveLeft = CLuaInterface::GetInstance()->getKeyBoardValue("moveLeft");
-	keyMoveRight = CLuaInterface::GetInstance()->getKeyBoardValue("moveRight");
-
-	printf("Move forward %c, Move Backward %c, Move Left %c, Move Right %c", keyMoveForward, keyMoveBackward, keyMoveLeft, keyMoveRight);
+	std::remove("Image/Options.lua");
+	std::rename("Image/Options2.lua", "Image/Options.lua");
+	/*
+	-- KeyBoard Input
+	moveForward = "W"
+	moveLeft = "A"
+	moveBackward = "S"
+	moveRight = "D"
+	*/
 }

@@ -123,6 +123,13 @@ public:
 	char getkeyMoveBackward() { return keyMoveBackward; }
 	char getkeyMoveLeft() { return keyMoveLeft; }
 	char getkeyMoveRight() { return keyMoveRight; }
+
+	bool getEditingForwardKey() { return EditingForwardKey; }
+	bool getEditingBackwardKey() { return EditingBackwardKey; }
+	bool getEditingLeftKey() { return EditingLeftKey; }
+	bool getEditingRightKey() { return EditingRightKey; }
+
+	char getCurrentChar() { return CurrentChar; }
 private:
 	Vector3 defaultPosition, defaultTarget, defaultUp;
 	Vector3 position, target, up;
@@ -159,4 +166,10 @@ private:
 	int TotalShots;
 
 	bool options;
+	bool EditingForwardKey;
+	bool EditingBackwardKey;
+	bool EditingLeftKey;
+	bool EditingRightKey;
+
+	char CurrentChar;
 };

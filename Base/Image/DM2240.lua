@@ -15,19 +15,17 @@ function SaveToLuaFile(outputString, overwrite)
 end
 
 function SaveToOptionsFile(outputString, overwrite)
-	print("SavingToLuaFile...")
 	local f; -- The File
 	
 	if overwrite == 1 then 
-		f = assert(io.open("Image/Options.lua","w"))
+		f = assert(io.open("Image/Options2.lua","w"))
 	elseif overwrite == 0 then 								-- Append with new data
-		f = assert(io.open("Image/Options.lua","a"))
+		f = assert(io.open("Image/Options2.lua","a"))
 	end
 	-- Write to file
 	f:write(outputString)
 	-- Close the file
 	f:close()
-	print("OK")
 end
 
 function CalculateDistanceSquare(x1,y1,z1,x2,y2,z2)
@@ -71,6 +69,12 @@ CPlayerInfoStartPos = {0,0,10}
 Waypoint_A_1 = {x=10.0,y=0.0,z=50.0}
 Waypoint_A_2 = {x=10.0,y=0.0,z=-50.0}
 Waypoint_A_3 = {x=-10.0,y=0.0,z=0.0}
+
+-- KeyBoard Input
+moveForward = "W"
+moveLeft = "A"
+moveBackward = "S"
+moveRight = "D"
 
 
 --[[ 

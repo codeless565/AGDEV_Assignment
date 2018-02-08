@@ -503,6 +503,25 @@ void SceneText::RenderOptionsOnScreen()
 	ss.str("");
 	ss << "MoveBackward " << playerInfo->getkeyMoveBackward();
 	textObj[4]->SetText(ss.str());
+
+	ss.str("");
+	ss << "MoveLeft " << playerInfo->getkeyMoveLeft();
+	textObj[5]->SetText(ss.str());
+
+	ss.str("");
+	ss << "MoveRight" << playerInfo->getkeyMoveRight();
+	textObj[6]->SetText(ss.str());
+
+	ss.str("");
+	if (playerInfo->getEditingForwardKey())
+		ss << "Edit forward key to:" << playerInfo->getCurrentChar();
+	else if (playerInfo->getEditingBackwardKey())
+		ss << "Edit backward key to:" << playerInfo->getCurrentChar();
+	else if (playerInfo->getEditingLeftKey())
+		ss << "Edit left key to:" << playerInfo->getCurrentChar();
+	else if (playerInfo->getEditingRightKey())
+		ss << "Edit right key to:" << playerInfo->getCurrentChar();
+	textObj[8]->SetText(ss.str());
 }
 
 void SceneText::ClearOptionsOnScreen()
@@ -511,4 +530,7 @@ void SceneText::ClearOptionsOnScreen()
 	ss.str("");
 	textObj[3]->SetText(ss.str());
 	textObj[4]->SetText(ss.str());
+	textObj[5]->SetText(ss.str());
+	textObj[6]->SetText(ss.str());
+	textObj[8]->SetText(ss.str());
 }
