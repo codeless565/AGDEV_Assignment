@@ -26,6 +26,9 @@
 #include "SceneNode.h"
 //#include "CUpdateTransformation.h"
 
+#include "Message\PostOffice.h"
+#include "Message\ConcreteMessages.h"
+
 #include <iostream>
 using namespace std;
 
@@ -33,6 +36,57 @@ using namespace std;
 
 SceneText::SceneText()
 {
+}
+
+SceneText::~SceneText()
+{
+	CSceneGraph::GetInstance()->Destroy();
+}
+
+bool SceneText::Handle(Message * message)
+{
+	MessageWRU* messageWRU = dynamic_cast<MessageWRU*>(message);
+
+	if (messageWRU)
+	{
+		switch (messageWRU->type)
+		{
+		case MessageWRU::MESSAGE_GETNEXTNODE:
+			GetNextNode(messageWRU->go);
+			break;
+		case MessageWRU::MESSAGE_CHECKNEARBY:
+			CheckNearbyPlayer(messageWRU->go);
+			break;
+		}
+		delete message;
+		return true;
+	}
+	delete message;
+	return false;
+}
+
+void SceneText::GetNextNode(CEnemy * go)
+{
+	CWaypoint* nextnode = CWaypointManager::GetInstance()->GetWaypoint(go->currWaypointID + 1);
+
+	if (nextnode == NULL)
+	{
+		go->currWaypointID = 0;
+		go->SetTarget(CWaypointManager::GetInstance()->GetWaypoint(go->currWaypointID)->GetPosition());
+	}
+	else
+	{
+		go->currWaypointID = nextnode->GetID();
+		go->SetTarget(nextnode->GetPosition());
+	}
+}
+
+void SceneText::CheckNearbyPlayer(CEnemy * go)
+{
+	Vector3 dist = playerInfo->GetPos() - go->GetPos();
+
+	if (dist.Length() <= 40)
+		go->nearby = playerInfo;
 }
 
 //SceneText::SceneText(SceneManager* _sceneMgr)
@@ -51,13 +105,10 @@ void SceneText::SpawnSandBag()
 	}
 }
 
-SceneText::~SceneText()
-{
-	CSceneGraph::GetInstance()->Destroy();
-}
-
 void SceneText::Init()
 {
+	PostOffice::GetInstance()->Register("GAME", this);
+
 	lights[0] = new Light();
 	GraphicsManager::GetInstance()->AddLight("lights[0]", lights[0]);
 	lights[0]->type = Light::LIGHT_DIRECTIONAL;
@@ -282,7 +333,7 @@ void SceneText::Init()
 	playerInfo->SetTerrain(groundEntity);
 
 	// Create multiple MasterBlocks
-	for (int i = 0; i < 2; ++i)
+	for (int i = 1; i <= 2; ++i)
 	{
 		Vector3 Pos, Target;
 
@@ -319,18 +370,32 @@ void SceneText::Init()
 
 	// Create a Waypoint inside WaypointManager
 	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Waypoint_A_1");
-	int aWayPoint = CWaypointManager::GetInstance()->AddWaypoint(Vector3(CLuaInterface::GetInstance()->getField("x"),
+	int way1 = CWaypointManager::GetInstance()->AddWaypoint(Vector3(
+		CLuaInterface::GetInstance()->getField("x"),
 		CLuaInterface::GetInstance()->getField("y"),
 		CLuaInterface::GetInstance()->getField("z")));
+
 	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Waypoint_A_2");
-	int anotherWaypoint = CWaypointManager::GetInstance()->AddWaypoint(aWayPoint, Vector3(CLuaInterface::GetInstance()->getField("x"),
+	int way2 = CWaypointManager::GetInstance()->AddWaypoint(way1, Vector3(
+		CLuaInterface::GetInstance()->getField("x"),
 		CLuaInterface::GetInstance()->getField("y"),
 		CLuaInterface::GetInstance()->getField("z")));
+
 	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Waypoint_A_3");
-	CWaypointManager::GetInstance()->AddWaypoint(anotherWaypoint, Vector3(CLuaInterface::GetInstance()->getField("x"),
+	CWaypointManager::GetInstance()->AddWaypoint(way2, Vector3(
+		CLuaInterface::GetInstance()->getField("x"),
 		CLuaInterface::GetInstance()->getField("y"),
 		CLuaInterface::GetInstance()->getField("z")));
 	CWaypointManager::GetInstance()->PrintSelf();
+	
+	//Chase Mob
+	Vector3 way1Pos = CWaypointManager::GetInstance()->GetWaypoint(way1)->GetPosition();
+
+	CEnemy* temp = new CEnemy();
+	temp->Init((CEnemy::COLOR)0, way1Pos, way1Pos);
+	temp->currWaypointID = 0;
+	temp->SetTerrain(groundEntity);
+	EnemyChaser.push_back(temp);
 }
 
 void SceneText::Update(double dt)

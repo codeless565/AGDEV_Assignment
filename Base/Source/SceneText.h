@@ -12,15 +12,20 @@
 #include "Enemy\Enemy.h"
 #include "../Base/Source/Lua/CLuaInterface.h"
 
+#include "../Base/Source/Message/ConcreteMessages.h"
+#include "../Base/Source/Message/ObjectBase.h"
+
 class ShaderProgram;
 class SceneManager;
 class TextEntity;
 class Light;
-class SceneText : public Scene
+class SceneText : public Scene , public ObjectBase
 {	
 public:
 	SceneText();
 	~SceneText();
+
+	bool Handle(Message * message);
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -49,12 +54,17 @@ private:
 
 	GenericEntity* theCube;
 	std::vector<CEnemy*> MasterSpheres;
+	std::vector<CEnemy*> EnemyChaser;
 
 	//static SceneText* sInstance; // The pointer to the object that gets registered
 
 	float fps;
 
 	void SpawnSandBag();
+
+	// Message Functions
+	void GetNextNode(CEnemy* go);
+	void CheckNearbyPlayer(CEnemy* go);
 };
 
 #endif

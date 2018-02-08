@@ -64,9 +64,9 @@ test = false -- Not in use for anything, placeholder
 CPlayerInfoStartPos = {0,0,10}
 
 -- Wayponts
-Waypoint_A_1 = {x=10.0,y=0.0,z=50.0}
-Waypoint_A_2 = {x=10.0,y=0.0,z=-50.0}
-Waypoint_A_3 = {x=-10.0,y=0.0,z=0.0}
+Waypoint_A_1 = {x=100.0,y=0.0,z=-30.0}
+Waypoint_A_2 = {x=0.0,y=0.0,z=-30.0}
+Waypoint_A_3 = {x=-100.0,y=0.0,z=-30.0}
 
 --[[ 
 COMMENTS

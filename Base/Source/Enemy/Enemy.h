@@ -3,11 +3,13 @@
 #include "../GroundEntity.h"
 #include "../SceneGraph.h"
 #include "../SceneNode.h"
+#include "../StateMachine/StateMachine.h"
 
 class Mesh;
 
-class CEnemy :
-	public GenericEntity
+#include "../PlayerInfo/PlayerInfo.h"
+
+class CEnemy :	public GenericEntity
 {
 protected:
 	Vector3 defaultPosition, defaultTarget, defaultUp;
@@ -21,7 +23,8 @@ protected:
 public:
 	enum COLOR
 	{
-		COLOR_RED = 0,
+		COLOR_NONE = 0,
+		COLOR_RED,
 		COLOR_BLUE,
 		COLOR_GREEN,
 		COLOR_YELLOW
@@ -61,9 +64,15 @@ public:
 	void Constrain(void);
 	// Render
 	void Render(void);
-
-
+	
 	void InitSpawnChild(int _num);
+
+	//StateMachine and Waypoints
+	CPlayerInfo* nearby;
+	StateMachine* sm;
+
+	int currWaypointID;
+	float speed;
 
 private:
 	void SpawnChild();
@@ -74,4 +83,5 @@ private:
 	
 	float m_SpawnTimer;
 	float m_SwapTimer;
+
 };

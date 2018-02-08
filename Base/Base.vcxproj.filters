@@ -43,6 +43,12 @@
     <Filter Include="Waypoint">
       <UniqueIdentifier>{cba348f4-c988-4b01-9009-7c7253292fa8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Message">
+      <UniqueIdentifier>{38243144-ce6a-4593-a356-bfe917c926fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine">
+      <UniqueIdentifier>{b2a48330-2207-4533-bdb2-3d707b4ac0d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -158,6 +164,21 @@
     </ClCompile>
     <ClCompile Include="Source\GameStateManagement\HighscoreMenuState.cpp">
       <Filter>GameStateManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StateMachine\StateAttack.cpp">
+      <Filter>StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StateMachine\StateMachine.cpp">
+      <Filter>StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StateMachine\StatePathFind.cpp">
+      <Filter>StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StateMachine\State.cpp">
+      <Filter>StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Message\PostOffice.cpp">
+      <Filter>Message</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -286,6 +307,27 @@
     </ClInclude>
     <ClInclude Include="Source\GameStateManagement\HighscoreMenuState.h">
       <Filter>GameStateManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMachine\StateAttack.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMachine\StateMachine.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMachine\StatePathFind.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMachine\State.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Message\ObjectBase.h">
+      <Filter>Message</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Message\PostOffice.h">
+      <Filter>Message</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Message\ConcreteMessages.h">
+      <Filter>Message</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

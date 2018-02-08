@@ -424,8 +424,9 @@ Return a copy of this vector, normalized
 Vector3 Vector3::Normalized( void ) const throw( DivideByZero )
 {
 	float d = Length();
-	if(d <= Math::EPSILON && -d <= Math::EPSILON)
-	  throw DivideByZero();
+	if (d <= Math::EPSILON && -d <= Math::EPSILON)
+		return 0;
+	//  throw DivideByZero();
 	return Vector3(x / d, y / d, z / d);
 }
 

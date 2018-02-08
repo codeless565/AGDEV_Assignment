@@ -3,6 +3,9 @@
 #include "GraphicsManager.h"
 #include "RenderHelper.h"
 
+#include "../StateMachine/StatePathFind.h"
+#include "../StateMachine/StateAttack.h"
+
 CEnemy::CEnemy()
 	: GenericEntity(NULL)
 	, defaultPosition(Vector3(0.0f,0.0f,0.0f))
@@ -15,6 +18,7 @@ CEnemy::CEnemy()
 	, m_pTerrain(NULL)
 	, m_SpawnTimer(0.f)
 	, m_SwapTimer(0.f)
+	, nearby(NULL)
 {
 }
 
@@ -58,6 +62,17 @@ void CEnemy::Init(COLOR _color, Vector3 _Pos, Vector3 _Target)
 	//Create a Graph for these Blocks
 	this->setEntityType(EntityBase::ENTITY_ENEMIES);
 	MasterNode = CSceneGraph::GetInstance()->AddNode(this);
+
+
+	if (Master_Color == COLOR_NONE)
+	{
+		speed = 20.f;
+
+		sm = new StateMachine();
+		sm->AddState(new StatePF_Normal("PathFind", this));
+		sm->AddState(new StateAttack("Attack", this));
+		sm->SetNextState("PathFind");
+	}
 }
 
 // Reset this player instance to default
@@ -72,6 +87,12 @@ void CEnemy::Reset(void)
 // Update
 void CEnemy::Update(double dt)
 {
+	if (Master_Color == COLOR_NONE)
+	{
+		sm->Update(dt);
+		return;
+	}
+
 	m_SpawnTimer += (float)dt;
 	m_SwapTimer += (float)dt;
 
@@ -80,24 +101,6 @@ void CEnemy::Update(double dt)
 		m_SpawnTimer = 0.f;
 		SpawnChild();
 	}
-
-	if (m_SwapTimer >= 1.f)
-	{
-		m_SwapTimer = 0.f;
-		//SwapPosition();
-	}
-
-	//Vector3 viewVector = (target - position).Normalized();
-	//position += viewVector * (float)m_dSpeed * (float)dt;
-
-	// Constrain the position
-	//Constrain();
-
-	//// Update the target - NO NEED TO MOVE
-	//if (position.z > 400.0f)
-	//	target.z = position.z * -1;
-	//else if (position.z < -400.0f)
-	//	target.z = position.z * -1;
 }
 
 // Constrain the position within the borders
@@ -174,9 +177,8 @@ void CEnemy::SpawnChild()
 			case COLOR_GREEN:
 				childBlock->InitLOD("CSGreen_High", "CSGreen_Med", "CSGreen_Low");
 				break;
-			case COLOR_YELLOW:
+			default:
 				childBlock->InitLOD("CSYellow_High", "CSYellow_Med", "CSYellow_Low");
-				break;
 			}
 			childBlock->SetScale(Vector3(5.f, 5.f, 5.f));
 			childBlock->SetCollider(true);
@@ -205,9 +207,8 @@ void CEnemy::SpawnChild()
 					case COLOR_GREEN:
 						childBlock->InitLOD("CSGreen_High", "CSGreen_Med", "CSGreen_Low");
 						break;
-					case COLOR_YELLOW:
+					default:
 						childBlock->InitLOD("CSYellow_High", "CSYellow_Med", "CSYellow_Low");
-						break;
 					}
 					childBlock->SetScale(Vector3(5.f, 5.f, 5.f));
 					childBlock->SetCollider(true);

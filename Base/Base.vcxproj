@@ -29,6 +29,7 @@
     <ClCompile Include="Source\Light.cpp" />
     <ClCompile Include="Source\Lua\CLuaInterface.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Message\PostOffice.cpp" />
     <ClCompile Include="Source\OBJMesh.cpp" />
     <ClCompile Include="Source\PlayerInfo\PlayerInfo.cpp" />
     <ClCompile Include="Source\Projectile\Grenade.cpp" />
@@ -40,6 +41,10 @@
     <ClCompile Include="Source\SkyBox\SkyBoxEntity.cpp" />
     <ClCompile Include="Source\SpatialPartition.cpp" />
     <ClCompile Include="Source\SpriteEntity.cpp" />
+    <ClCompile Include="Source\StateMachine\State.cpp" />
+    <ClCompile Include="Source\StateMachine\StateAttack.cpp" />
+    <ClCompile Include="Source\StateMachine\StateMachine.cpp" />
+    <ClCompile Include="Source\StateMachine\StatePathFind.cpp" />
     <ClCompile Include="Source\TextEntity.cpp" />
     <ClCompile Include="Source\Transform.cpp" />
     <ClCompile Include="Source\Waypoint\Waypoint.cpp" />
@@ -73,6 +78,9 @@
     <ClInclude Include="Source\LevelOfDetails\LevelOfDetails.h" />
     <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\Lua\CLuaInterface.h" />
+    <ClInclude Include="Source\Message\ConcreteMessages.h" />
+    <ClInclude Include="Source\Message\ObjectBase.h" />
+    <ClInclude Include="Source\Message\PostOffice.h" />
     <ClInclude Include="Source\OBJMesh.h" />
     <ClInclude Include="Source\PlayerInfo\PlayerInfo.h" />
     <ClInclude Include="Source\Projectile\Grenade.h" />
@@ -84,6 +92,10 @@
     <ClInclude Include="Source\SkyBox\SkyBoxEntity.h" />
     <ClInclude Include="Source\SpatialPartition.h" />
     <ClInclude Include="Source\SpriteEntity.h" />
+    <ClInclude Include="Source\StateMachine\State.h" />
+    <ClInclude Include="Source\StateMachine\StateAttack.h" />
+    <ClInclude Include="Source\StateMachine\StateMachine.h" />
+    <ClInclude Include="Source\StateMachine\StatePathFind.h" />
     <ClInclude Include="Source\TextEntity.h" />
     <ClInclude Include="Source\Transform.h" />
     <ClInclude Include="Source\Waypoint\Waypoint.h" />
