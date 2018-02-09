@@ -117,23 +117,9 @@ public:
 
 	bool getOptionsState() { return options; }
 	void setOptionsState(bool _options) { options = _options; }
-	void SaveOptionsState();
 
-	char getkeyMoveForward() { return keyMoveForward; }
-	char getkeyMoveBackward() { return keyMoveBackward; }
-	char getkeyMoveLeft() { return keyMoveLeft; }
-	char getkeyMoveRight() { return keyMoveRight; }
 
-	bool getEditingForwardKey() { return EditingForwardKey; }
-	bool getEditingBackwardKey() { return EditingBackwardKey; }
-	bool getEditingLeftKey() { return EditingLeftKey; }
-	bool getEditingRightKey() { return EditingRightKey; }
 
-	char getCurrentChar() { return CurrentChar; }
-
-	bool InvalidKey();
-	bool InvalidKeyPressed;
-	void ResetEditing();
 private:
 	Vector3 defaultPosition, defaultTarget, defaultUp;
 	Vector3 position, target, up;
@@ -159,22 +145,10 @@ private:
 	CWeaponInfo* tertiaryWeapon;
 	std::vector <CWeaponInfo*> Weapons;
 
-	// Key to move the player
-	char keyMoveForward;
-	char keyMoveBackward;
-	char keyMoveLeft;
-	char keyMoveRight;
-	char keyOptions;
-
 	int score;
 	int Shots;
 	int TotalShots;
 
 	bool options;
-	bool EditingForwardKey;
-	bool EditingBackwardKey;
-	bool EditingLeftKey;
-	bool EditingRightKey;
 
-	char CurrentChar;
 };
