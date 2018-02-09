@@ -180,9 +180,6 @@
     <ClCompile Include="Source\Message\PostOffice.cpp">
       <Filter>Message</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ControlsManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -331,9 +328,6 @@
     </ClInclude>
     <ClInclude Include="Source\Message\ConcreteMessages.h">
       <Filter>Message</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ControlsManager.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

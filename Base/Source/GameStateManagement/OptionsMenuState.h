@@ -24,11 +24,30 @@ public:
 	virtual void Exit();
 	virtual bool getKeepState() { return false; }
 
+	char CurrentChar;
+
 //	bool EditGraphics;
 //	int GraphicsChoices;
 
 	int windowWidth;
 	int windowHeight;
+	char keyMoveForward;
+	char keyMoveBackward;
+	char keyMoveLeft;
+	char keyMoveRight;
+	char keyOptions;
+
+	bool EditingForwardKey;
+	bool EditingBackwardKey;
+	bool EditingLeftKey;
+	bool EditingRightKey;
+	bool EditingOptionsKey;
+
+	bool InvalidKey();
+	bool InvalidKeyPressed;
+	void ResetEditing();
+	void SaveOptionsState();
+
 private:
 	FPSCamera camera;
 	SpriteEntity* IntroStateBackground;

@@ -12,7 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
-    <ClCompile Include="Source\ControlsManager.cpp" />
     <ClCompile Include="Source\CUpdateTransformation.cpp" />
     <ClCompile Include="Source\Enemy\Enemy.cpp" />
     <ClCompile Include="Source\EntityManager.cpp" />
@@ -63,7 +62,6 @@
     <ClInclude Include="..\Lua\luaconf.h" />
     <ClInclude Include="..\Lua\lualib.h" />
     <ClInclude Include="Source\Application.h" />
-    <ClInclude Include="Source\ControlsManager.h" />
     <ClInclude Include="Source\CUpdateTransformation.h" />
     <ClInclude Include="Source\Enemy\Enemy.h" />
     <ClInclude Include="Source\EntityManager.h" />

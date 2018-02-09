@@ -29,8 +29,6 @@
 #include "Message\PostOffice.h"
 #include "Message\ConcreteMessages.h"
 
-#include "ControlsManager.h"
-
 #include <iostream>
 using namespace std;
 
@@ -561,42 +559,42 @@ void SceneText::RenderOptionsOnScreen()
 {
 	std::ostringstream ss;
 	ss.str("");
-	ss << "MoveForward  " << ControlsManager::GetInstance()->getkeyMoveForward();
+	ss << "MoveForward  " << playerInfo->getkeyMoveForward();
 	textObj[3]->SetText(ss.str());
 
 	ss.str("");
-	ss << "MoveBackward " << ControlsManager::GetInstance()->getkeyMoveBackward();
+	ss << "MoveBackward " << playerInfo->getkeyMoveBackward();
 	textObj[4]->SetText(ss.str());
 
 	ss.str("");
-	ss << "MoveLeft     " << ControlsManager::GetInstance()->getkeyMoveLeft();
+	ss << "MoveLeft     " << playerInfo->getkeyMoveLeft();
 	textObj[5]->SetText(ss.str());
 
 	ss.str("");
-	ss << "MoveRight    " << ControlsManager::GetInstance()->getkeyMoveRight();
+	ss << "MoveRight    " << playerInfo->getkeyMoveRight();
 	textObj[6]->SetText(ss.str());
 
 
-	char PrevChar = ControlsManager::GetInstance()->getCurrentChar() - 1;
-	char NextChar = ControlsManager::GetInstance()->getCurrentChar() + 1;
+	char PrevChar = playerInfo->getCurrentChar() - 1;
+	char NextChar = playerInfo->getCurrentChar() + 1;
 	if (PrevChar < 65)
 		PrevChar = ' ';
 	if (NextChar > 90)
 		NextChar = ' ';
 
 	ss.str("");
-	if (ControlsManager::GetInstance()->getEditingForwardKey())
-		ss << "Edit forward key to:" << PrevChar << " " << ControlsManager::GetInstance()->getCurrentChar() << " " << NextChar;
-	else if (ControlsManager::GetInstance()->getEditingBackwardKey())
-		ss << "Edit backward key to:" << PrevChar << " " << ControlsManager::GetInstance()->getCurrentChar() << " " << NextChar;
-	else if (ControlsManager::GetInstance()->getEditingLeftKey())
-		ss << "Edit left key to:" << PrevChar << " " << ControlsManager::GetInstance()->getCurrentChar() << " " << NextChar;
-	else if (ControlsManager::GetInstance()->getEditingRightKey())
-		ss << "Edit right key to:" << PrevChar << " " << ControlsManager::GetInstance()->getCurrentChar() << " " << NextChar;
+	if (playerInfo->getEditingForwardKey())
+		ss << "Edit forward key to:" << PrevChar << " " << playerInfo->getCurrentChar() << " " << NextChar;
+	else if (playerInfo->getEditingBackwardKey())
+		ss << "Edit backward key to:" << PrevChar << " " << playerInfo->getCurrentChar() << " " << NextChar;
+	else if (playerInfo->getEditingLeftKey())
+		ss << "Edit left key to:" << PrevChar << " " << playerInfo->getCurrentChar() << " " << NextChar;
+	else if (playerInfo->getEditingRightKey())
+		ss << "Edit right key to:" << PrevChar << " " << playerInfo->getCurrentChar() << " " << NextChar;
 	textObj[9]->SetText(ss.str());
 
 	ss.str("");
-	if (ControlsManager::GetInstance()->InvalidKeyPressed)
+	if (playerInfo->InvalidKeyPressed)
 		ss << "Key bind already exist";
 	else
 		ss.str("");
