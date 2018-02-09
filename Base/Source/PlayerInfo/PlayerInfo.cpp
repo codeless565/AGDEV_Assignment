@@ -12,6 +12,7 @@
 #include "../Lua/CLuaInterface.h"
 #include "../Application.h"
 
+#include "../ControlsManager.h"
 // Allocating and initializing CPlayerInfo's static data member.  
 // The pointer is allocated but not the object's constructor.
 CPlayerInfo *CPlayerInfo::s_instance = 0;
@@ -32,11 +33,6 @@ CPlayerInfo::CPlayerInfo(void)
 	, secondaryWeapon(NULL)
 	, tertiaryWeapon(NULL)
 	, score(0)
-	, keyMoveForward('W')
-	, keyMoveBackward('S')
-	, keyMoveLeft('A')
-	, keyMoveRight('D')
-	, keyOptions('O')
 {
 }
 
@@ -87,25 +83,10 @@ void CPlayerInfo::Init(void)
 
 	currWeapon = Weapons[0];
 
-	// Initialise the custom keyboard inputs
-	keyMoveForward = CLuaInterface::GetInstance()->getKeyBoardValue("moveForward");
-	keyMoveBackward = CLuaInterface::GetInstance()->getKeyBoardValue("moveBackward");
-	keyMoveLeft = CLuaInterface::GetInstance()->getKeyBoardValue("moveLeft");
-	keyMoveRight = CLuaInterface::GetInstance()->getKeyBoardValue("moveRight");
-	keyOptions = CLuaInterface::GetInstance()->getKeyBoardValue("options");
-
 	//float distanceSquare = CLuaInterface::GetInstance()->getDistanceSquareValue(Vector3(0, 0, 0), position);
 	//int a = 1000, b = 2000, c = 3000, d = 4000;
 	//CLuaInterface::GetInstance()->getVariableValues("GetMinMax", a, b, c, d);
 	options = false;
-
-	EditingForwardKey = false;
-	EditingBackwardKey = false;
-	EditingLeftKey = false;
-	EditingRightKey = false;
-
-	CurrentChar = 65;
-	InvalidKeyPressed = false;
 }
 
 // Returns true if the player is on ground
@@ -313,18 +294,18 @@ void CPlayerInfo::UpdateFreeFall(double dt)
 void CPlayerInfo::Update(double dt)
 {
 	static bool bOptions = false;
-	if (!bOptions && KeyboardController::GetInstance()->IsKeyDown(keyOptions))
+	if (!bOptions && KeyboardController::GetInstance()->IsKeyDown(ControlsManager::GetInstance()->getkeyOptions()))
 	{
 		bOptions = true;
 		options = !options;
 	}
-	else if (bOptions && !KeyboardController::GetInstance()->IsKeyDown(keyOptions))
+	else if (bOptions && !KeyboardController::GetInstance()->IsKeyDown(ControlsManager::GetInstance()->getkeyOptions()))
 		bOptions = false;
 
 	
 	if (!options)
 	{
-		ResetEditing();
+		ControlsManager::GetInstance()->ResetEditing();
 		double mouse_diff_x, mouse_diff_y;
 		MouseController::GetInstance()->GetMouseDelta(mouse_diff_x, mouse_diff_y);
 
@@ -332,34 +313,34 @@ void CPlayerInfo::Update(double dt)
 		double camera_pitch = mouse_diff_y * 0.0174555555555556;	// 3.142 / 180.0
 
 		// Update the position if the WASD buttons were activated
-		if (KeyboardController::GetInstance()->IsKeyDown(keyMoveForward) ||
-			KeyboardController::GetInstance()->IsKeyDown(keyMoveLeft) ||
-			KeyboardController::GetInstance()->IsKeyDown(keyMoveBackward) ||
-			KeyboardController::GetInstance()->IsKeyDown(keyMoveRight))
+		if (KeyboardController::GetInstance()->IsKeyDown(ControlsManager::GetInstance()->getkeyMoveForward()) ||
+			KeyboardController::GetInstance()->IsKeyDown(ControlsManager::GetInstance()->getkeyMoveBackward()) ||
+			KeyboardController::GetInstance()->IsKeyDown(ControlsManager::GetInstance()->getkeyMoveLeft()) ||
+			KeyboardController::GetInstance()->IsKeyDown(ControlsManager::GetInstance()->getkeyMoveRight()))
 		{
 			Vector3 viewVector = target - position;
 			Vector3 rightUV;
-			if (KeyboardController::GetInstance()->IsKeyDown(keyMoveForward))
+			if (KeyboardController::GetInstance()->IsKeyDown(ControlsManager::GetInstance()->getkeyMoveForward()))
 			{
 				Vector3 temp(viewVector);
 				temp.y = 0;
 				position += temp.Normalized() * (float)m_dSpeed * (float)dt;
 			}
-			else if (KeyboardController::GetInstance()->IsKeyDown(keyMoveBackward))
+			else if (KeyboardController::GetInstance()->IsKeyDown(ControlsManager::GetInstance()->getkeyMoveBackward()))
 			{
 				Vector3 temp(viewVector);
 				temp.y = 0;
 				position -= temp.Normalized() * (float)m_dSpeed * (float)dt;
 			}
 
-			if (KeyboardController::GetInstance()->IsKeyDown(keyMoveLeft))
+			if (KeyboardController::GetInstance()->IsKeyDown(ControlsManager::GetInstance()->getkeyMoveLeft()))
 			{
 				rightUV = (viewVector.Normalized()).Cross(up);
 				rightUV.y = 0;
 				rightUV.Normalize();
 				position -= rightUV * (float)m_dSpeed * (float)dt;
 			}
-			else if (KeyboardController::GetInstance()->IsKeyDown(keyMoveRight))
+			else if (KeyboardController::GetInstance()->IsKeyDown(ControlsManager::GetInstance()->getkeyMoveRight()))
 			{
 				rightUV = (viewVector.Normalized()).Cross(up);
 				rightUV.y = 0;
@@ -524,124 +505,122 @@ void CPlayerInfo::Update(double dt)
 	}
 	else
 	{
-		if (KeyboardController::GetInstance()->IsKeyPressed(keyMoveForward))
-			EditingForwardKey = true;
+		if (KeyboardController::GetInstance()->IsKeyPressed(ControlsManager::GetInstance()->getkeyMoveForward()))
+			ControlsManager::GetInstance()->setEditingForwardKey(true);
 
-		if (KeyboardController::GetInstance()->IsKeyPressed(keyMoveBackward))
-			EditingBackwardKey = true;
+		if (KeyboardController::GetInstance()->IsKeyPressed(ControlsManager::GetInstance()->getkeyMoveBackward()))
+			ControlsManager::GetInstance()->setEditingBackwardKey(true);
 
-		if (KeyboardController::GetInstance()->IsKeyPressed(keyMoveLeft))
-			EditingLeftKey = true;
+		if (KeyboardController::GetInstance()->IsKeyPressed(ControlsManager::GetInstance()->getkeyMoveLeft()))
+			ControlsManager::GetInstance()->setEditingLeftKey(true);
 
-		if (KeyboardController::GetInstance()->IsKeyPressed(keyMoveRight))
-			EditingRightKey = true;
+		if (KeyboardController::GetInstance()->IsKeyPressed(ControlsManager::GetInstance()->getkeyMoveRight()))
+			ControlsManager::GetInstance()->setEditingRightKey(true);
 
-		if (EditingForwardKey)
+		if (ControlsManager::GetInstance()->getEditingForwardKey())
 		{
 			if (KeyboardController::GetInstance()->IsKeyDown(VK_UP))
 			{
-				if (CurrentChar+1 <= 90)
-					CurrentChar++;
+				if (ControlsManager::GetInstance()->getCurrentChar()+1 <= 90)
+					ControlsManager::GetInstance()->addCurrentChar(1);
 			}
 			else if (KeyboardController::GetInstance()->IsKeyDown(VK_DOWN))
 			{
-				if (CurrentChar-1 >= 65)
-					CurrentChar--;	
+				if (ControlsManager::GetInstance()->getCurrentChar() -1 >= 65)
+					ControlsManager::GetInstance()->addCurrentChar(-1);
 			}
 			if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
 			{
-				if (!InvalidKey())
+				if (!ControlsManager::GetInstance()->InvalidKey())
 				{
-					InvalidKeyPressed = false;
-					keyMoveForward = CurrentChar;
-					SaveOptionsState();
-					EditingForwardKey = false;
+					ControlsManager::GetInstance()->setInvalidKeyPressed(false);
+					ControlsManager::GetInstance()->setKeyMoveForward(ControlsManager::GetInstance()->getCurrentChar());
+					ControlsManager::GetInstance()->SaveOptionsState();
+					ControlsManager::GetInstance()->setEditingForwardKey(false);
 					options = false;
 				}
 				else
-					InvalidKeyPressed = true;
+					ControlsManager::GetInstance()->setInvalidKeyPressed(true);
 			}
 		}
 
-		if (EditingBackwardKey)
+		if (ControlsManager::GetInstance()->getEditingBackwardKey())
 		{
 			if (KeyboardController::GetInstance()->IsKeyDown(VK_UP))
 			{
-				if (CurrentChar + 1 <= 90)
-					CurrentChar++;
+				if (ControlsManager::GetInstance()->getCurrentChar() + 1 <= 90)
+					ControlsManager::GetInstance()->addCurrentChar(1);
 			}
 			else if (KeyboardController::GetInstance()->IsKeyDown(VK_DOWN))
 			{
-				if (CurrentChar - 1 >= 65)
-					CurrentChar--;
+				if (ControlsManager::GetInstance()->getCurrentChar() - 1 >= 65)
+					ControlsManager::GetInstance()->addCurrentChar(-1);
 			}
 			if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
 			{
-
-				if (!InvalidKey())
+				if (!ControlsManager::GetInstance()->InvalidKey())
 				{
-					InvalidKeyPressed = false;
-					keyMoveBackward = CurrentChar;
-					SaveOptionsState();
-					EditingBackwardKey = false;
+					ControlsManager::GetInstance()->setInvalidKeyPressed(false);
+					ControlsManager::GetInstance()->setKeyMoveBackward(ControlsManager::GetInstance()->getCurrentChar());
+					ControlsManager::GetInstance()->SaveOptionsState();
+					ControlsManager::GetInstance()->setEditingBackwardKey(false);
 					options = false;
 				}
 				else
-					InvalidKeyPressed = true;
+					ControlsManager::GetInstance()->setInvalidKeyPressed(true);
+			}
+		}
+		if (ControlsManager::GetInstance()->getEditingLeftKey())
+		{
+			if (KeyboardController::GetInstance()->IsKeyDown(VK_UP))
+			{
+				if (ControlsManager::GetInstance()->getCurrentChar() + 1 <= 90)
+					ControlsManager::GetInstance()->addCurrentChar(1);
+			}
+			else if (KeyboardController::GetInstance()->IsKeyDown(VK_DOWN))
+			{
+				if (ControlsManager::GetInstance()->getCurrentChar() - 1 >= 65)
+					ControlsManager::GetInstance()->addCurrentChar(-1);
+			}
+			if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
+			{
+				if (!ControlsManager::GetInstance()->InvalidKey())
+				{
+					ControlsManager::GetInstance()->setInvalidKeyPressed(false);
+					ControlsManager::GetInstance()->setKeyMoveLeft(ControlsManager::GetInstance()->getCurrentChar());
+					ControlsManager::GetInstance()->SaveOptionsState();
+					ControlsManager::GetInstance()->setEditingLeftKey(false);
+					options = false;
+				}
+				else
+					ControlsManager::GetInstance()->setInvalidKeyPressed(true);
 			}
 		}
 
-		if (EditingLeftKey)
+		if (ControlsManager::GetInstance()->getEditingRightKey())
 		{
 			if (KeyboardController::GetInstance()->IsKeyDown(VK_UP))
 			{
-				if (CurrentChar + 1 <= 90)
-					CurrentChar++;
+				if (ControlsManager::GetInstance()->getCurrentChar() + 1 <= 90)
+					ControlsManager::GetInstance()->addCurrentChar(1);
 			}
 			else if (KeyboardController::GetInstance()->IsKeyDown(VK_DOWN))
 			{
-				if (CurrentChar - 1 >= 65)
-					CurrentChar--;
+				if (ControlsManager::GetInstance()->getCurrentChar() - 1 >= 65)
+					ControlsManager::GetInstance()->addCurrentChar(-1);
 			}
 			if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
 			{
-				if (!InvalidKey())
+				if (!ControlsManager::GetInstance()->InvalidKey())
 				{
-					keyMoveLeft = CurrentChar;
-					SaveOptionsState();
-					InvalidKeyPressed = false;
-					EditingLeftKey = false;
+					ControlsManager::GetInstance()->setInvalidKeyPressed(false);
+					ControlsManager::GetInstance()->setKeyMoveRight(ControlsManager::GetInstance()->getCurrentChar());
+					ControlsManager::GetInstance()->SaveOptionsState();
+					ControlsManager::GetInstance()->setEditingRightKey(false);
 					options = false;
 				}
 				else
-					InvalidKeyPressed = true;
-			}
-		}
-
-		if (EditingRightKey)
-		{
-			if (KeyboardController::GetInstance()->IsKeyDown(VK_UP))
-			{
-				if (CurrentChar + 1 <= 90)
-					CurrentChar++;
-			}
-			else if (KeyboardController::GetInstance()->IsKeyDown(VK_DOWN))
-			{
-				if (CurrentChar - 1 >= 65)
-					CurrentChar--;
-			}
-			if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
-			{
-				if (!InvalidKey())
-				{
-					InvalidKeyPressed = false;
-					keyMoveRight = CurrentChar;
-					SaveOptionsState();
-					EditingRightKey = false;
-					options = false;
-				}
-				else
-					InvalidKeyPressed = true;
+					ControlsManager::GetInstance()->setInvalidKeyPressed(true);
 			}
 		}
 	}
@@ -682,38 +661,4 @@ void CPlayerInfo::AttachCamera(FPSCamera* _cameraPtr)
 void CPlayerInfo::DetachCamera()
 {
 	attachedCamera = nullptr;
-}
-
-void CPlayerInfo::SaveOptionsState()
-{
-	CLuaInterface::GetInstance()->saveKeyBoardValue("moveForward",keyMoveForward);
-	CLuaInterface::GetInstance()->saveKeyBoardValue("moveBackward", keyMoveBackward);
-	CLuaInterface::GetInstance()->saveKeyBoardValue("moveLeft", keyMoveLeft);
-	CLuaInterface::GetInstance()->saveKeyBoardValue("moveRight", keyMoveRight);
-	CLuaInterface::GetInstance()->saveKeyBoardValue("options", keyOptions);
-	CLuaInterface::GetInstance()->saveOptionsValue("width", Application::GetInstance().GetWindowWidth());
-	CLuaInterface::GetInstance()->saveOptionsValue("height", Application::GetInstance().GetWindowHeight());
-	
-	std::remove("Image/Options.lua");
-	std::rename("Image/Options2.lua", "Image/Options.lua");
-}
-
-bool CPlayerInfo::InvalidKey()
-{
-	if (CurrentChar == keyMoveForward ||
-		CurrentChar == keyMoveBackward ||
-		CurrentChar == keyMoveLeft ||
-		CurrentChar == keyMoveRight ||
-		CurrentChar == keyOptions)
-		return true;
-
-	return false;
-}
-
-void CPlayerInfo::ResetEditing()
-{
-	EditingForwardKey = false;
-	EditingBackwardKey = false;
-	EditingLeftKey = false;
-	EditingRightKey = false;
 }
