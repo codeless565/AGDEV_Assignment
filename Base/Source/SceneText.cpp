@@ -623,8 +623,9 @@ void SceneText::ReadWayPoint()
 	//{
 	//	CLuaInterface::GetInstance()->getWaypointPos();
 
-
-	//} while (contLoop);
+	//} while (contLoop); 
+	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Waypoint_init");
+	lua_call(CLuaInterface::GetInstance()->theLuaState, 0, 0);
 
 	lua_getglobal(CLuaInterface::GetInstance()->theLuaState, "Waypoint_A_1");
 	int way1 = CWaypointManager::GetInstance()->AddWaypoint(Vector3(

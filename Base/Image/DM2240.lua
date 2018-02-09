@@ -57,6 +57,12 @@ function GetMinMax(...)
 	return minimum,maximum,avg,n
 end
 
+function Waypoint_init()
+	for key,value in pairs(waypoint_test) do
+		
+	end
+end		
+
 title = "DM2240 - Week 14 Scripting"
 test = false -- Not in use for anything, placeholder 
 
@@ -68,6 +74,13 @@ Waypoint_A_1 = {x=100.0,y=0.0,z=-30.0}
 Waypoint_A_2 = {x=0.0,y=0.0,z=-30.0}
 Waypoint_A_3 = {x=-100.0,y=0.0,z=-30.0}
 
+waypoint_test = {
+					first={x=100.0,y=0.0,z=-30.0},
+					second={x=0.0,y=0.0,z=-30.0},
+					third={x=-100.0,y=0.0,z=-30.0}
+				}
+
+		
 --[[ 
 COMMENTS
 This lua file is read as [KEY] = [VALUE]
