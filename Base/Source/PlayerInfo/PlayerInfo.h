@@ -130,6 +130,10 @@ public:
 	bool getEditingRightKey() { return EditingRightKey; }
 
 	char getCurrentChar() { return CurrentChar; }
+
+	bool InvalidKey();
+	bool InvalidKeyPressed;
+	void ResetEditing();
 private:
 	Vector3 defaultPosition, defaultTarget, defaultUp;
 	Vector3 position, target, up;
@@ -160,6 +164,7 @@ private:
 	char keyMoveBackward;
 	char keyMoveLeft;
 	char keyMoveRight;
+	char keyOptions;
 
 	int score;
 	int Shots;

@@ -117,13 +117,13 @@ void Application::Init()
 	CLuaInterface::GetInstance()->Init();
 
 	// get the OpenGL resolution
-	m_window_width = CLuaInterface::GetInstance()->getIntValue("width");
-	m_window_height = CLuaInterface::GetInstance()->getIntValue("height");
+	m_window_width = CLuaInterface::GetInstance()->getOptionsValue("width");
+	m_window_height = CLuaInterface::GetInstance()->getOptionsValue("height");
 	
 
-	CLuaInterface::GetInstance()->saveFloatValue("Player2", 200.10);
-	CLuaInterface::GetInstance()->saveIntValue("Player1", 200);
-	CLuaInterface::GetInstance()->saveBooleanValue("test", false);
+	//CLuaInterface::GetInstance()->saveFloatValue("Player2", 200.10);
+	//CLuaInterface::GetInstance()->saveIntValue("Player1", 200);
+	//CLuaInterface::GetInstance()->saveBooleanValue("test", false);
 
 	//Set the error callback
 	glfwSetErrorCallback(error_callback);
@@ -142,7 +142,7 @@ void Application::Init()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL 
 
 	//Create a window and create its OpenGL context
-	m_window = glfwCreateWindow(m_window_width, m_window_height, "NYP Framework", NULL, NULL);
+	m_window = glfwCreateWindow(m_window_width, m_window_height, "AGDEV", NULL, NULL);
 
 	//If the window couldn't be created
 	if (!m_window)

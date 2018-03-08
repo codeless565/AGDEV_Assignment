@@ -507,7 +507,7 @@ void SceneText::RenderOptionsOnScreen()
 {
 	std::ostringstream ss;
 	ss.str("");
-	ss << "MoveForward " << playerInfo->getkeyMoveForward();
+	ss << "MoveForward  " << playerInfo->getkeyMoveForward();
 	textObj[3]->SetText(ss.str());
 
 	ss.str("");
@@ -515,22 +515,39 @@ void SceneText::RenderOptionsOnScreen()
 	textObj[4]->SetText(ss.str());
 
 	ss.str("");
-	ss << "MoveLeft " << playerInfo->getkeyMoveLeft();
+	ss << "MoveLeft     " << playerInfo->getkeyMoveLeft();
 	textObj[5]->SetText(ss.str());
 
 	ss.str("");
-	ss << "MoveRight" << playerInfo->getkeyMoveRight();
+	ss << "MoveRight    " << playerInfo->getkeyMoveRight();
 	textObj[6]->SetText(ss.str());
+
+
+	char PrevChar = playerInfo->getCurrentChar() - 1;
+	char NextChar = playerInfo->getCurrentChar() + 1;
+	if (PrevChar < 65)
+		PrevChar = ' ';
+	if (NextChar > 90)
+		NextChar = ' ';
 
 	ss.str("");
 	if (playerInfo->getEditingForwardKey())
-		ss << "Edit forward key to:" << playerInfo->getCurrentChar();
+	{
+		ss << "Edit forward key to:" << PrevChar << " " << playerInfo->getCurrentChar() << " " << NextChar;
+	}
 	else if (playerInfo->getEditingBackwardKey())
-		ss << "Edit backward key to:" << playerInfo->getCurrentChar();
+		ss << "Edit backward key to:" << PrevChar << " " << playerInfo->getCurrentChar() << " " << NextChar;
 	else if (playerInfo->getEditingLeftKey())
-		ss << "Edit left key to:" << playerInfo->getCurrentChar();
+		ss << "Edit left key to:" << PrevChar << " " << playerInfo->getCurrentChar() << " " << NextChar;
 	else if (playerInfo->getEditingRightKey())
-		ss << "Edit right key to:" << playerInfo->getCurrentChar();
+		ss << "Edit right key to:" << PrevChar << " " << playerInfo->getCurrentChar() << " " << NextChar;
+	textObj[9]->SetText(ss.str());
+
+	ss.str("");
+	if (playerInfo->InvalidKeyPressed)
+		ss << "Key bind already exist";
+	else
+		ss.str("");
 	textObj[8]->SetText(ss.str());
 }
 
@@ -543,4 +560,5 @@ void SceneText::ClearOptionsOnScreen()
 	textObj[5]->SetText(ss.str());
 	textObj[6]->SetText(ss.str());
 	textObj[8]->SetText(ss.str());
+	textObj[9]->SetText(ss.str());
 }

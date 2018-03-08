@@ -228,7 +228,34 @@ void CLuaInterface::saveKeyBoardValue(const char * varName, char value, bool ove
 	temp += value;
 	temp.append("\"\n");
 
+#ifdef DEBUG
 	cout << temp << endl;
+#endif
+
+	if (theLuaState)
+	{
+		lua_getglobal(theLuaState, "SaveToOptionsFile");
+		lua_pushstring(theLuaState, temp.c_str());
+		lua_pushinteger(theLuaState, overwrite);
+	}
+	lua_call(theLuaState, 2, 0);
+}
+
+int CLuaInterface::getOptionsValue(const char * varName)
+{
+	lua_getglobal(theOptionState, varName);
+	int tempValue = lua_tointeger(theOptionState, -1);
+	return tempValue;
+
+}
+
+void CLuaInterface::saveOptionsValue(const char * varName, int value, bool overwrite)
+{
+	std::string temp = varName;
+	temp.append(" = ");
+	temp.append(std::to_string(value));
+	temp.append("\n");
+
 	if (theLuaState)
 	{
 		lua_getglobal(theLuaState, "SaveToOptionsFile");

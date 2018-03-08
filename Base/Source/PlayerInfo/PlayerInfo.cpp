@@ -10,7 +10,7 @@
 #include "../WeaponInfo/LaserBlaster.h"
 #include "../WeaponInfo/GrenadeThrow.h"
 #include "../Lua/CLuaInterface.h"
-#include <fstream>
+#include "../Application.h"
 
 // Allocating and initializing CPlayerInfo's static data member.  
 // The pointer is allocated but not the object's constructor.
@@ -36,6 +36,7 @@ CPlayerInfo::CPlayerInfo(void)
 	, keyMoveBackward('S')
 	, keyMoveLeft('A')
 	, keyMoveRight('D')
+	, keyOptions('O')
 {
 }
 
@@ -91,17 +92,20 @@ void CPlayerInfo::Init(void)
 	keyMoveBackward = CLuaInterface::GetInstance()->getKeyBoardValue("moveBackward");
 	keyMoveLeft = CLuaInterface::GetInstance()->getKeyBoardValue("moveLeft");
 	keyMoveRight = CLuaInterface::GetInstance()->getKeyBoardValue("moveRight");
+	keyOptions = CLuaInterface::GetInstance()->getKeyBoardValue("options");
 
-	float distanceSquare = CLuaInterface::GetInstance()->getDistanceSquareValue(Vector3(0, 0, 0), position);
-	int a = 1000, b = 2000, c = 3000, d = 4000;
-	CLuaInterface::GetInstance()->getVariableValues("GetMinMax", a, b, c, d);
+	//float distanceSquare = CLuaInterface::GetInstance()->getDistanceSquareValue(Vector3(0, 0, 0), position);
+	//int a = 1000, b = 2000, c = 3000, d = 4000;
+	//CLuaInterface::GetInstance()->getVariableValues("GetMinMax", a, b, c, d);
 	options = false;
+
 	EditingForwardKey = false;
 	EditingBackwardKey = false;
 	EditingLeftKey = false;
 	EditingRightKey = false;
 
 	CurrentChar = 65;
+	InvalidKeyPressed = false;
 }
 
 // Returns true if the player is on ground
@@ -309,17 +313,18 @@ void CPlayerInfo::UpdateFreeFall(double dt)
 void CPlayerInfo::Update(double dt)
 {
 	static bool bOptions = false;
-	if (!bOptions && KeyboardController::GetInstance()->IsKeyDown('O'))
+	if (!bOptions && KeyboardController::GetInstance()->IsKeyDown(keyOptions))
 	{
 		bOptions = true;
 		options = !options;
 	}
-	else if (bOptions && !KeyboardController::GetInstance()->IsKeyDown('O'))
+	else if (bOptions && !KeyboardController::GetInstance()->IsKeyDown(keyOptions))
 		bOptions = false;
 
 	
 	if (!options)
 	{
+		ResetEditing();
 		double mouse_diff_x, mouse_diff_y;
 		MouseController::GetInstance()->GetMouseDelta(mouse_diff_x, mouse_diff_y);
 
@@ -519,8 +524,6 @@ void CPlayerInfo::Update(double dt)
 	}
 	else
 	{
-		// Read Any key
-		// Check if key corresponds with any modifiable keys
 		if (KeyboardController::GetInstance()->IsKeyPressed(keyMoveForward))
 			EditingForwardKey = true;
 
@@ -547,10 +550,16 @@ void CPlayerInfo::Update(double dt)
 			}
 			if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
 			{
-				keyMoveForward = CurrentChar;
-				SaveOptionsState();
-				EditingForwardKey = false;
-				options = false;
+				if (!InvalidKey())
+				{
+					InvalidKeyPressed = false;
+					keyMoveForward = CurrentChar;
+					SaveOptionsState();
+					EditingForwardKey = false;
+					options = false;
+				}
+				else
+					InvalidKeyPressed = true;
 			}
 		}
 
@@ -568,10 +577,17 @@ void CPlayerInfo::Update(double dt)
 			}
 			if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
 			{
-				keyMoveBackward = CurrentChar;
-				SaveOptionsState();
-				EditingBackwardKey = false;
-				options = false;
+
+				if (!InvalidKey())
+				{
+					InvalidKeyPressed = false;
+					keyMoveBackward = CurrentChar;
+					SaveOptionsState();
+					EditingBackwardKey = false;
+					options = false;
+				}
+				else
+					InvalidKeyPressed = true;
 			}
 		}
 
@@ -589,10 +605,16 @@ void CPlayerInfo::Update(double dt)
 			}
 			if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
 			{
-				keyMoveLeft = CurrentChar;
-				SaveOptionsState();
-				EditingLeftKey = false;
-				options = false;
+				if (!InvalidKey())
+				{
+					keyMoveLeft = CurrentChar;
+					SaveOptionsState();
+					InvalidKeyPressed = false;
+					EditingLeftKey = false;
+					options = false;
+				}
+				else
+					InvalidKeyPressed = true;
 			}
 		}
 
@@ -610,10 +632,16 @@ void CPlayerInfo::Update(double dt)
 			}
 			if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
 			{
-				keyMoveRight = CurrentChar;
-				SaveOptionsState();
-				EditingRightKey = false;
-				options = false;
+				if (!InvalidKey())
+				{
+					InvalidKeyPressed = false;
+					keyMoveRight = CurrentChar;
+					SaveOptionsState();
+					EditingRightKey = false;
+					options = false;
+				}
+				else
+					InvalidKeyPressed = true;
 			}
 		}
 	}
@@ -662,14 +690,31 @@ void CPlayerInfo::SaveOptionsState()
 	CLuaInterface::GetInstance()->saveKeyBoardValue("moveBackward", keyMoveBackward);
 	CLuaInterface::GetInstance()->saveKeyBoardValue("moveLeft", keyMoveLeft);
 	CLuaInterface::GetInstance()->saveKeyBoardValue("moveRight", keyMoveRight);
+	CLuaInterface::GetInstance()->saveKeyBoardValue("options", keyOptions);
+	CLuaInterface::GetInstance()->saveOptionsValue("width", Application::GetInstance().GetWindowWidth());
+	CLuaInterface::GetInstance()->saveOptionsValue("height", Application::GetInstance().GetWindowHeight());
+
 
 	std::remove("Image/Options.lua");
 	std::rename("Image/Options2.lua", "Image/Options.lua");
-	/*
-	-- KeyBoard Input
-	moveForward = "W"
-	moveLeft = "A"
-	moveBackward = "S"
-	moveRight = "D"
-	*/
+}
+
+bool CPlayerInfo::InvalidKey()
+{
+	if (CurrentChar == keyMoveForward ||
+		CurrentChar == keyMoveBackward ||
+		CurrentChar == keyMoveLeft ||
+		CurrentChar == keyMoveRight ||
+		CurrentChar == keyOptions)
+		return true;
+
+	return false;
+}
+
+void CPlayerInfo::ResetEditing()
+{
+	EditingForwardKey = false;
+	EditingBackwardKey = false;
+	EditingLeftKey = false;
+	EditingRightKey = false;
 }

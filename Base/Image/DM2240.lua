@@ -58,8 +58,6 @@ function GetMinMax(...)
 end
 
 title = "DM2240 - Week 14 Scripting"
-width =  800
-height = 600
 test = false -- Not in use for anything, placeholder 
 
 -- CPlayerInfo start position
@@ -69,13 +67,6 @@ CPlayerInfoStartPos = {0,0,10}
 Waypoint_A_1 = {x=10.0,y=0.0,z=50.0}
 Waypoint_A_2 = {x=10.0,y=0.0,z=-50.0}
 Waypoint_A_3 = {x=-10.0,y=0.0,z=0.0}
-
--- KeyBoard Input
-moveForward = "W"
-moveLeft = "A"
-moveBackward = "S"
-moveRight = "D"
-
 
 --[[ 
 COMMENTS
